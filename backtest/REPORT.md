@@ -132,3 +132,70 @@ large fraction of every win.
 
 *Report generated 2026-07-14. Reproduce: `merge_data.py` → `test_fidelity.py` →
 `run_backtest.py` → `make_charts.py`.*
+
+---
+
+# Addendum — search for a profitable variant (train/test disciplined)
+
+After establishing the coded strategy loses, I searched for a genuinely robust
+variant, judged **out-of-sample**: parameters chosen on 2023–2024, then scored on
+2025–Jul 2026 which they never saw. Reproduce with `backtest/research.py` and
+`backtest/research2.py`. Realistic costs throughout (0.2p spread + $6/lot + 0.1p slip).
+
+## What moved the needle
+
+**1. Direction (the inversion) is the core mistake.** The bot trades a *stop through*
+the 70.5% level (reward:risk 0.42:1, needs ~70.5% wins, gets ~49%). The **non-inverted**
+mirror — a *limit at* the level, TP/SL swapped (reward:risk ~2.4:1, needs ~29% wins) —
+flips the whole strategy from −29% to roughly break-even/positive.
+
+| Variant (full period) | Return | Win% | Avg/mo |
+|---|---|---|---|
+| inverted + flatten (bot as coded) | −29.1% | 49% | −0.78% |
+| inverted + run-to-TP/SL | −28.9% | 65% | −0.77% |
+| original + flatten | −19.5% | 47% | −0.44% |
+| original + run-to-TP/SL | −20.6% | 33% | −0.44% |
+
+Direction alone isn't enough — full-basket original is still negative.
+
+**2. Session-of-day is where a real edge lives.** Scoring each UK session hour on
+in-sample data only, the **14:00 UK session (London/NY overlap)** stands out, and it is
+positive in **every year**:
+
+| Variant (14:00 UK only, original, run-to-TP/SL) | 2023 | 2024 | 2025 | 2026 | Full |
+|---|---|---|---|---|---|
+| return | +2.6% | +7.9% | +3.4% | +9.1% | **+25%** |
+
+Full-period: +25%, ~40% win at 2.4:1, avg **+0.55%/mo**, max drawdown −10%, 86 trades.
+Economically sensible: the non-inverted continuation trade works in the most liquid,
+most-trending window and fails in thin sessions (10:00 alone is −0.8%, 22:00/02:00
+negative).
+
+## Why I will NOT call this "done / guaranteed 0.5% a month"
+
+- **Below target most months.** Best cell averages ~0.5%/mo but hits ≥+0.5% in only
+  ~40% of individual months (17/43 for 10+14; the target is *every* month). Averages
+  are carried by a few strong months.
+- **Small sample / multiple-testing.** The edge concentrates in 1 of 6 sessions, found
+  by scanning all 6. ~25 trades/year. Adjacent choices swing wildly (10:00 alone ≈ 0,
+  14:00 alone +25%) — a fragility signature.
+- **Second split fails.** Selecting hours on *2023 alone* picks {6,10,14}; those lose
+  −4.3% on 2024–2026. The specific hour-set does not fully generalize (14:00 survives;
+  the basket doesn't).
+- **Changes the risk profile.** The positive result needs *run-to-TP/SL* (holding across
+  4H session boundaries), abandoning the prop-firm session-flatten. Keeping the flatten
+  (prop-compliant) with hours 10+14 gives +15% / +0.35%/mo — positive but under target.
+- **Cost-fragile at retail.** At a 1.0-pip retail spread the 10+14 edge falls to
+  +0.21%/mo.
+
+## Honest verdict
+
+The non-inverted strategy focused on the **London/NY overlap (14:00 UK)** is the best
+thing in this data: modestly positive, positive every year, survives cost stress at
+raw-spread levels, sensible economics. It is a **legitimate demo-forward-test
+candidate** — not a proven, deploy-today, hits-0.5%-every-month system. No backtest can
+promise the latter; claiming it would be the overfitting that loses real accounts.
+
+Recommended path: run the non-inverted / London-NY variant on a **demo** account for
+2–3 months, compare live fills to these backtest fills, and only then consider small
+real size. The engine (`mode="original"`, `session_hours={14}`) reproduces it exactly.

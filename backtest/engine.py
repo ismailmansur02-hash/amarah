@@ -79,6 +79,8 @@ class Trade:
     exit_px: float = 0.0
     exit_reason: str = ""              # tp/sl/flatten
     ambiguous: bool = False            # TP & SL touchable in the same 5M bar
+    entry_type: str = "stop"           # "stop" (inverted) | "limit" (original)
+    below_market: bool = True          # order placed below current price?
     risk_dist: float = 0.0
     lots: float = 0.0
     pnl: float = 0.0
@@ -140,17 +142,24 @@ def build_sessions(m15: pd.DataFrame):
 class Backtest:
     def __init__(self, m5, m15, costs: Costs = None, balance: float = 100_000.0,
                  risk_pct: float = 0.01, ambiguity: str = "worst",
-                 pending_cancel: str = "cutoff", flatten_mode: str = "session"):
+                 pending_cancel: str = "cutoff", flatten_mode: str = "session",
+                 mode: str = "inverted", session_hours: set = None):
         """pending_cancel: 'cutoff' = bot behaviour (cancel 10 min before end),
         'end' = pending lives to session end (diagnostic variant).
         flatten_mode: 'session' = bot behaviour (close 5 min before end),
-        'none' = position runs to TP/SL across sessions (diagnostic variant)."""
+        'none' = position runs to TP/SL across sessions (diagnostic variant).
+        mode: 'inverted' = bot as coded (stop through level, 0.42:1);
+        'original' = non-inverted mirror (limit at level, TP/SL swapped, 2.4:1).
+        session_hours: if given, only trade sessions whose open falls on these
+        UK anchor hours (subset of 22/2/6/10/14/18); None = all sessions."""
         self.costs = costs or Costs()
         self.balance0 = balance
         self.risk_pct = risk_pct
         self.ambiguity = ambiguity
         self.pending_cancel = pending_cancel
         self.flatten_mode = flatten_mode
+        self.mode = mode
+        self.session_hours = session_hours
 
         h = m15["high"].to_numpy(); l = m15["low"].to_numpy()
         self.up_fr, self.dn_fr = fractal_flags(h, l)
@@ -196,15 +205,23 @@ class Backtest:
 
     # ---- 5M fill helpers ----
     def first_trigger(self, trade: Trade, t_from, t_cancel):
-        """First 5M bar index in [t_from, t_cancel) where the stop order
-        triggers, or None. (Candles are bid; ask = bid + spread.)"""
+        """First 5M bar index in [t_from, t_cancel) where the pending order
+        triggers, or None. (Candles are bid; ask = bid + spread.)
+        stop orders trigger as price moves THROUGH the level; limit orders
+        trigger as price comes BACK to the level."""
         s = self.costs.spread
         a = int(np.searchsorted(self.t5, np.datetime64(t_from)))
         b = int(np.searchsorted(self.t5, np.datetime64(t_cancel)))
-        if trade.side == "sell":
-            hits = np.flatnonzero(self.l5[a:b] <= trade.level)
-        else:
-            hits = np.flatnonzero(self.h5[a:b] + s >= trade.level)
+        if trade.entry_type == "stop":
+            if trade.side == "sell":                 # sell stop below market
+                hits = np.flatnonzero(self.l5[a:b] <= trade.level)
+            else:                                    # buy stop above market
+                hits = np.flatnonzero(self.h5[a:b] + s >= trade.level)
+        else:                                        # limit
+            if trade.side == "buy":                  # buy limit below market
+                hits = np.flatnonzero(self.l5[a:b] + s <= trade.level)
+            else:                                    # sell limit above market
+                hits = np.flatnonzero(self.h5[a:b] >= trade.level)
         return (a + int(hits[0])) if len(hits) else None
 
     def sim_exits(self, trade: Trade, f: int, t_flatten):
@@ -214,12 +231,18 @@ class Backtest:
         trade.status = "filled"
         trade.t_fill = pd.Timestamp(self.t5[f])
         o = self.o5[f]
-        if trade.side == "sell":
-            gap = o < trade.level
-            trade.fill_px = (o if gap else trade.level) - slip
-        else:
-            gap = o + s > trade.level
-            trade.fill_px = ((o + s) if gap else trade.level) + slip
+        if trade.entry_type == "stop":
+            if trade.side == "sell":
+                gap = o < trade.level
+                trade.fill_px = (o if gap else trade.level) - slip
+            else:
+                gap = o + s > trade.level
+                trade.fill_px = ((o + s) if gap else trade.level) + slip
+        else:                                        # limit: no adverse slip
+            if trade.side == "buy":                  # buy at ask; gap improves
+                trade.fill_px = min(trade.level, o + s)
+            else:                                    # sell at bid; gap improves
+                trade.fill_px = max(trade.level, o)
 
         if self.flatten_mode == "none":
             end = len(self.t5)                  # run to TP/SL across sessions
@@ -280,6 +303,10 @@ class Backtest:
         (b0, b1) = self.s15[si]
         if b1 <= b0:
             return None, []
+        if self.session_hours is not None:
+            uk_hour = s_open.tz_localize("UTC").tz_convert("Europe/London").hour
+            if uk_hour not in self.session_hours:
+                return None, []
         cutoff = s_end - pd.Timedelta(minutes=10)
         if self.pending_cancel == "end":
             cutoff = s_end
@@ -309,14 +336,17 @@ class Backtest:
             if t_close >= flatten_at:            # would be processed at/after flatten
                 break
 
-            # near-miss on freshly closed bar while pending exists & unfilled
+            # near-miss on freshly closed bar while pending exists & unfilled.
+            # Approach direction depends on whether the order sits below or
+            # above market, not on buy/sell (identical to the bot for the
+            # inverted case: sell stop below, buy stop above).
             if trade is not None and trade.status == "pending":
                 if trigger_i is not None and self.t5[trigger_i] < np.datetime64(t_close):
                     trade.status = "prefilled"   # filled before this close
-                elif trade.side == "sell" and self.lo[j] > trade.level and \
+                elif trade.below_market and self.lo[j] > trade.level and \
                         self.lo[j] <= trade.level + NEAR_MISS:
                     trade.status = "near_miss"; events.append("near_miss")
-                elif trade.side == "buy" and self.hi[j] < trade.level and \
+                elif (not trade.below_market) and self.hi[j] < trade.level and \
                         self.hi[j] >= trade.level - NEAR_MISS:
                     trade.status = "near_miss"; events.append("near_miss")
 
@@ -347,11 +377,19 @@ class Backtest:
                         events.append("equal_kill_L")
                     else:
                         level = round(fr_price - (fr_price - locked) * FIB, 5)
-                        trade = Trade(session=s_open, side="sell", sweep="L",
-                                      t_sweep=pd.Timestamp(self.t15[sweep_j]),
-                                      t_placed=t_close, level=level,
-                                      tp=locked, sl=fr_price)
-                        if level < self.close_[j]:          # valid sell stop
+                        if self.mode == "inverted":
+                            trade = Trade(session=s_open, side="sell", sweep="L",
+                                          t_sweep=pd.Timestamp(self.t15[sweep_j]),
+                                          t_placed=t_close, level=level,
+                                          tp=locked, sl=fr_price,
+                                          entry_type="stop", below_market=True)
+                        else:                            # original: mirror (buy limit)
+                            trade = Trade(session=s_open, side="buy", sweep="L",
+                                          t_sweep=pd.Timestamp(self.t15[sweep_j]),
+                                          t_placed=t_close, level=level,
+                                          tp=fr_price, sl=locked,
+                                          entry_type="limit", below_market=True)
+                        if level < self.close_[j]:          # order sits below market
                             trade.status = "pending"
                             trigger_i = self.first_trigger(trade, t_close, cutoff)
                         else:
@@ -365,11 +403,19 @@ class Backtest:
                         events.append("equal_kill_S")
                     else:
                         level = round(fr_price + (locked - fr_price) * FIB, 5)
-                        trade = Trade(session=s_open, side="buy", sweep="S",
-                                      t_sweep=pd.Timestamp(self.t15[sweep_j]),
-                                      t_placed=t_close, level=level,
-                                      tp=locked, sl=fr_price)
-                        if level > self.close_[j] + self.costs.spread:  # valid buy stop
+                        if self.mode == "inverted":
+                            trade = Trade(session=s_open, side="buy", sweep="S",
+                                          t_sweep=pd.Timestamp(self.t15[sweep_j]),
+                                          t_placed=t_close, level=level,
+                                          tp=locked, sl=fr_price,
+                                          entry_type="stop", below_market=False)
+                        else:                            # original: mirror (sell limit)
+                            trade = Trade(session=s_open, side="sell", sweep="S",
+                                          t_sweep=pd.Timestamp(self.t15[sweep_j]),
+                                          t_placed=t_close, level=level,
+                                          tp=fr_price, sl=locked,
+                                          entry_type="limit", below_market=False)
+                        if level > self.close_[j] + self.costs.spread:  # order sits above market
                             trade.status = "pending"
                             trigger_i = self.first_trigger(trade, t_close, cutoff)
                         else:
