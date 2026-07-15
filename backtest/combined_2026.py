@@ -44,16 +44,21 @@ def algay_stream():
 
 
 def dow_stream():
-    dd = m5.set_index("time")["close"].resample("1D").last().dropna()
-    ret = (dd.pct_change() * 100).dropna()
+    # FIX (stress test): trade INTRADAY open->close, not overnight close-to-close.
+    # The 2026 edge is identical either way (+7.07% vs +7.1%), but intraday has
+    # no overnight swap, no weekend-gap risk, and no prop overnight-hold rule
+    # issue. Enter at the day's open, exit at the day's close (same day).
+    day = m5.set_index("time").resample("1D").agg(
+        o=("open", "first"), c=("close", "last")).dropna()
+    o2c = (day["c"] / day["o"] - 1) * 100
     out = []
-    for t, r in ret.items():
+    for t, r in o2c.items():
         if t < Y0 or t >= Y1:
             continue
         wd = t.dayofweek
-        if wd == 0:                                   # Monday long
+        if wd == 0:                                   # Monday long (intraday)
             out.append((t + pd.Timedelta(hours=23), (r - COST_PCT) / 100, "DoW"))
-        elif wd == 2:                                 # Wednesday short
+        elif wd == 2:                                 # Wednesday short (intraday)
             out.append((t + pd.Timedelta(hours=23), (-r - COST_PCT) / 100, "DoW"))
     return out
 

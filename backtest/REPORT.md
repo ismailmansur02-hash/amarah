@@ -199,3 +199,40 @@ promise the latter; claiming it would be the overfitting that loses real account
 Recommended path: run the non-inverted / London-NY variant on a **demo** account for
 2–3 months, compare live fills to these backtest fills, and only then consider small
 real size. The engine (`mode="original"`, `session_hours={14}`) reproduces it exactly.
+
+---
+
+# Addendum 2 — adversarial stress-test (2026), flaws found & fixed
+
+I tried to BREAK the combined candidate on 2026, not confirm it. Battery in
+`backtest/stress_test.py`, `stress_test2.py`. Verdicts:
+
+| Test | What it checks | Result |
+|---|---|---|
+| Beta | Is it just long EURUSD in an up year? | 2026 EURUSD **fell −2.7%**. Wednesdays fell *more* than the market and Mondays rose *against* it — the day effect is **beyond beta**. The permutation test also shuffles within the real (down-drift) returns, so drift is controlled for. |
+| Overnight leakage | Is the day-of-week edge only a close-to-close/weekend artifact? | **No** — intraday open→close gives the same +7.07% as close-to-close. It is capturable **intraday**. |
+| Swap cost | Overnight financing ignored? | Moot after the intraday fix (no overnight hold). |
+| Significance (t) | Per-trade edge vs noise | DoW sleeve t≈2.9 (**significant**). ALGAY 14:00 sleeve t≈1.2 (**NOT significant**, n=17). |
+| Permutation (20k) | Corrects "I picked the lucky weekday" | Wednesday raw p=0.003; **multiple-comparison-corrected p=0.037 → still passes <0.05**. |
+| Bootstrap (10k) | 2026 return confidence interval | DoW 90% CI **[+3.1%, +11.1%], P(>0)=100%**. ALGAY CI **[−1.7%, +13.7%], P(>0)=89%** (includes losing). |
+| Outlier | Is DoW one lucky day? | No — 18/27 Wednesdays profitable, median +0.16%; removing the best 3 days still leaves +2.3%. Broad-based. |
+| Day-boundary | Fragile to UTC vs London midnight? | Stable: +4.43% vs +4.25%. |
+
+## Flaws found and fixed
+1. **Day-of-week sleeve was specified as an overnight (close-to-close) hold.**
+   Fixed to **intraday open→close** in `combined_2026.py` — removes swap,
+   weekend-gap risk and prop overnight-hold rule issues at ~zero cost to return
+   (+7.07% vs +7.10%).
+2. **The combined bot leaned on the ALGAY London/NY sleeve, which is NOT
+   statistically robust on 2026** (t≈1.2; bootstrap CI includes losses). The
+   day-of-week sleeve is the statistically strong component; ALGAY is, at best,
+   light diversification — it should not be the anchor.
+
+## Honest standing after stressing it
+On 2026 the **day-of-week (Mon-long / Wed-short, intraday) edge genuinely
+survives** multiple-comparison correction, bootstrapping, outlier removal,
+boundary changes and a beta check — that is a real, non-trivial result for a
+single year. What it still **cannot** tell us: whether 2026 itself is
+representative. Weekday effects are famous for being regime-specific; a
+p=0.037 on ~6 months is "promising", not "proven". The forward demo test
+(reminder set) remains the deciding experiment.
