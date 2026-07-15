@@ -236,3 +236,39 @@ single year. What it still **cannot** tell us: whether 2026 itself is
 representative. Weekday effects are famous for being regime-specific; a
 p=0.037 on ~6 months is "promising", not "proven". The forward demo test
 (reminder set) remains the deciding experiment.
+
+---
+
+# Addendum 3 — out-of-sample: new year (2025) AND new instrument (GBPUSD)
+
+The decisive test for a day-of-week pattern: does it survive a year it wasn't
+found on, and an instrument it wasn't found on? Mon-long / Wed-short intraday,
+FMP daily EOD bars, ~0.6 pip cost. `backtest/oos_test.py`.
+(XAUUSD requested too but is not available on the current FMP plan.)
+
+| Slice | Total | Avg/mo | Win | t-stat | ≥+0.5% mo | Buy&hold |
+|---|---|---|---|---|---|---|
+| EURUSD 2025 | +6.8% | +0.56% | 59% | 1.35 | 6/12 | +13.4% |
+| EURUSD 2026 | +7.9% | +1.10% | 65% | **2.69** | 5/7 | −2.8% |
+| GBPUSD 2025 | +11.4% | +0.91% | 57% | **2.30** | 7/12 | +7.4% |
+| GBPUSD 2026 | +10.8% | +1.49% | 73% | **3.41** | 6/7 | −0.6% |
+
+**Positive on all four slices; statistically significant (t>2) on three.**
+Not beta: 2026 EUR/GBP buy&hold were *negative* while the algo made +8–11%.
+GBPUSD is actually stronger than EURUSD. This is real out-of-sample support —
+the strongest evidence in this whole report that the edge is a market property,
+not a fit to 2026.
+
+## Remaining honest caveats
+- **EURUSD and GBPUSD are ~0.9 correlated** → the four cells are closer to ~2
+  independent tests than four. Still: a new year + a correlated-but-distinct
+  pair both holding is meaningful.
+- **Only two years.** Day-of-week/flow effects can persist for years and then
+  decay as positioning changes; two years cannot rule that out.
+- EOD daily bars (one broker's day boundary); real spread, slippage and the
+  exact entry/exit clock still need live confirmation.
+- Could not test a different asset class (gold) — the strongest independence
+  test — due to the FMP plan.
+
+**Verdict:** upgraded from "promising 2026 curiosity" to "out-of-sample-validated
+candidate worth real forward capital on demo." Still forward-test before funding.
