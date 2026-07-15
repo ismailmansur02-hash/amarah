@@ -101,39 +101,54 @@ day's two trades as **~one correlated position**, not two independent ones.
   (1.5×ATR sits outside the normal daily range, so the time-exit — not the stop
   — is the usual exit; the stop is crash protection.)
 - **Lot size**: `lots = (balance × RISK_PER_PAIR) / (STOP_DIST × CONTRACT)`,
-  `CONTRACT = 100_000`. Then **floor to `volume_step`** (never round up — an
-  ALGAY fix), clamp to `[volume_min, volume_max]`. If the floored size is below
-  `volume_min`, **skip the trade and alert** (do not silently over-risk).
-- Account currency assumed USD; if the deployed account is GBP/EUR, add the
-  quote→account FX conversion to lot sizing (**[GATE]** verify on the real
-  account before live).
+  `CONTRACT = 100_000`. `balance` = live account balance read from MT5
+  (`account_info().balance`), **base case $100,000 USD**. Then **floor to
+  `volume_step`** (never round up — an ALGAY fix), clamp to
+  `[volume_min, volume_max]`. If the floored size is below `volume_min`, **skip
+  the trade and alert** (do not silently over-risk).
+- **Account currency = USD** (confirmed). EURUSD and GBPUSD are USD-quoted, so
+  pip value is in USD and **no FX conversion is needed** — sizing is exact as
+  written. (If a non-USD account is ever used, a quote→account conversion must
+  be added; not required here.)
+- Worked example at $100k, 0.5%/pair: risk $500/pair. If ATR14≈0.0060 and
+  K_ATR=1.5 → STOP_DIST≈0.0090 (90 pips) → `lots ≈ 500/(0.0090×100000) ≈ 0.55`.
 
 ---
 
 ## 5. News / event filter ("no red-day clusterfucks")
 
-Skip trading a pair on days with high-impact scheduled news for its currencies.
+**User rule (their own words): "all red days I never used to trade."** A "red
+day" on ForexFactory = a day containing a **High-impact (red folder)** event. So:
+if a trade day carries a red event affecting our pairs, **sit out**.
 
-- **Currencies that matter per pair**: EURUSD → {USD, EUR}; GBPUSD → {USD, GBP}.
-  USD events (NFP, CPI, FOMC — FOMC is typically a **Wednesday**, exactly our
-  short day) therefore skip **both** pairs.
-- **Impact level to avoid**: **High only** ("red folder"). Medium/Low are traded.
-- **Source (primary)**: ForexFactory weekly JSON
+- **Source**: ForexFactory calendar, `https://www.forexfactory.com/calendar`
+  (what the user uses). The page itself is Cloudflare/bot-protected, so the bot
+  consumes **ForexFactory's machine-readable weekly JSON feed**:
   `https://nfs.faireconomy.media/ff_calendar_thisweek.json`
-  (fields: `title`, `country`/currency, `impact`, `date`/time). Parse once at
-  startup and **re-fetch every day at 00:00 London** (calendar updates).
-  **Secondary/fallback source** must be pluggable (interface in §7) in case the
-  URL changes.
-- **Rule**: for a pair on a trade day, if **any High-impact event for one of its
-  currencies** is timestamped **within the holding window (00:15–21:45 London)
-  that day**, **skip that pair for the day**. (Events strictly outside the window
-  do not block — but see the pre-event buffer below.)
-- **Pre-event buffer**: also skip if a High event lands within
-  `NEWS_BUFFER_MIN = 60` minutes **before** the 00:15 entry (overnight spillover).
+  (array of events; fields: `title`, `country`=currency, `impact`
+  ∈ {High, Medium, Low, Holiday}, `date`=ISO datetime). This is the standard FF
+  feed and matches the red/orange/yellow folders on the site 1:1
+  (High = red). Parse at startup and **re-fetch daily at 00:00 London**. The
+  fetcher is **pluggable** (a second source can be dropped in if the URL changes).
+  *Note: this feed could not be reached from the build sandbox (network policy
+  403); it must be reachable from the VPS — verified in the build-time test.*
+- **Impact to block**: **High only** ("red"). Medium/Low are fine to trade.
+- **Which currencies**: default `NEWS_CCYS = {USD, EUR, GBP}` — the only
+  currencies driving our two pairs. A red **USD** event (NFP, CPI, and **FOMC —
+  typically a Wednesday, our short day**) skips **both** pairs; a red **EUR**
+  event (ECB) skips EURUSD only; a red **GBP** event (BoE) skips GBPUSD only.
+  Optional stricter flag `NEWS_BLOCK_ANY_CCY=False`: if set True, ANY currency's
+  red event skips that day entirely (fullest reading of "all red days"). Default
+  is the USD/EUR/GBP rule, which already covers essentially every red day that
+  moves EUR/GBP.
+- **Window**: block a pair if a qualifying red event is timestamped **within the
+  holding window (00:15–21:45 London)** that day, **or** within
+  `NEWS_BUFFER_MIN = 60` min **before** the 00:15 entry (overnight spillover).
+  All-day events / events with no precise time → treat as blocking the day.
 - **FAIL-SAFE (critical)**: if the calendar cannot be fetched or parsed and no
   cached copy ≤ 48h old exists, **do not trade that day at all**. "No data" must
   never mean "trade blind." Alert loudly.
-- All skips are logged with the blocking event name.
+- Every skip is logged and alerted with the blocking event's name/time.
 
 ---
 
@@ -181,8 +196,33 @@ New modules to add:
 - `bot/dow_bot.py` — main loop + state machine (§8).
 - `bot/dow_config.py` — all constants (§10) in one importable module.
 
-Credentials via env vars only (`MT_LOGIN`, `MT_PASSWORD`, `MT_SERVER`, `MT_PATH`,
-`TG_BOT_TOKEN`, `TG_CHAT_ID`) — never hardcode.
+### 7.1 Account & credentials — WHERE YOU PUT YOUR DETAILS
+
+`bot/dow_config.py` must contain **one clearly-marked block** at the very top, so
+the user fills it in in exactly one place. Preferred: read from environment
+variables, with a commented in-file fallback for the demo. Template:
+
+```python
+# ============================================================
+#  >>> PUT YOUR ACCOUNT DETAILS HERE  <<<
+#  (env vars take priority; edit the fallbacks for a quick demo start)
+# ============================================================
+import os
+MT_LOGIN    = int(os.environ.get("MT_LOGIN",  "0"))          # <-- your FTMO login number
+MT_PASSWORD =     os.environ.get("MT_PASSWORD", "")          # <-- your FTMO password
+MT_SERVER   =     os.environ.get("MT_SERVER",  "FTMO-Demo")  # <-- demo server (default)
+MT_PATH     =     os.environ.get("MT_PATH",    r"C:\Program Files\FTMO MetaTrader 5\terminal64.exe")
+TG_BOT_TOKEN =    os.environ.get("TG_BOT_TOKEN", "")         # <-- Telegram alerts (optional)
+TG_CHAT_ID   =    os.environ.get("TG_CHAT_ID",   "")         # <-- Telegram chat id (optional)
+# ============================================================
+```
+
+Rules: **server defaults to `FTMO-Demo`**; `MT_PATH` points at the FTMO MT5
+terminal (the installer's default path differs from a stock MT5 — the config
+comment must say "set this to your FTMO terminal64.exe"). `main()` must refuse to
+start if `MT_LOGIN==0` or `MT_PASSWORD==""` (reuse ALGAY's guard) with a clear
+message telling the user to fill the block. **Never hardcode real credentials in
+committed files**; the fallbacks stay blank/demo.
 
 ---
 
@@ -250,6 +290,8 @@ never die on a transient error; only `SystemExit`/`KILL` stops it.
 
 | Name | Default | Meaning |
 |---|---|---|
+| `START_BALANCE_NOTE` | `$100,000 USD` | base account size (live balance is read from MT5) |
+| `MT_SERVER` | `FTMO-Demo` | broker server (see §7.1 credentials block) |
 | `PAIRS` | `["EURUSD","GBPUSD"]` | enabled instruments |
 | `SIDE_BY_WEEKDAY` | `{0:"BUY", 2:"SELL"}` | Mon long, Wed short |
 | `ENTRY_LON` | `00:15` | entry time (London) |
@@ -258,9 +300,11 @@ never die on a transient error; only `SystemExit`/`KILL` stops it.
 | `RISK_PER_PAIR` | `0.005` | 0.5% risk per pair |
 | `MAX_DAILY_RISK` | `0.010` | hard daily gross-risk cap |
 | `K_ATR` | `1.5` | stop = K_ATR × ATR14(daily) |
-| `NEWS_IMPACT_BLOCK` | `["High"]` | impact levels that skip a day |
+| `NEWS_IMPACT_BLOCK` | `["High"]` | impact levels that skip a day ("red") |
+| `NEWS_CCYS` | `{USD, EUR, GBP}` | currencies whose red events block |
+| `NEWS_BLOCK_ANY_CCY` | `False` | True = ANY currency's red event skips the day |
 | `NEWS_BUFFER_MIN` | `60` | pre-entry buffer for overnight events |
-| `CAL_URL` | ForexFactory weekly JSON | primary calendar source |
+| `CAL_URL` | `nfs.faireconomy.media/ff_calendar_thisweek.json` | ForexFactory JSON feed |
 | `CAL_CACHE_MAX_H` | `48` | max cache age before fail-safe blocks |
 | `MAX_SPREAD_PIPS` | `{EUR:2.0, GBP:2.5}` | entry spread guard |
 | `DAILY_HALT` | `0.02` | −2% day → stop for the day |
@@ -369,12 +413,15 @@ audited helpers into a shared `bot/broker.py`).
 ## 16. Open items to resolve AT BUILD TIME (not now)
 
 1. Fetch **GBPUSD 5-min** and run GATE on it (only EUR 5-min in repo today).
-2. Confirm the **account currency** on the real prop account; add FX conversion
-   to sizing if not USD.
+   *May be done now, before build — see the offer accompanying this spec.*
+2. ~~Account currency~~ — **RESOLVED: USD, $100k, FTMO-Demo.** No FX conversion.
 3. Confirm the prop firm's exact rules (daily %, max DD, news-trading clause,
-   weekend clause) and map to §6 constants.
-4. Confirm a **calendar history source** for the backtest news filter, or
-   document the monthly-USD-event approximation.
-5. Confirm broker **server timezone** and **daily-candle rollover** time.
+   weekend clause) and map to §6 constants. (FTMO defaults assumed: 5% daily,
+   10% max, no weekend holds — our design already fits.)
+4. Confirm the **VPS can reach** `nfs.faireconomy.media` (blocked in the build
+   sandbox; must be open on the live host). Confirm a **calendar history source**
+   for the backtest news filter, or document the monthly-USD-event approximation.
+5. Confirm broker **server timezone** and **daily-candle rollover** time (for
+   ATR14-daily reads; FTMO server is EET/EEST = UTC+2/+3).
 
 Everything else above is decided. Build to this document.
