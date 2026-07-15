@@ -299,3 +299,33 @@ in good regimes, not guaranteed monthly*. The bot's drawdown / consecutive-loss
 halts exist precisely to stop trading when the edge turns off. Demo-first stands.
 
 ![dow monthly](out/dow_monthly_all.png)
+
+---
+
+# Addendum 5 — FINAL AUDIT (2025-01 → 2026-07 only), pre-build go/no-go
+
+Exact live rules, both pairs, 0.5%/pair on $100k, real FTMO GBP + FMP EUR.
+Window restricted to 2025-01-01 → 2026-07-14 (the current regime, as requested).
+`backtest/dow_acceptance.py` (start=2025-01-01).
+
+| Metric | Value |
+|---|---|
+| **Total return** | **+16.0%** ($100k → $116.0k) |
+| Avg / median month | **+0.79%** / +0.37% |
+| Months up | **15 / 19** (4 down; worst −2.34%) |
+| Months ≥ +0.5% / ≥ +1.0% | 8/19 / 7/19 |
+| Win rate (trades) | 60% (320 trades; stop binds 4%) |
+| **Max drawdown** | **−3.1%** (FTMO limit −10%, halt −8%) |
+| Significance | **t = 3.48**, profit factor **1.65** |
+| Per pair | EURUSD +6.5% (t 2.17) · GBPUSD +8.9% (t 2.73) — balanced |
+
+**Verdict: PROFITABLE and statistically real over 2025→Jul-2026.** +16% with a
+−3.1% max drawdown, both pairs contributing, t=3.48. It clears +0.5%/mo *on
+average* (+0.79%) though the median month is +0.37% — the average is lifted by a
+handful of strong months, and only 8 of 19 individual months clear +0.5%. This
+window is the favourable regime by construction (2024's dead patch excluded), so
+the decay risk documented in Addendum 4 still stands. Within the asked window,
+the edge is genuine, profitable, and well inside prop risk limits. Cleared to
+build (demo-first).
+
+![final audit](out/dow_final_audit.png)
