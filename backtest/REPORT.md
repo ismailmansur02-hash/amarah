@@ -272,3 +272,30 @@ not a fit to 2026.
 
 **Verdict:** upgraded from "promising 2026 curiosity" to "out-of-sample-validated
 candidate worth real forward capital on demo." Still forward-test before funding.
+
+---
+
+# Addendum 4 — real FTMO GBP data + sized both-pair acceptance backtest
+
+User supplied the **real FTMO GBPUSD 5-min feed** (2023–2026, EET server time =
+London+2). Ran the **exact live rules** (00:15→21:45 London clock, 1.5×ATR
+protective stop checked intrabar, 0.5%/pair sizing, spread cost) on both pairs,
+one $100k USD account — `backtest/dow_acceptance.py`.
+
+| Year | Total | Avg/mo | maxDD contribution |
+|---|---|---|---|
+| 2023 | +1.4% | +0.12% | mixed |
+| **2024** | **−1.8%** | **−0.15%** | **the dead regime** |
+| 2025 | +6.3% | +0.52% | strong |
+| 2026 (→Jul) | +9.2% | +1.27% | strong |
+| **All** | **+15.5%** | +0.34% | **maxDD −6.2%**, t=2.23 (3.48 on 2025–26) |
+
+**Honest conclusion:** the edge is real and, in the current regime (2025–26),
+clears the +0.5%/mo target and hit +1%/mo in 2026 — but it **went negative in
+2024**. Weekday effects decay; this is that risk in the data. Sizing cannot fix
+a dead year (0.75%/pair → −9.2% DD, 1%/pair → −12% DD which **breaks FTMO's 10%
+limit**), so **0.5%/pair is the prudent maximum** and the target is *achievable
+in good regimes, not guaranteed monthly*. The bot's drawdown / consecutive-loss
+halts exist precisely to stop trading when the edge turns off. Demo-first stands.
+
+![dow monthly](out/dow_monthly_all.png)

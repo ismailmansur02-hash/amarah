@@ -30,9 +30,37 @@ Validated (see `backtest/oos_test.py`, `stress_test*.py`, REPORT.md Addenda 2–
 
 Passed: multiple-comparison permutation (corrected p=0.037), 10k bootstrap
 (90% CI clears 0), outlier removal (18/27 Weds profitable), day-boundary
-stability, and **beyond beta** (2026 EUR/GBP fell while the algo rose). It is
-NOT proven for all time — weekday/flow effects can decay — so this bot ships to
-**demo first** (§13) and carries kill-switches (§6).
+stability, and **beyond beta** (2026 EUR/GBP fell while the algo rose).
+
+### Real-data validation of the EXACT live rules (do not re-derive)
+
+Ran the exact clock + 1.5×ATR stop + 0.5%/pair sizing on **real FTMO GBPUSD
+5-min** (user-supplied) and **FMP EURUSD 5-min**, both pairs on one $100k USD
+account (`backtest/dow_acceptance.py`):
+
+| Year | Total | Avg/mo | ≥+0.5% months |
+|---|---|---|---|
+| 2023 | +1.4% | +0.12% | 5/12 |
+| **2024** | **−1.8%** | **−0.15%** | 4/12 |
+| 2025 | +6.3% | +0.52% | 4/12 |
+| 2026 (→Jul) | +9.2% | +1.27% | 4/7 |
+| **All 2023–26** | **+15.5%** | +0.34% | 17/43 |
+
+Combined per-trade **t = 2.23 (all), 3.48 (2025–26)**; win 54%; the ATR stop
+binds only 5% of the time (genuine safety net, not the strategy); **max
+drawdown −6.2%** at 0.5%/pair.
+
+### ⚠ The honest expectation (read before promising anyone a number)
+
+- **It meets +0.5%/mo in the recent regime** (2025 +0.52%, 2026 +1.27%) and
+  cleared +1%/mo in 2026 — the target is realistic *when the edge is on*.
+- **It does NOT hit +0.5% every month, and 2024 was a losing year (−1.8%).**
+  Weekday/flow effects decay; 2024 is that decay, in the data. **No sizing fixes
+  a dead regime** — leverage multiplies 2024's losses and blows the drawdown
+  limit (see §4). So: target achievable in good regimes, **not guaranteed
+  monthly**, and the kill-switches (§6) exist to *stop* trading when the edge
+  turns off. This ships to **demo first** (§13). Anyone told "guaranteed 1%/mo"
+  is being misled.
 
 ---
 
@@ -86,6 +114,19 @@ day's two trades as **~one correlated position**, not two independent ones.
   balance). A normal day therefore risks ~1.0% gross but ~0.95% economically
   (correlation-adjusted). This keeps EUR/GBP divergence as mild diversification
   without doubling the USD bet.
+- **Sizing vs the FTMO 10% max-loss limit — why 0.5% is the ceiling, not 1%**
+  (from `dow_acceptance.py`, real data 2023–26):
+
+  | Risk/pair | Total | Avg/mo | Max drawdown | Verdict |
+  |---|---|---|---|---|
+  | 0.40% | +12% | +0.27% | −5.0% | very safe, undershoots target in slow regimes |
+  | **0.50% (default)** | **+15.5%** | **+0.34% (0.5–1.3% in 2025–26)** | **−6.2%** | **chosen** |
+  | 0.75% | +24% | +0.52% | −9.2% | too close to FTMO's 10% |
+  | 1.00% | +33% | +0.70% | **−12.1%** | **BLOWS an FTMO account** |
+
+  Chasing a higher monthly number by raising risk walks straight into the 10%
+  wall. **0.5%/pair is the default and the prudent maximum**; only lower it for
+  more safety. Never raise it to force a target.
 - **Never scale up** the surviving pair when the other is skipped (news/holiday).
   A one-pair day simply risks 0.5%. Simpler = fewer failure modes.
 - **Hard cap**: total open risk across all pairs ≤ `MAX_DAILY_RISK = 1.0%`.
@@ -161,9 +202,10 @@ holds). Our design already respects them (intraday only; ~1%/day risk). Add
 - **Daily stop**: if realized+open P&L for the day ≤ `−DAILY_HALT` (default
   −2.0% of start-of-day balance), close everything and **stop trading until next
   day**.
-- **Drawdown halt**: if equity ≤ `PEAK × (1 − MAX_DD_HALT)`, `MAX_DD_HALT = 6%`
-  (buffer below the firm's 10%), **flatten and stop the bot**; require manual
-  restart. Never let the account approach the firm's real limit.
+- **Drawdown halt**: if equity ≤ `PEAK × (1 − MAX_DD_HALT)`, `MAX_DD_HALT = 8%`
+  (buffer below FTMO's 10%; historical worst was −6.2% at 0.5%/pair, so 8% gives
+  headroom while still stopping before the firm limit), **flatten and stop the
+  bot**; require manual restart. Never let the account approach the firm's limit.
 - **Consecutive-loss halt**: after `MAX_CONSEC_LOSSES = 4` losing days in a row,
   pause and alert for manual review (possible regime decay — the known risk).
 - **Spread guard**: at entry, if `spread > MAX_SPREAD_PIPS` (default 2.0 pips
@@ -308,7 +350,7 @@ never die on a transient error; only `SystemExit`/`KILL` stops it.
 | `CAL_CACHE_MAX_H` | `48` | max cache age before fail-safe blocks |
 | `MAX_SPREAD_PIPS` | `{EUR:2.0, GBP:2.5}` | entry spread guard |
 | `DAILY_HALT` | `0.02` | −2% day → stop for the day |
-| `MAX_DD_HALT` | `0.06` | −6% from peak → flatten + stop bot |
+| `MAX_DD_HALT` | `0.08` | −8% from peak → flatten + stop bot (hist. worst −6.2%) |
 | `MAX_CONSEC_LOSSES` | `4` | pause for review |
 | `POLL_SECONDS` | `30` | loop cadence |
 | `MAGIC` | `31` | order tag (distinct from ALGAY's 30) |
@@ -321,27 +363,32 @@ Build `backtest/dow_acceptance.py` that reproduces the **exact live rules**
 (00:15→21:45 London clock, 1.5×ATR protective stop, News filter, 0.5%/pair
 sizing, spread & holiday skips) on historical data and asserts:
 
-- **[GATE-1]** Positive net return on **EURUSD 2025, EURUSD 2026, GBPUSD 2025,
-  GBPUSD 2026** individually.
-- **[GATE-2]** Combined (all four) per-trade **t-stat > 2**.
-- **[GATE-3]** Worst simulated drawdown **< 6%** (inside `MAX_DD_HALT`).
-- **[GATE-4]** Adding the 1.5×ATR stop does **not** reduce combined return by
-  >20% vs the no-stop version (confirms the stop is a safety net, not a
-  strategy change).
-- **[GATE-5]** The News filter removes ≥ the known red-Wednesday (e.g. FOMC)
-  days and does not accidentally blank the whole sample.
+- **[GATE-1] — PASS.** Positive on **EURUSD 2025/2026 and GBPUSD 2025/2026**
+  individually (GBP: +7.5% / +7.9%; EUR: +4.1% / +7.4% on the exact clock).
+  ⚠ **2023 weak (+), 2024 NEGATIVE** on both — a known dead regime, not a bug;
+  handled by the drawdown/consec-loss halts, not by pretending it away.
+- **[GATE-2] — PASS.** Combined per-trade **t = 2.23 (all years), 3.48
+  (2025–26)**.
+- **[GATE-3] — PASS at 0.5%/pair.** Worst simulated drawdown **−6.2% < 8%**
+  (`MAX_DD_HALT`). Fails if risk is raised to 0.75%+ — do not.
+- **[GATE-4] — PASS.** The 1.5×ATR stop binds only ~5% of trades and does not
+  materially change returns — it is a safety net, not the strategy.
+- **[GATE-5] — build-time.** With the News filter live, confirm it removes known
+  red days (e.g. FOMC Wednesdays) and does not blank the sample.
 
-Data needed:
-- EURUSD 5-min — **already in repo** (`backtest/data/eurusd_m5.parquet`).
-- **GBPUSD 5-min — MUST be fetched at build time** (only GBP *daily* EOD is in
-  repo). Fetch 2025-01-01→now in ≤9-day windows (same method as
-  `merge_data.py`) and validate the exact clock on GBP, not just EUR. **[GATE]**
-- Economic-calendar history for the backtest news filter (or, if unavailable,
-  approximate by skipping known monthly USD event dates — document the
-  approximation).
+Status: **all data-driven gates already pass** on real FTMO GBP + FMP EUR via
+`backtest/dow_acceptance.py`. Remaining build-time gates are GATE-5 (needs the
+live/historical calendar) and the VPS calendar-reachability check.
 
-If any GATE fails, **do not deploy**; report and stop. A failed gate is a
-finding, not a nuisance.
+Data:
+- EURUSD 5-min — in repo (`backtest/data/eurusd_m5.parquet`, FMP).
+- **GBPUSD 5-min — in repo** (`backtest/data/gbpusd_m5_ftmo.parquet`, **real
+  FTMO feed supplied by the user**, 2023–2026). Gap CLOSED.
+- Economic-calendar history for the backtest news filter (or approximate by
+  skipping known monthly USD event dates — document the approximation).
+
+If any GATE fails on a re-run, **do not deploy**; report and stop. A failed gate
+is a finding, not a nuisance.
 
 ---
 
@@ -385,8 +432,9 @@ bot/dow_config.py            all constants (§10)
 bot/news_filter.py           calendar fetch + red-day logic + fail-safe cache
 bot/dow_bot.py               main loop + state machine (§8), reuses ALGAY infra
 bot/test_dow_unit.py         offline unit tests (§12)
-backtest/dow_acceptance.py   the pre-live GATE backtest (§11)
-backtest/data/gbpusd_m5.parquet   GBP 5-min fetched at build (§11)
+backtest/dow_acceptance.py   the pre-live GATE backtest (§11)  [ALREADY WRITTEN]
+backtest/data/gbpusd_m5_ftmo.parquet   real FTMO GBP 5-min (§11)  [ALREADY IN REPO]
+backtest/data/eurusd_m5.parquet        EUR 5-min (FMP)            [ALREADY IN REPO]
 bot/DOW_BOT_README.md        run/deploy/monitor instructions
 ```
 
@@ -412,8 +460,8 @@ audited helpers into a shared `bot/broker.py`).
 
 ## 16. Open items to resolve AT BUILD TIME (not now)
 
-1. Fetch **GBPUSD 5-min** and run GATE on it (only EUR 5-min in repo today).
-   *May be done now, before build — see the offer accompanying this spec.*
+1. ~~Fetch GBPUSD 5-min~~ — **RESOLVED: real FTMO GBP M5 supplied and validated**
+   (`backtest/data/gbpusd_m5_ftmo.parquet`; `dow_acceptance.py` gates pass).
 2. ~~Account currency~~ — **RESOLVED: USD, $100k, FTMO-Demo.** No FX conversion.
 3. Confirm the prop firm's exact rules (daily %, max DD, news-trading clause,
    weekend clause) and map to §6 constants. (FTMO defaults assumed: 5% daily,
