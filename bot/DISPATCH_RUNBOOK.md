@@ -1,8 +1,8 @@
 # DISPATCH RUNBOOK — deploy & operate the DOW bot (for Claude "dispatch")
 
-**Status: PRE-BUILD DRAFT.** Written before the bot exists. Items marked
-`[FILL AFTER BUILD]` get their exact filenames/commands once Fable 5 builds the
-bot and the acceptance gate is green. Everything else is final.
+**Status: FINAL (build complete 2026-07-16).** The bot is built, all 55 unit
+tests pass, and the acceptance gate is green (see §5). Every command below is
+the real one.
 
 **Audience: the Claude "dispatch" agent running locally on the user's Windows
 PC.** Your job is to *set up, verify, launch, and health-check* the bot on this
@@ -48,9 +48,13 @@ Confirm each; if any is false, fix or ask the user before proceeding:
 
 1. Clone/pull the repo branch that contains the built bot:
    `git clone -b claude/algay-audit-backtest-jk84nh <repo-url>` (or `git pull`).
-2. Files you will use (from spec §14): `[FILL AFTER BUILD: exact bot entry
-   filename, e.g. bot/dow_bot.py]`, `bot/dow_config.py`, `bot/news_filter.py`,
-   `backtest/dow_acceptance.py`.
+2. Files you will use:
+   - `bot/dow_bot.py` — the bot (entry point)
+   - `bot/dow_config.py` — all settings + the credentials block
+   - `bot/broker.py`, `bot/news_filter.py` — infrastructure (no edits needed)
+   - `bot/test_dow_unit.py` — offline test suite
+   - `backtest/dow_acceptance.py` — the pre-live gate
+   - `bot/DOW_BOT_README.md` — the user-facing run guide
 
 ---
 
@@ -78,9 +82,10 @@ differs from a stock MT5 install).
 
 ```
 python -m pip install --upgrade pip
-python -m pip install MetaTrader5 pandas numpy pyarrow requests
+python -m pip install -r bot/requirements.txt
 ```
-(Exact list `[FILL AFTER BUILD]` from the bot's imports / requirements file.)
+(Bot runtime: MetaTrader5, numpy, requests, tzdata. The backtests additionally
+need `pandas pyarrow` — install those too if you will run the gate locally.)
 
 ---
 
@@ -90,31 +95,42 @@ Run the acceptance backtest and confirm it is green:
 ```
 python backtest/dow_acceptance.py
 ```
-Expected (spec §11): all four EUR/GBP 2025-26 slices positive, combined t>2,
-max drawdown < 8%, stop binds ~5%. **If any gate fails, do NOT start the bot —
-report to the user and stop.** A failed gate means the code doesn't match the
-validated strategy.
+Reference output (build-time, 2026-07-16): 727 trades, win 54%, stop binds 5%,
+total +15.5% (all data), maxDD −6.2% (< the 8% halt), 2025 avg +0.52%/mo, 2026
+avg +1.27%/mo. **If a re-run deviates materially or any gate fails, do NOT
+start the bot — report to the user and stop.**
 
-Also run the unit tests: `python -m pytest bot/test_dow_unit.py -q` (or
-`[FILL AFTER BUILD: exact test command]`). All must pass.
+Also run the unit tests:
+```
+python bot/test_dow_unit.py
+```
+Expected: `ALL TESTS PASSED` (55 checks). All must pass.
 
 ---
 
 ## 6. Launch (the "press run" step)
 
 1. In a **dedicated terminal** (VS Code integrated terminal is fine), run:
-   `[FILL AFTER BUILD: exact run command, e.g. python bot/dow_bot.py]`
+   ```
+   python bot/dow_bot.py
+   ```
 2. Confirm within ~1 minute:
-   - a **"connected to FTMO-Demo"** log line,
-   - a **startup Telegram alert** arrives (proves alerting works),
-   - the log shows the computed **London time** and **next Monday/Wednesday**
-     schedule, and no error loop.
+   - a **"connected to FTMO-Demo"** log line (also in `bot/dow_bot.log`),
+   - the **"DOW bot started | EURUSD+GBPUSD | …"** startup alert arrives on
+     Telegram (proves alerting works),
+   - no error loop.
 3. Leave that terminal running. The bot now loops hands-off: it enters at 00:15
    London on Mon/Wed, exits 21:45, skips red-news days, and self-halts on limits.
 
-**Auto-start on boot** (so a reboot resumes trading): create a Windows **Task
-Scheduler** task → trigger "At log on / At startup" → action: run the same
-command in the repo directory. `[FILL AFTER BUILD: exact command + working dir]`.
+**Emergency stop:** create an empty file `bot/KILL` → bot flattens and exits on
+its next 30 s poll. **After a risk halt:** review first, then
+`python bot/dow_bot.py --reset-halt` and start it again (spec: never restart a
+halt without review).
+
+**Auto-start on boot** (so a reboot resumes trading): Task Scheduler → Create
+Task → trigger "At log on" → action Start a program: program `python`,
+arguments `bot\dow_bot.py`, "Start in" = the repo root directory. MT5 itself
+must also auto-start and stay logged in.
 
 ---
 
@@ -179,14 +195,14 @@ check health, verify:
 
 ---
 
-## 11. To finalize after the build (checklist)
+## 11. Build finalization (done 2026-07-16)
 
-- [ ] Fill exact **filenames**, **run command**, **requirements**, **test
-      command** placeholders above.
-- [ ] Re-run `dow_acceptance.py` on the built code; paste the green results here.
-- [ ] Add the built bot's **README** link and any bot-specific flags.
-- [ ] Confirm the **Task Scheduler** command + working directory.
-- [ ] Confirm the **news feed reachability** from this PC.
+- [x] Filenames / run command / requirements / test command filled in above.
+- [x] `dow_acceptance.py` green at build time (+15.5% all-data, maxDD −6.2%,
+      2025 +0.52%/mo, 2026 +1.27%/mo — matches the validated numbers exactly).
+- [x] `bot/test_dow_unit.py`: ALL TESTS PASSED (55 checks).
+- [x] User guide: `bot/DOW_BOT_README.md`.
+- [ ] **On the PC (dispatch does this):** confirm `nfs.faireconomy.media` is
+      reachable, then run §1–§6 in order.
 
-Once these are filled and the gate is green, this runbook is the complete
-hands-off operating manual for dispatch.
+This runbook is now the complete hands-off operating manual for dispatch.
