@@ -466,10 +466,17 @@ audited helpers into a shared `bot/broker.py`).
 3. Confirm the prop firm's exact rules (daily %, max DD, news-trading clause,
    weekend clause) and map to §6 constants. (FTMO defaults assumed: 5% daily,
    10% max, no weekend holds — our design already fits.)
-4. Confirm the **VPS can reach** `nfs.faireconomy.media` (blocked in the build
-   sandbox; must be open on the live host). Confirm a **calendar history source**
-   for the backtest news filter, or document the monthly-USD-event approximation.
+4. Confirm the **live host can reach** `nfs.faireconomy.media` (blocked in the
+   build sandbox; must be open on the live host = the user's always-on Windows
+   PC). Confirm a **calendar history source** for the backtest news filter, or
+   document the monthly-USD-event approximation.
 5. Confirm broker **server timezone** and **daily-candle rollover** time (for
    ATR14-daily reads; FTMO server is EET/EEST = UTC+2/+3).
+
+**Deployment target (confirmed): the user's own always-on Windows PC** (not a
+VPS). MT5 terminal + the bot + the local "Claude dispatch" agent all run on that
+one machine. No VPS provisioning; add Windows **auto-start on boot** (Task
+Scheduler) so a reboot resumes the bot. Operational runbook for dispatch:
+`bot/DISPATCH_RUNBOOK.md`.
 
 Everything else above is decided. Build to this document.
