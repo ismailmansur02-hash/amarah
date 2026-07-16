@@ -329,3 +329,44 @@ the edge is genuine, profitable, and well inside prop risk limits. Cleared to
 build (demo-first).
 
 ![final audit](out/dow_final_audit.png)
+
+---
+
+# Addendum 6 — does the edge extend to more pairs? (breadth test for the challenge)
+
+Tested the day-of-week effect on 5 more pairs, aligned by USD direction (the
+real hypothesis: **USD weak Monday, strong Wednesday**). `multi_pair_dow.py`.
+
+| Pair | USD side | 2025→Jul26 | Verdict |
+|---|---|---|---|
+| GBPUSD | quote | +23% (t3.7) | strong |
+| EURUSD | quote | +15% (t2.4) | strong |
+| NZDUSD | quote | +14% (t1.6) | holds (positive every year) |
+| AUDUSD | quote | +13% (t1.7) | holds (positive every year) |
+| USDCHF | base | +6% (t0.9) | weak |
+| USDJPY | base | +1% (t0.3) | none |
+| USDCAD | base | +1% (t0.3) | none |
+
+**Two findings:**
+1. **Good (confidence):** the effect **generalises to the risk currencies**
+   (EUR/GBP/AUD/NZD) but **not** the havens/oil (JPY/CHF/CAD). That split is
+   economically sensible and makes it more believable as a real *risk-on vs USD*
+   effect, not a 2-pair fluke.
+2. **But breadth does NOT help the challenge.** The four risk pairs are **0.73
+   average correlated** (they're the same risk-on/USD bet), and AUD/NZD are
+   individually weaker than GBP/EUR. At **matched total risk**, the 4-pair basket
+   returned **less** with the **same** drawdown as EUR+GBP:
+
+   | Basket (matched gross notional) | Return 2025→Jul26 | Max DD |
+   |---|---|---|
+   | EUR+GBP @1.0x | +41.0% | −5.6% |
+   | EUR+GBP+AUD+NZD @0.5x | +34.3% | −5.6% |
+
+   Adding correlated, weaker pairs diluted return without cutting drawdown — so
+   it does **not** raise the challenge pass-rate. Breadth ≠ diversification when
+   the pairs are all the same bet.
+
+**Conclusion:** the edge is real and broader than EUR/GBP (good for the funded
+account), but **the prop challenge stays a leverage/variance problem** — no
+free-lunch basket makes +10%-in-5-months a high-probability event. Best
+challenge basket remains EUR+GBP (the strongest signals).
