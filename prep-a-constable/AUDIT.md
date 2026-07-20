@@ -142,3 +142,122 @@ exists at or above the workspace root.
   non-numeric counts pass the sanitiser) would hide the accuracy line on Home
   rather than crash — acceptable degradation; tighten `sanitizeRecordMap`
   with a numeric check if you ever see odd stats after sync ships.
+
+---
+
+# Round 2 — owner-requested fixes, Supabase deploy, pen test, load test
+
+## Content fixes applied (authorised)
+
+### Mnemonics stripped from the Constable Companion (hard rule 1)
+The C1 finding is fixed. Every mnemonic acronym was removed from displayed CC
+card text, keeping the substantive legal content intact:
+- Theft / Robbery points to prove — "(DAPBI)" / "— DAPBI satisfied" removed.
+- Aggravated burglary — "(WIFE)" removed.
+- Offensive weapon — "M-A-I test:" → "Made, adapted or intended:"; "— M-A-I" removed.
+- Bladed article — "NO M-A-I" → "there is no made/adapted/intended test".
+- Section 1 stop & search — "SOAP —" removed; the article categories kept and
+  "TWOC" expanded to "taking a conveyance without consent" (hard rule 2).
+- Section 17 entry — "(SCARES)"/"ES —" removed; "UAL" expanded to "unlawfully at
+  large" (hard rule 2).
+- Section 24 arrest — "(IDCOPPLAN)" removed (the necessity criteria remain listed
+  by name in the notes — that is operational content, not the acronym).
+- Section 19 / Section 22 seizure — "FILE:" acronym removed; the retention
+  reasons kept in plain words.
+
+Verified: the CC-separation scan no longer reports any mnemonic in CC, and the
+statute-abbreviation scan across all displayed strings is still clean. Note: each
+power still carries a hidden `mnemonic:` metadata field (e.g. "SCARES") that is
+**not rendered anywhere** — left as-is; say the word if you want those removed too.
+
+### About page counts corrected
+Settings → About now reads "333 flashcards, 40 mnemonics, … 91 offences and 24
+powers" (was "91 offences and powers", and omitted the mnemonic count).
+
+## Driving penalties (offencecode.uk) — BLOCKED, reported not guessed
+You asked me to check the driving penalties against https://offencecode.uk. That
+domain is **blocked by this environment's network egress policy** (the gateway
+refuses the connection with HTTP 403), so I could not open it. Per the cardinal
+rule I did **not** change any penalty figure from my own knowledge. Instead I
+extracted all 19 driving-penalty cards currently in the app into
+`docs/DRIVING-PENALTIES-TO-VERIFY.md` for you to check against the site (or paste
+me its figures and I'll correct the app from that source). The IN10 "verify" gap
+from the content-gaps doc is already resolved in the app data. `q-rta-22`
+(penalty-points distractor, Section 7 failure-to-provide) is left unchanged — it
+sits inside the drink-drive procedure (the agreed exception); your call whether to
+reword it.
+
+## Supabase — deploy state (project `uqekeszdgeumwjdbompd`, eu-west-1)
+The project was **paused** (free-tier auto-pause); restored to ACTIVE_HEALTHY for
+this work. State verified against the repo:
+- `user_state` table present, RLS enabled, PK `user_id` → `auth.users(id)`
+  `ON DELETE CASCADE`, `schema_version`, `updated_at`.
+- Four RLS policies, all `auth.uid() = user_id`. Trigger `touch_updated_at` now
+  carries `SET search_path = 'public'` (mutable-search-path advisory closed —
+  a migration that existed live but not in the repo; the repo migration is now
+  reconciled to match, plus the new size constraint below).
+- Edge function `delete-account` ACTIVE with `verify_jwt = true`.
+
+## Penetration test (RLS reproduced exactly at the SQL layer)
+The egress policy also blocks the project's REST/Auth host, so HTTP attacks
+couldn't be fired from here. PostgREST is HTTP→SQL executed as the `anon` /
+`authenticated` role with the caller's JWT claims set, so every attack was
+reproduced precisely at the SQL layer with two real test identities (created and
+cleaned up; production table is empty again).
+
+| Attack (as the given role) | Result | Verdict |
+|---|---|---|
+| User A reads the whole table | sees only A's own row | PASS — isolated |
+| User A reads User B's secret directly | returns null | PASS |
+| User A UPDATEs User B's row | 0 rows affected | PASS |
+| User A DELETEs User B's row | 0 rows affected | PASS |
+| User A INSERTs a row owned by B (impersonation) | `42501` policy violation | PASS |
+| User A writes its OWN row | succeeds | PASS (correct) |
+| Anonymous role reads the table | 0 rows, `auth.uid()` null | PASS |
+| Anonymous role INSERTs any row | `42501` policy violation | PASS |
+| Public tables without RLS / SECURITY DEFINER funcs / views | none | PASS |
+| Account deletion cascade (delete auth user → state row) | row removed | PASS |
+
+### Vulnerability found and FIXED — unbounded `state` blob
+No server-side cap existed on the `state` JSONB. The app caps size client-side,
+but a direct authenticated REST call bypasses that: I wrote a **3 MB blob** to a
+row with no rejection. Combined with self-service (anonymous) sign-ups this is a
+storage-exhaustion / cost-amplification vector. **Fixed** with a CHECK constraint
+(`octet_length(state::text) <= 4 MiB`) applied to the live DB (migration
+`add_state_size_limit`) and baked into the repo migration. Re-verified: a 5 MB
+write is now rejected (`23514`), a realistic ~40 KB write still succeeds.
+
+### Advisor recommendation (dashboard, not code)
+Security advisor is otherwise clean; it flags **leaked-password protection
+disabled** (WARN). Low priority here — the recommended flow is passwordless
+magic-link — but enable it under Authentication settings for defence in depth
+(needs a dashboard toggle; not changeable via the tools available to me).
+
+## Load / scale test — "will 10,000 concurrent users crash it?"
+HTTP is blocked from here and a literal 10,000-simultaneous-client flood would
+also need a paid tier and 10k real auth users in production, so I benchmarked the
+**actual data path each request runs**, at 10,000-user scale, on the current
+free-tier instance:
+
+- Loaded **10,000 users** with realistic ~4 KB state blobs (trigger firing on each).
+- **Read path** (PK lookup on launch/foreground): **0.024 ms/op ≈ 41,000 reads/sec**
+  on a single connection — a pure primary-key index scan, flat with table size.
+- **Write path** (the debounced upsert, with trigger + size constraint):
+  **0.634 ms/op ≈ 1,577 writes/sec** on a single connection.
+
+**What this means for 10,000 concurrent users.** A study app is not 10,000
+simultaneous requests — each user issues one read on launch/foreground and one
+*debounced* upsert after a burst of changes, so a user hits the server roughly
+once every 10–30 s while actively studying and never while idle. Even a
+pessimistic peak of 1 request/user/5 s is ~2,000 req/s aggregate — dominated by
+reads (41k/s on one connection) with occasional writes, and Supabase's Supavisor
+pooler multiplexes thousands of clients onto a small Postgres connection pool, so
+10,000 clients do **not** mean 10,000 DB connections. The measured per-op cost is
+tiny and flat at 10k rows, and content ships in the app bundle (zero per-user
+content bandwidth or DB load).
+
+**Honest scope:** this is a measured data-path + architecture assessment, not a
+live 10k-client HTTP flood (blocked here). Conclusion: the architecture supports
+10,000 concurrent users; the free tier is fine for hundreds and for headroom at
+10k you move to **Supabase Pro (~$25/mo)** — a plan dial, not a re-architecture.
+All 10k test rows and benchmark tables were dropped; the production table is empty.

@@ -78,8 +78,11 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
 ## Deployed infrastructure (live)
 
 - Supabase project `uqekeszdgeumwjdbompd` (org MET, eu-west-1):
-  `user_state` table with RLS on all four verbs + cascade delete; security
-  advisor clean; edge function `delete-account` ACTIVE (JWT-verified).
+  `user_state` table with RLS on all four verbs + cascade delete; a CHECK
+  constraint caps `state` at 4 MiB (pen-test fix); trigger has a pinned
+  `search_path`; edge function `delete-account` ACTIVE (JWT-verified).
+  RLS isolation pen-tested at the SQL layer (cross-user read/write/impersonation
+  all blocked). Advisor: enable leaked-password protection in the dashboard.
 - Client keys in `backend/.env` (publishable — safe in the client).
 - Still manual in the dashboard: enable Apple/Google/Email auth providers and
   the deep-link redirect URL; RevenueCat products not yet created.

@@ -20,14 +20,25 @@ create table if not exists public.user_state (
 comment on table public.user_state is
   'One row per user. Entire app state lives in `state` (JSONB). No per-field columns by design.';
 
+-- Bound the state blob server-side. The app also caps state client-side, but a
+-- direct REST call bypasses that; without this a malicious/buggy client could
+-- store an arbitrarily large row (storage-exhaustion / cost vector). 4 MiB is far
+-- above any legitimate state (~1.2 MB worst case) yet blocks abuse. (Pen-test fix.)
+alter table public.user_state drop constraint if exists user_state_state_size;
+alter table public.user_state add constraint user_state_state_size
+  check (octet_length(state::text) <= 4194304);
+
 -- ----------------------------------------------------------------------------
 -- 2. Keep updated_at honest at the database level
 --    (the app also sets it, but a trigger guarantees it can never be stale
 --     or spoofed to an older value on write).
 -- ----------------------------------------------------------------------------
+-- `set search_path` pins the function's schema resolution so it can't be hijacked
+-- by a malicious search_path (Supabase "Function Search Path Mutable" advisory).
 create or replace function public.touch_updated_at()
 returns trigger
 language plpgsql
+set search_path = 'public'
 as $$
 begin
   new.updated_at := now();

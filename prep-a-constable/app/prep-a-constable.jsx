@@ -4857,7 +4857,7 @@ const OFFENCES = [
       "Appropriates",
       "Property",
       "Belonging to another",
-      "With intent to permanently deprive (DAPBI)",
+      "With intent to permanently deprive",
     ],
     mode: "Either way",
     sentence: "7 years on indictment",
@@ -4872,7 +4872,7 @@ const OFFENCES = [
     category: "theft",
     daily: true,
     pointsToProve: [
-      "Steals (completed theft — DAPBI satisfied)",
+      "Steals (completed theft)",
       "Uses force on any person, OR puts/seeks to put any person in fear of being then and there subjected to force",
       "Immediately before or at the time of the theft",
       "In order to steal",
@@ -4924,7 +4924,7 @@ const OFFENCES = [
     daily: false,
     pointsToProve: [
       "Commits burglary (Section 9)",
-      "At the time has with him any of: Weapon of offence, Imitation firearm, Firearm, Explosive (WIFE)",
+      "At the time has with him any of: Weapon of offence, Imitation firearm, Firearm, Explosive",
     ],
     mode: "Indictable only",
     sentence: "Life imprisonment",
@@ -5231,12 +5231,12 @@ const OFFENCES = [
     daily: true,
     pointsToProve: [
       "Has with him in a public place",
-      "Any offensive weapon (made, adapted, or intended — M-A-I)",
+      "Any offensive weapon (made, adapted, or intended)",
       "Without lawful authority or reasonable excuse",
     ],
     mode: "Either way",
     sentence: "4 years on indictment",
-    notes: "M-A-I test: MADE (purpose-built — knuckleduster), ADAPTED (modified — bottle smashed at scene), INTENDED (otherwise innocent item — torch, screwdriver — carried for use to cause injury). Burden of 'reasonable excuse' shifts to defence on balance of probabilities.",
+    notes: "Made, adapted or intended: MADE (purpose-built — knuckleduster), ADAPTED (modified — bottle smashed at scene), INTENDED (otherwise innocent item — torch, screwdriver — carried for use to cause injury). Burden of 'reasonable excuse' shifts to defence on balance of probabilities.",
   },
   {
     id: "bladed-public",
@@ -5253,7 +5253,7 @@ const OFFENCES = [
     ],
     mode: "Either way",
     sentence: "4 years on indictment",
-    notes: "Excludes folding pocketknives with cutting edge ≤ 3 inches (NON-locking). Statutory defences: work, religion, national costume. Adult mandatory minimum 6 months on second conviction. NO M-A-I — fact of having the blade is enough.",
+    notes: "Excludes folding pocketknives with cutting edge ≤ 3 inches (NON-locking). Statutory defences: work, religion, national costume. Adult mandatory minimum 6 months on second conviction. There is no made/adapted/intended test — the fact of having the blade is enough.",
   },
   {
     id: "bladed-education",
@@ -6195,7 +6195,7 @@ const POWERS = [
     section: "Section 1",
     act: "Police and Criminal Evidence Act 1984",
     category: "stop-search",
-    grounds: "Reasonable grounds to suspect person/vehicle is carrying stolen or prohibited articles (SOAP — Stolen, Offensive weapons, Articles for theft/burglary/TWOC/fraud/criminal damage, Pointed/bladed)",
+    grounds: "Reasonable grounds to suspect person/vehicle is carrying stolen or prohibited articles (stolen goods, offensive weapons, articles for theft, burglary, taking a conveyance without consent, fraud or criminal damage, and pointed or bladed articles)",
     where: "Any place to which the public have access (or to which person has gone uninvited)",
     mnemonic: "GOWISELY",
     notes: "Grounds, Object, Warrant card, Identity, Station, Entitlement to a record, Legal power, You are detained. Reasonable force under Section 117. Outer clothing only in public (Section 2(9)). Receipt to be given.",
@@ -6241,7 +6241,7 @@ const POWERS = [
     section: "Section 17",
     act: "Police and Criminal Evidence Act 1984",
     category: "entry",
-    grounds: "Five categories (SCARES): Save life or limb / prevent serious damage to property; Capture (arrest of UAL escapee); Arrest for indictable offence; Re-arrest of UAL detainee; ES — Execute warrant of arrest/commitment OR recapture child at risk",
+    grounds: "Five categories: save life or limb / prevent serious damage to property; capture (arrest of an escapee unlawfully at large); arrest for an indictable offence; re-arrest of a detainee unlawfully at large; execute a warrant of arrest or commitment, or recapture a child at risk",
     where: "Any premises (including vehicles)",
     mnemonic: "SCARES",
     notes: "MUST believe person is on the premises (except 'save life or limb'/prevent serious damage). Reasonable force under Section 117. Search confined to area for which power exercised (Section 17(4)).",
@@ -6287,7 +6287,7 @@ const POWERS = [
     section: "Section 24",
     act: "Police and Criminal Evidence Act 1984",
     category: "arrest",
-    grounds: "TWO elements: (1) reasonable grounds to suspect involvement/committing/about to commit ANY offence, AND (2) reasonable grounds to believe arrest necessary (IDCOPPLAN)",
+    grounds: "TWO elements: (1) reasonable grounds to suspect involvement/committing/about to commit ANY offence, AND (2) reasonable grounds to believe arrest is necessary",
     where: "Anywhere",
     mnemonic: "IDCOPPLAN",
     notes: "Necessity grounds: Investigation, Disappearance, Child/vulnerable, Obstruction of highway, Physical injury, Public decency, Loss/damage property, Address (ascertain), Name (ascertain). Caution + Reason for arrest required (Section 28). Code G applies.",
@@ -6325,7 +6325,7 @@ const POWERS = [
     grounds: "Constable LAWFULLY on premises; reasonable grounds to believe item: (a) obtained in consequence of offence, OR (b) evidence of any offence; AND necessary to seize to prevent concealment/loss/damage/destruction/alteration",
     where: "Premises on which constable is lawfully present",
     mnemonic: "FILE (retention)",
-    notes: "Broad seizure — ANY offence. Section 21 right of access; Section 22 retention (FILE: Forensic, Investigation, Linked offence, Evidence). Section 19(3) covers items needed as evidence; Section 19(2) covers items obtained from offence.",
+    notes: "Broad seizure — ANY offence. Section 21 right of access; Section 22 retention (retained for forensic examination, investigation, a linked offence, or as evidence). Section 19(3) covers items needed as evidence; Section 19(2) covers items obtained from offence.",
   },
   {
     id: "s22-pace",
@@ -6336,7 +6336,7 @@ const POWERS = [
     grounds: "Items lawfully seized may be retained for so long as necessary",
     where: "—",
     mnemonic: "FILE",
-    notes: "FILE: Forensic examination, Investigation, Linked offence, Evidence at court. Items must be returned once retention no longer justified. Police and Criminal Evidence Act 1984 Code B governs.",
+    notes: "Items may be retained for forensic examination, investigation, a linked offence, or as evidence at court. Items must be returned once retention no longer justified. Police and Criminal Evidence Act 1984 Code B governs.",
   },
   {
     id: "s165a-rta",
@@ -9303,7 +9303,7 @@ function SettingsScreen({ state, dispatch, go }) {
         <Card style={{ marginBottom: 14 }}>
           <h3 style={{ fontFamily: fontDisplay, margin: "0 0 6px", fontSize: 18 }}>About this build</h3>
           <p style={{ margin: 0, color: C.textMuted, fontSize: 14, lineHeight: 1.5 }}>
-            Prep a Constable v0.9 prototype. 885 exam-style questions across 35 topics covering AP1 to AP4, with AP-scoped mock exams, 333 flashcards, spoken verbal drills (caution, GOWISELY, ESD arrest), a Constable Companion reference library of 91 offences and powers with points to prove, and real assessment result tracking. Progress stored locally on this device and synced to your account when signed in.
+            Prep a Constable v0.9 prototype. 885 exam-style questions across 35 topics covering AP1 to AP4, with AP-scoped mock exams, 333 flashcards, 40 mnemonics, spoken verbal drills (caution, GOWISELY, ESD arrest), a Constable Companion reference library of 91 offences and 24 powers with points to prove, and real assessment result tracking. Progress stored locally on this device and synced to your account when signed in.
           </p>
         </Card>
         <Card style={{ marginBottom: 14 }}>
