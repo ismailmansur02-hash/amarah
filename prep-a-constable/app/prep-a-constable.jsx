@@ -9607,7 +9607,9 @@ function VerbalDrillScreen({ go }) {
   // Refs — immune to stale closures
   const recognitionRef = useRef(null);
   const isRecordingRef = useRef(false);
-  const transcriptRef = useRef("");   // accumulates across restarts
+  const committedRef = useRef("");    // finalised speech, accumulated across restart sessions
+  const interimRef = useRef("");      // words the recogniser is still forming (Safari streams these)
+  const restartTimerRef = useRef(null);
   const drillRef = useRef(null);      // always current drill
   useEffect(() => { drillRef.current = drill; }, [drill]);
 
@@ -9617,18 +9619,35 @@ function VerbalDrillScreen({ go }) {
     : null;
   const supported = !!SpeechRec;
 
-  const launchRec = () => {
-    if (!SpeechRec || !isRecordingRef.current) return;
+  const fullTranscript = () => (committedRef.current + " " + interimRef.current).trim();
+
+  // Fold any un-finalised interim words into the committed transcript. A pause
+  // ends the Safari session before it marks those words "final", so without this
+  // they'd be dropped — the classic "it didn't pick up what I said" symptom.
+  const commitInterim = () => {
+    if (interimRef.current) {
+      committedRef.current = (committedRef.current + " " + interimRef.current).trim();
+      interimRef.current = "";
+    }
+  };
+
+  const buildRec = () => {
     const rec = new SpeechRec();
     rec.lang = "en-GB";
-    rec.continuous = false;      // false = more reliable on iOS Safari
-    rec.interimResults = false;  // false = only fire on complete phrases
+    rec.continuous = false;      // iOS Safari is unreliable in continuous mode — one phrase per session
+    rec.interimResults = true;   // KEY for Safari: stream partial results so short/soft speech is captured
+    rec.maxAlternatives = 1;
 
     rec.onresult = (e) => {
-      let chunk = "";
-      for (let i = 0; i < e.results.length; i++) chunk += e.results[i][0].transcript + " ";
-      transcriptRef.current = (transcriptRef.current + " " + chunk).trim();
-      setLiveHeard(transcriptRef.current); // live feedback so the officer can SEE it's hearing them
+      let interim = "";
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const res = e.results[i];
+        const txt = (res[0] && res[0].transcript) ? res[0].transcript : "";
+        if (res.isFinal) committedRef.current = (committedRef.current + " " + txt).trim();
+        else interim += txt + " ";
+      }
+      interimRef.current = interim.trim();
+      setLiveHeard(fullTranscript()); // live feedback so the officer can SEE it's hearing them
     };
 
     rec.onerror = (e) => {
@@ -9637,61 +9656,65 @@ function VerbalDrillScreen({ go }) {
         setPhase("unsupported");
         return;
       }
-      // On any other error (network, aborted) restart silently if still recording
-      if (isRecordingRef.current && e.error !== "aborted") {
-        setTimeout(() => { if (isRecordingRef.current) launchRec(); }, 300);
-      }
+      // no-speech / network / audio-capture / aborted → onend restarts if still recording
     };
 
-    // iOS Safari fires onend after every pause — restart while recording flag is true
+    // Safari ends the session after each utterance or pause — restart to keep listening.
     rec.onend = () => {
+      commitInterim();
       if (isRecordingRef.current) {
-        setTimeout(() => { if (isRecordingRef.current) launchRec(); }, 120);
+        restartTimerRef.current = setTimeout(() => { if (isRecordingRef.current) safeStart(); }, 250);
       }
     };
 
+    return rec;
+  };
+
+  const safeStart = () => {
+    if (!isRecordingRef.current) return;
+    const rec = buildRec();          // fresh instance each session — most reliable on Safari
     recognitionRef.current = rec;
     try {
       rec.start();
-    } catch (startErr) {
-      // Already started or brief overlap — retry
-      setTimeout(() => { if (isRecordingRef.current) launchRec(); }, 250);
+    } catch (err) {
+      // "already started" / brief overlap during a restart — bounce and retry.
+      try { rec.stop(); } catch (_) {}
+      restartTimerRef.current = setTimeout(() => { if (isRecordingRef.current) safeStart(); }, 300);
     }
   };
 
   const startRecording = () => {
     if (!supported) { setPhase("unsupported"); return; }
-    // Request mic permission explicitly — shows the browser prompt on mobile
-    setPhase("permcheck");
-    setMicLabel("Waiting for microphone…");
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then((stream) => {
-        // Permission granted — stop the stream (speech API handles its own)
-        stream.getTracks().forEach((t) => t.stop());
-        transcriptRef.current = "";
-        isRecordingRef.current = true;
-        setPhase("recording");
-        setMicLabel("Recording…");
-        launchRec();
-      })
-      .catch(() => {
-        setPhase("unsupported");
-      });
+    committedRef.current = "";
+    interimRef.current = "";
+    setLiveHeard("");
+    isRecordingRef.current = true;
+    setPhase("recording");
+    setMicLabel("Recording…");
+    // CRITICAL for iOS Safari: start the recogniser SYNCHRONOUSLY, inside the tap
+    // gesture. The old flow awaited navigator.mediaDevices.getUserMedia() first —
+    // that (a) broke the user-activation context, after which Safari silently
+    // refuses to capture, and (b) double-acquired the mic (getUserMedia then the
+    // recogniser), which iOS Safari often fails. SpeechRecognition raises its own
+    // permission prompt, so no getUserMedia pre-flight is needed.
+    safeStart();
   };
 
   const stopAndScore = () => {
     isRecordingRef.current = false;
+    if (restartTimerRef.current) { clearTimeout(restartTimerRef.current); restartTimerRef.current = null; }
     const rec = recognitionRef.current;
-    if (rec) { try { rec.stop(); } catch (_) {} recognitionRef.current = null; }
-    // iOS Safari can deliver the FINAL result up to ~1.5s after stop. Poll for it
-    // rather than bailing early — the old 400ms single check silently discarded
-    // real speech and dumped the user back to the start with no feedback.
+    if (rec) { try { rec.stop(); } catch (_) {} }
+    // Safari can deliver the FINAL result up to ~1.5s after stop. Poll for it
+    // rather than bailing early — a single early check silently discards real
+    // speech and dumps the user back to the start with no feedback.
     let attempts = 0;
     const settle = () => {
-      const spoken = transcriptRef.current;
+      commitInterim();
+      const spoken = committedRef.current.trim();
       const d = drillRef.current;
       if (!d) return;
-      if (spoken && spoken.trim().length > 0) {
+      if (spoken.length > 0) {
         const r = d.componentMode
           ? matchComponents(d.components, spoken)
           : d.keywordMode
@@ -9699,20 +9722,31 @@ function VerbalDrillScreen({ go }) {
           : matchScript(d.script, spoken);
         setResult({ ...r, spoken });
         setPhase("result");
+        recognitionRef.current = null;
         return;
       }
       attempts += 1;
-      if (attempts < 6) {
-        setTimeout(settle, 300); // keep waiting up to ~1.8s total
+      if (attempts < 8) {
+        setTimeout(settle, 300); // keep waiting up to ~2.4s total
       } else {
         // NEVER fail silently — tell the officer nothing was captured and why that happens.
         setPhase("nothing");
+        recognitionRef.current = null;
       }
     };
-    setTimeout(settle, 300);
+    setTimeout(settle, 350);
   };
 
-  const reset = () => { setPhase("idle"); setResult(null); transcriptRef.current = ""; setLiveHeard(""); };
+  // Stop cleanly if the user leaves mid-recording (prevents a leaked recogniser
+  // holding the mic hot after navigation).
+  useEffect(() => () => {
+    isRecordingRef.current = false;
+    if (restartTimerRef.current) clearTimeout(restartTimerRef.current);
+    const rec = recognitionRef.current;
+    if (rec) { try { rec.stop(); } catch (_) {} }
+  }, []);
+
+  const reset = () => { setPhase("idle"); setResult(null); committedRef.current = ""; interimRef.current = ""; setLiveHeard(""); };
 
   // ---- LIST VIEW ----
   if (!drill) {

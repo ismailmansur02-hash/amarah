@@ -133,9 +133,8 @@ exists at or above the workspace root.
 
 ## Minor observations (no action needed now)
 
-- The verbal-drill recogniser has no unmount cleanup, but no navigation is
-  reachable while recording, so it cannot leak in practice. Worth a cleanup
-  effect in the Expo port where OS-level navigation exists.
+- ~~The verbal-drill recogniser has no unmount cleanup~~ — done in Round 3
+  (cleanup effect stops recognition on unmount).
 - `FontLoader` pulls Google Fonts over the network — fine for the web preview;
   the Expo port should bundle fonts.
 - Malformed `answered` records from a future cloud blob (plain objects with
@@ -261,3 +260,43 @@ live 10k-client HTTP flood (blocked here). Conclusion: the architecture supports
 10,000 concurrent users; the free tier is fine for hundreds and for headroom at
 10k you move to **Supabase Pro (~$25/mo)** — a plan dial, not a re-architecture.
 All 10k test rows and benchmark tables were dropped; the production table is empty.
+
+---
+
+# Round 3 — Verbal Drills mic capture on Safari
+
+Reported: on Safari, "tap to speak" doesn't pick up speech properly. Rewrote the
+Web Speech API engine in `VerbalDrillScreen` to fix the iOS-Safari-specific
+failures:
+
+1. **Start now runs synchronously inside the tap gesture.** The old flow awaited
+   `navigator.mediaDevices.getUserMedia()` and only then called
+   `recognition.start()`. iOS Safari only grants speech capture when `start()`
+   fires within the user-activation context; after the awaited promise it
+   silently captured nothing. This was the primary cause.
+2. **Removed the getUserMedia pre-flight.** It double-acquired the mic
+   (getUserMedia grabbed and released it, then SpeechRecognition grabbed it
+   again) — a second acquisition iOS Safari frequently fails. SpeechRecognition
+   raises its own permission prompt, so the pre-flight is unnecessary.
+3. **`interimResults` is now `true`.** With it `false`, short or softly-spoken
+   phrases that never produced a "final" result yielded no `onresult` at all —
+   nothing to score. Interim results stream the words as they're recognised.
+4. **Interim words are salvaged on session end.** Safari ends the session on
+   every pause, previously dropping any not-yet-final words; they are now folded
+   into the committed transcript on `onend` before the auto-restart.
+5. **Cleaner restart + unmount cleanup** (fresh recogniser per session, cleared
+   restart timer, recogniser stopped if the user navigates away).
+
+**Verified** with a headless-Chromium test that injects a mock Web Speech API
+reproducing Safari's behaviour (streams interim results, ends the session with no
+final result): recording starts synchronously, the full caution is captured from
+the interim stream and scored **100%**, and an empty-speech run still lands on the
+graceful "nothing captured" screen — no JS errors. Parse, 885-question structural
+scan, 27/27 contract tests and the main app smoke test all still pass.
+
+**Note on final confirmation:** the real iOS-Safari speech engine can't run in
+this environment (no device mic, and the WebKit recogniser needs real hardware),
+so this is verified against a faithful mock of Safari's quirks plus the known
+iOS-Safari Web Speech API rules — not a live iPhone. Please confirm on a real
+device / TestFlight build; the fixes target the exact documented Safari failure
+modes.
