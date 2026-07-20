@@ -1,0 +1,1154 @@
+date,country,event,currency,previous,estimate,actual,change,impact,changePercentage,unit
+2023-01-04 15:00:00,US,JOLTs Job Openings (Nov),USD,10.512,10.0,10.458,-0.054,High,-0.514,M
+2023-01-04 15:00:00,US,ISM Manufacturing PMI (Dec),USD,49.0,48.5,48.4,-0.6,High,-1.224,
+2023-01-04 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2023-01-05 13:30:00,US,Balance of Trade (Nov),USD,-77.8,-73.0,-61.5,16.3,High,20.951,B
+2023-01-06 13:30:00,US,Unemployment Rate (Dec),USD,3.6,3.7,3.5,-0.1,High,-2.778,%
+2023-01-06 13:30:00,US,Non Farm Payrolls (Dec),USD,256.0,200.0,223.0,-33.0,High,-12.891,K
+2023-01-06 15:00:00,US,ISM Non-Manufacturing PMI (Dec),USD,56.5,55.0,49.6,-6.9,High,-12.212,
+2023-01-12 07:30:00,US,CPI YoY (Dec),USD,7.1,6.5,6.5,-0.6,High,-8.451,%
+2023-01-12 07:30:00,US,Core CPI MoM (Dec),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2023-01-12 07:30:00,US,CPI MoM (Dec),USD,0.2,0.0,-0.1,-0.3,High,-150.0,%
+2023-01-12 13:30:00,US,Core Inflation Rate YoY (Dec),USD,6.0,5.7,5.7,-0.3,High,-5.0,%
+2023-01-12 13:30:00,US,Inflation Rate YoY (Dec),USD,7.1,6.5,6.5,-0.6,High,-8.451,%
+2023-01-18 13:30:00,US,Producer Price Index MoM (Dec),USD,0.2,-0.1,-0.5,-0.7,High,-350.0,%
+2023-01-18 13:30:00,US,Retail Sales MoM (Dec),USD,-1.0,-0.8,-1.1,-0.1,High,-10.0,%
+2023-01-26 13:30:00,US,Durable Goods Orders MoM (Dec),USD,-1.7,2.5,5.6,7.3,High,429.412,%
+2023-01-27 13:30:00,US,Personal Spending MoM (Dec),USD,-0.1,-0.1,-0.2,-0.1,High,-100.0,%
+2023-01-27 13:30:00,US,Core PCE Price Index MoM (Dec),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2023-01-27 13:30:00,US,Personal Income MoM (Dec),USD,0.3,0.2,0.2,-0.1,High,-33.333,%
+2023-01-31 09:00:00,US,CB Consumer Confidence (Jan),USD,109.0,109.0,107.1,-1.9,High,-1.743,
+2023-02-01 13:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2023-02-01 13:30:00,US,Press Conference,USD,,,,,High,0.0,
+2023-02-01 15:00:00,US,JOLTs Job Openings (Dec),USD,10.44,10.25,11.012,0.572,High,5.479,M
+2023-02-01 15:00:00,US,ISM Manufacturing PMI (Jan),USD,48.4,48.0,47.4,-1.0,High,-2.066,
+2023-02-01 19:00:00,US,Fed Interest Rate Decision,USD,4.5,4.75,4.75,0.25,High,5.556,%
+2023-02-01 19:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2023-02-03 13:30:00,US,Unemployment Rate (Jan),USD,3.5,3.6,3.4,-0.1,High,-2.857,%
+2023-02-03 13:30:00,US,Non Farm Payrolls (Jan),USD,260.0,185.0,517.0,257.0,High,98.846,K
+2023-02-03 15:00:00,US,ISM Non-Manufacturing PMI (Jan),USD,49.2,50.4,55.2,6.0,High,12.195,
+2023-02-07 13:30:00,US,Balance of Trade (Dec),USD,-61.0,-68.5,-67.4,-6.4,High,-10.492,B
+2023-02-10 15:00:00,US,Michigan Consumer Sentiment (Feb),USD,64.9,65.0,66.4,1.5,High,2.311,
+2023-02-14 07:30:00,US,CPI YoY (Jan),USD,6.5,6.2,6.4,-0.1,High,-1.538,%
+2023-02-14 07:30:00,US,CPI MoM (Jan),USD,0.1,0.5,0.5,0.4,High,400.0,%
+2023-02-14 07:30:00,US,Core CPI MoM (Jan),USD,0.4,0.4,0.4,0.0,High,0.0,%
+2023-02-14 13:30:00,US,Inflation Rate YoY (Jan),USD,6.5,6.2,6.4,-0.1,High,-1.538,%
+2023-02-14 13:30:00,US,Core Inflation Rate YoY (Jan),USD,5.7,5.5,5.6,-0.1,High,-1.754,%
+2023-02-15 13:30:00,US,Retail Sales MoM (Jan),USD,-1.1,1.8,3.0,4.1,High,372.727,%
+2023-02-16 13:30:00,US,Building Permits (Jan),USD,1.337,1.35,1.339,0.002,High,0.15,M
+2023-02-16 13:30:00,US,Producer Price Index MoM (Jan),USD,-0.2,0.4,0.7,0.9,High,450.0,%
+2023-02-22 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2023-02-24 13:30:00,US,Personal Spending MoM (Jan),USD,-0.1,1.3,1.8,1.9,High,1900.0,%
+2023-02-24 13:30:00,US,Personal Income MoM (Jan),USD,0.3,1.0,0.6,0.3,High,100.0,%
+2023-02-24 13:30:00,US,Core PCE Price Index MoM (Jan),USD,0.4,0.4,0.6,0.2,High,50.0,%
+2023-02-27 13:30:00,US,Durable Goods Orders MoM (Jan),USD,5.1,-4.0,-4.5,-9.6,High,-188.235,%
+2023-02-28 09:00:00,US,CB Consumer Confidence (Feb),USD,106.0,108.5,102.9,-3.1,High,-2.925,
+2023-03-01 15:00:00,US,ISM Manufacturing PMI (Feb),USD,47.4,48.0,47.7,0.3,High,0.633,
+2023-03-03 09:00:00,US,Monetary Policy Report,USD,,,,,High,0.0,
+2023-03-03 15:00:00,US,ISM Non-Manufacturing PMI (Feb),USD,55.2,54.5,55.1,-0.1,High,-0.181,
+2023-03-08 13:30:00,US,Balance of Trade (Jan),USD,-67.2,-68.9,-68.3,-1.1,High,-1.637,B
+2023-03-08 15:00:00,US,Fed Chair Powell Testimony,USD,,,,,High,0.0,
+2023-03-08 15:00:00,US,JOLTs Job Openings (Jan),USD,11.234,10.5,10.824,-0.41,High,-3.65,M
+2023-03-10 13:30:00,US,Non Farm Payrolls (Feb),USD,504.0,205.0,311.0,-193.0,High,-38.294,K
+2023-03-10 13:30:00,US,Unemployment Rate (Feb),USD,3.4,3.4,3.6,0.2,High,5.882,%
+2023-03-13 13:00:00,US,President Biden Speech on Banking System,USD,,,,0.0,High,0.0,
+2023-03-13 15:30:00,US,Closed-door Fed Emergency Meeting,USD,,,,,High,0.0,
+2023-03-14 06:30:00,US,Core CPI MoM (Feb),USD,0.4,0.4,0.5,0.1,High,25.0,%
+2023-03-14 06:30:00,US,CPI YoY (Feb),USD,6.4,6.0,6.0,-0.4,High,-6.25,%
+2023-03-14 06:30:00,US,CPI MoM (Feb),USD,0.5,0.4,0.4,-0.1,High,-20.0,%
+2023-03-14 12:30:00,US,Inflation Rate YoY (Feb),USD,6.4,6.0,6.0,-0.4,High,-6.25,%
+2023-03-14 12:30:00,US,Core Inflation Rate YoY (Feb),USD,5.6,5.5,5.5,-0.1,High,-1.786,%
+2023-03-15 12:30:00,US,Retail Sales MoM (Feb),USD,3.2,-0.3,-0.4,-3.6,High,-112.5,%
+2023-03-15 12:30:00,US,Producer Price Index MoM (Feb),USD,0.3,0.3,-0.1,-0.4,High,-133.333,%
+2023-03-22 12:30:00,US,Press Conference,USD,,,,,High,0.0,
+2023-03-22 18:00:00,US,Fed Interest Rate Decision,USD,4.75,5.0,5.0,0.25,High,5.263,%
+2023-03-22 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2023-03-24 12:30:00,US,Durable Goods Orders MoM (Feb),USD,-5.0,0.6,-1.0,4.0,High,80.0,%
+2023-03-28 08:00:00,US,CB Consumer Confidence (Mar),USD,103.4,101.0,104.2,0.8,High,0.774,
+2023-03-30 06:30:00,US,Gross Domestic Product QoQ (Q4),USD,3.2,2.7,2.6,-0.6,High,-18.75,%
+2023-03-31 12:30:00,US,Core PCE Price Index MoM (Feb),USD,0.5,0.4,0.3,-0.2,High,-40.0,%
+2023-03-31 12:30:00,US,Personal Spending MoM (Feb),USD,2.0,0.3,0.2,-1.8,High,-90.0,%
+2023-03-31 12:30:00,US,Personal Income MoM (Feb),USD,0.6,0.2,0.3,-0.3,High,-50.0,%
+2023-04-03 14:00:00,US,ISM Manufacturing PMI (Mar),USD,47.7,47.5,46.3,-1.4,High,-2.935,
+2023-04-04 14:00:00,US,JOLTs Job Openings (Feb),USD,10.563,10.4,9.931,-0.632,High,-5.983,M
+2023-04-05 12:30:00,US,Balance of Trade (Feb),USD,-68.7,-69.0,-70.5,-1.8,High,-2.62,B
+2023-04-05 14:00:00,US,ISM Non-Manufacturing PMI (Mar),USD,55.1,54.5,51.2,-3.9,High,-7.078,
+2023-04-07 12:30:00,US,Unemployment Rate (Mar),USD,3.6,3.6,3.5,-0.1,High,-2.778,%
+2023-04-07 12:30:00,US,Non Farm Payrolls (Mar),USD,326.0,239.0,236.0,-90.0,High,-27.607,K
+2023-04-12 06:30:00,US,Core CPI MoM (Mar),USD,0.5,0.4,0.4,-0.1,High,-20.0,%
+2023-04-12 06:30:00,US,CPI YoY (Mar),USD,6.0,5.2,5.0,-1.0,High,-16.667,%
+2023-04-12 12:30:00,US,Inflation Rate MoM (Mar),USD,0.4,0.2,0.1,-0.3,High,-75.0,%
+2023-04-12 12:30:00,US,Core Inflation Rate YoY (Mar),USD,5.5,5.6,5.6,0.1,High,1.818,%
+2023-04-12 12:30:00,US,Inflation Rate YoY (Mar),USD,6.0,5.2,5.0,-1.0,High,-16.667,%
+2023-04-12 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2023-04-13 12:30:00,US,Producer Price Index MoM (Mar),USD,0.0,0.0,-0.5,-0.5,High,0.0,%
+2023-04-14 12:30:00,US,Retail Sales MoM (Mar),USD,-0.2,-0.4,-1.0,-0.8,High,-400.0,%
+2023-04-25 08:00:00,US,CB Consumer Confidence (Apr),USD,104.0,104.0,101.3,-2.7,High,-2.596,
+2023-04-26 12:30:00,US,Durable Goods Orders MoM (Mar),USD,-1.2,0.7,3.2,4.4,High,366.667,%
+2023-04-28 12:30:00,US,Core PCE Price Index MoM (Mar),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2023-04-28 12:30:00,US,Personal Spending MoM (Mar),USD,0.1,-0.1,0.0,-0.1,High,-100.0,%
+2023-04-28 12:30:00,US,Personal Income MoM (Mar),USD,0.3,0.2,0.3,0.0,High,0.0,%
+2023-05-01 14:00:00,US,ISM Manufacturing PMI (Apr),USD,46.3,46.8,47.1,0.8,High,1.728,
+2023-05-02 14:00:00,US,JOLTs Job Openings (Mar),USD,9.974,9.775,9.59,-0.384,High,-3.85,M
+2023-05-03 07:00:00,US,ISM Non-Manufacturing Prices (Apr),USD,59.5,59.9,59.6,0.1,High,0.168,
+2023-05-03 07:00:00,US,ISM Non-Manufacturing PMI (Apr),USD,51.2,51.8,51.9,0.7,High,1.367,
+2023-05-03 11:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2023-05-03 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2023-05-03 14:00:00,US,ISM Services PMI (Apr),USD,51.2,51.8,51.9,0.7,High,1.367,
+2023-05-03 18:00:00,US,Fed Interest Rate Decision,USD,5.0,5.25,5.25,0.25,High,5.0,%
+2023-05-03 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2023-05-04 12:30:00,US,Balance of Trade (Mar),USD,-70.6,-63.3,-64.2,6.4,High,9.065,B
+2023-05-05 12:30:00,US,Non Farm Payrolls (Apr),USD,165.0,180.0,253.0,88.0,High,53.333,K
+2023-05-05 12:30:00,US,Unemployment Rate (Apr),USD,3.5,3.6,3.4,-0.1,High,-2.857,%
+2023-05-10 05:30:00,US,CPI YoY (Apr),USD,5.0,5.0,4.9,-0.1,High,-2.0,%
+2023-05-10 05:30:00,US,Core CPI MoM (Apr),USD,0.4,0.4,0.4,0.0,High,0.0,%
+2023-05-10 12:30:00,US,Inflation Rate MoM (Apr),USD,0.1,0.4,0.4,0.3,High,300.0,%
+2023-05-10 12:30:00,US,Inflation Rate YoY (Apr),USD,5.0,5.0,4.9,-0.1,High,-2.0,%
+2023-05-10 12:30:00,US,Core Inflation Rate YoY (Apr),USD,5.6,5.5,5.5,-0.1,High,-1.786,%
+2023-05-11 12:30:00,US,Producer Price Index MoM (Apr),USD,-0.4,0.3,0.2,0.6,High,150.0,%
+2023-05-12 14:00:00,US,Michigan Consumer Sentiment (May),USD,63.5,63.0,57.7,-5.8,High,-9.134,
+2023-05-16 12:30:00,US,Retail Sales MoM (Apr),USD,-0.7,0.8,0.4,1.1,High,157.143,%
+2023-05-19 15:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2023-05-24 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2023-05-26 12:30:00,US,Core PCE Price Index MoM (Apr),USD,0.3,0.3,0.4,0.1,High,33.333,%
+2023-05-26 12:30:00,US,Durable Goods Orders MoM (Apr),USD,3.3,-1.0,1.1,-2.2,High,-66.667,%
+2023-05-26 12:30:00,US,Personal Spending MoM (Apr),USD,0.1,0.4,0.8,0.7,High,700.0,%
+2023-05-26 12:30:00,US,Personal Income MoM (Apr),USD,0.3,0.4,0.4,0.1,High,33.333,%
+2023-05-30 07:00:00,US,CB Consumer Confidence (May),USD,103.7,99.0,102.3,-1.4,High,-1.35,
+2023-05-31 14:00:00,US,JOLTs Job Openings (Apr),USD,9.745,9.375,10.103,0.358,High,3.674,M
+2023-06-01 14:00:00,US,ISM Manufacturing PMI (May),USD,47.1,47.0,46.9,-0.2,High,-0.425,
+2023-06-02 12:30:00,US,Non Farm Payrolls (May),USD,294.0,190.0,339.0,45.0,High,15.306,K
+2023-06-02 12:30:00,US,Unemployment Rate (May),USD,3.4,3.5,3.7,0.3,High,8.824,%
+2023-06-05 07:00:00,US,ISM Non-Manufacturing Prices (May),USD,59.6,57.8,56.2,-3.4,High,-5.705,
+2023-06-05 07:00:00,US,ISM Non-Manufacturing PMI (May),USD,51.9,52.2,50.3,-1.6,High,-3.083,
+2023-06-05 14:00:00,US,ISM Services PMI (May),USD,51.9,52.2,50.3,-1.6,High,-3.083,
+2023-06-07 12:30:00,US,Balance of Trade (Apr),USD,-60.6,-75.2,-74.6,-14.0,High,-23.102,B
+2023-06-13 05:30:00,US,CPI YoY (May),USD,4.9,4.1,4.0,-0.9,High,-18.367,%
+2023-06-13 05:30:00,US,Core CPI MoM (May),USD,0.4,0.4,0.4,0.0,High,0.0,%
+2023-06-13 12:30:00,US,Inflation Rate YoY (May),USD,4.9,4.1,4.0,-0.9,High,-18.367,%
+2023-06-13 12:30:00,US,Core Inflation Rate YoY (May),USD,5.5,5.3,5.3,-0.2,High,-3.636,%
+2023-06-13 12:30:00,US,Inflation Rate MoM (May),USD,0.4,0.2,0.1,-0.3,High,-75.0,%
+2023-06-14 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2023-06-14 12:30:00,US,Producer Price Index MoM (May),USD,0.2,-0.1,-0.3,-0.5,High,-250.0,%
+2023-06-14 18:00:00,US,Fed Interest Rate Decision,USD,5.25,5.25,5.25,0.0,High,0.0,%
+2023-06-14 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2023-06-15 12:30:00,US,Retail Sales MoM (May),USD,0.4,-0.1,0.3,-0.1,High,-25.0,%
+2023-06-16 08:00:00,US,Monetary Policy Report,USD,,,,,High,0.0,
+2023-06-22 14:00:00,US,Fed Chair Powell Testimony,USD,,,,,High,0.0,
+2023-06-27 07:00:00,US,CB Consumer Confidence (Jun),USD,102.5,104.0,109.7,7.2,High,7.024,
+2023-06-27 12:30:00,US,Durable Goods Orders MoM (May),USD,1.2,-1.0,1.7,0.5,High,41.667,%
+2023-06-29 05:30:00,US,Gross Domestic Product QoQ (Q1),USD,2.6,1.4,2.0,-0.6,High,-23.077,%
+2023-06-29 06:30:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2023-06-30 12:30:00,US,Personal Income MoM (May),USD,0.3,0.3,0.4,0.1,High,33.333,%
+2023-06-30 12:30:00,US,Personal Spending MoM (May),USD,0.6,0.2,0.1,-0.5,High,-83.333,%
+2023-06-30 12:30:00,US,Core PCE Price Index MoM (May),USD,0.4,0.3,0.3,-0.1,High,-25.0,%
+2023-07-03 14:00:00,US,ISM Manufacturing PMI (Jun),USD,46.9,47.0,46.0,-0.9,High,-1.919,
+2023-07-05 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2023-07-06 07:00:00,US,ISM Non-Manufacturing Prices (Jun),USD,56.2,53.3,54.1,-2.1,High,-3.737,
+2023-07-06 07:00:00,US,ISM Non-Manufacturing PMI (Jun),USD,50.3,51.0,53.9,3.6,High,7.157,
+2023-07-06 14:00:00,US,JOLTs Job Openings (May),USD,10.32,9.935,9.8,-0.52,High,-5.039,M
+2023-07-06 14:00:00,US,ISM Services PMI (Jun),USD,50.3,51.0,53.9,3.6,High,7.157,
+2023-07-07 12:30:00,US,Non Farm Payrolls (Jun),USD,306.0,225.0,209.0,-97.0,High,-31.699,K
+2023-07-07 12:30:00,US,Unemployment Rate (Jun),USD,3.7,3.6,3.6,-0.1,High,-2.703,%
+2023-07-12 05:30:00,US,CPI YoY (Jun),USD,4.0,3.1,3.0,-1.0,High,-25.0,%
+2023-07-12 05:30:00,US,Core CPI MoM (Jun),USD,0.4,0.3,0.2,-0.2,High,-50.0,%
+2023-07-12 12:30:00,US,Inflation Rate YoY (Jun),USD,4.0,3.1,3.0,-1.0,High,-25.0,%
+2023-07-12 12:30:00,US,Core Inflation Rate YoY (Jun),USD,5.3,5.0,4.8,-0.5,High,-9.434,%
+2023-07-12 12:30:00,US,Inflation Rate MoM (Jun),USD,0.1,0.3,0.2,0.1,High,100.0,%
+2023-07-12 12:30:00,US,Core Inflation Rate MoM (Jun),USD,0.4,0.3,0.2,-0.2,High,-50.0,%
+2023-07-13 12:30:00,US,Producer Price Index MoM (Jun),USD,-0.4,0.2,0.1,0.5,High,125.0,%
+2023-07-18 12:30:00,US,Retail Sales MoM (Jun),USD,0.5,0.5,0.2,-0.3,High,-60.0,%
+2023-07-25 07:00:00,US,CB Consumer Confidence (Jul),USD,110.1,111.8,117.0,6.9,High,6.267,
+2023-07-26 11:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2023-07-26 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2023-07-26 18:00:00,US,Fed Interest Rate Decision,USD,5.25,5.5,5.5,0.25,High,4.762,%
+2023-07-26 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2023-07-27 12:30:00,US,Durable Goods Orders MoM (Jun),USD,2.0,1.0,4.7,2.7,High,135.0,%
+2023-07-28 12:30:00,US,Core PCE Price Index MoM (Jun),USD,0.3,0.2,0.2,-0.1,High,-33.333,%
+2023-07-28 12:30:00,US,Personal Spending MoM (Jun),USD,0.2,0.4,0.5,0.3,High,150.0,%
+2023-07-28 12:30:00,US,Personal Income MoM (Jun),USD,0.5,0.5,0.3,-0.2,High,-40.0,%
+2023-08-01 14:00:00,US,JOLTs Job Openings (Jun),USD,9.616,9.61,9.582,-0.034,High,-0.354,M
+2023-08-01 14:00:00,US,ISM Manufacturing PMI (Jul),USD,46.0,46.8,46.4,0.4,High,0.87,
+2023-08-03 07:00:00,US,ISM Non-Manufacturing PMI (Jul),USD,53.9,53.0,52.7,-1.2,High,-2.226,
+2023-08-03 07:00:00,US,ISM Non-Manufacturing Prices (Jul),USD,54.1,52.1,56.8,2.7,High,4.991,
+2023-08-03 14:00:00,US,ISM Services PMI (Jul),USD,53.9,53.0,52.7,-1.2,High,-2.226,
+2023-08-04 12:30:00,US,Non Farm Payrolls (Jul),USD,185.0,200.0,187.0,2.0,High,1.081,K
+2023-08-04 12:30:00,US,Unemployment Rate (Jul),USD,3.6,3.6,3.5,-0.1,High,-2.778,%
+2023-08-10 05:30:00,US,Core CPI MoM (Jul),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2023-08-10 05:30:00,US,CPI YoY (Jul),USD,3.0,3.3,3.2,0.2,High,6.667,%
+2023-08-10 12:30:00,US,Inflation Rate MoM (Jul),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2023-08-10 12:30:00,US,Core Inflation Rate MoM (Jul),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2023-08-10 12:30:00,US,Core Inflation Rate YoY (Jul),USD,4.8,4.8,4.7,-0.1,High,-2.083,%
+2023-08-10 12:30:00,US,Inflation Rate YoY (Jul),USD,3.0,3.3,3.2,0.2,High,6.667,%
+2023-08-11 12:30:00,US,Producer Price Index MoM (Jul),USD,0.0,0.2,0.3,0.3,High,0.0,%
+2023-08-15 12:30:00,US,Retail Sales MoM (Jul),USD,0.3,0.4,0.7,0.4,High,133.333,%
+2023-08-16 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2023-08-24 12:30:00,US,Durable Goods Orders MoM (Jul),USD,4.4,-4.0,-5.2,-9.6,High,-218.182,%
+2023-08-25 14:05:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2023-08-29 07:00:00,US,CB Consumer Confidence (Aug),USD,114.0,116.0,106.1,-7.9,High,-6.93,
+2023-08-29 14:00:00,US,JOLTs Job Openings (Jul),USD,9.165,9.465,8.827,-0.338,High,-3.688,M
+2023-08-30 12:30:00,US,GDP Growth Rate QoQ (Q2),USD,2.0,2.4,2.1,0.1,High,5.0,%
+2023-08-31 12:30:00,US,Core PCE Price Index MoM (Jul),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2023-08-31 12:30:00,US,Personal Income MoM (Jul),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2023-08-31 12:30:00,US,Personal Spending MoM (Jul),USD,0.5,0.7,0.8,0.3,High,60.0,%
+2023-09-01 12:30:00,US,Non Farm Payrolls (Aug),USD,157.0,170.0,187.0,30.0,High,19.108,K
+2023-09-01 12:30:00,US,Unemployment Rate (Aug),USD,3.5,3.5,3.8,0.3,High,8.571,%
+2023-09-01 14:00:00,US,ISM Manufacturing PMI (Aug),USD,46.4,47.0,47.6,1.2,High,2.586,
+2023-09-06 07:00:00,US,ISM Non-Manufacturing PMI (Aug),USD,52.7,52.5,54.5,1.8,High,3.416,
+2023-09-06 07:00:00,US,ISM Non-Manufacturing Prices (Aug),USD,56.8,,58.9,2.1,High,3.697,
+2023-09-06 14:00:00,US,ISM Services PMI (Aug),USD,52.7,52.5,54.5,1.8,High,3.416,
+2023-09-13 05:30:00,US,CPI MoM (Aug),USD,0.2,0.6,0.6,0.4,High,200.0,%
+2023-09-13 05:30:00,US,CPI YoY (Aug),USD,3.2,3.6,3.7,0.5,High,15.625,%
+2023-09-13 05:30:00,US,Core CPI MoM (Aug),USD,0.2,0.2,0.3,0.1,High,50.0,%
+2023-09-13 12:30:00,US,Inflation Rate MoM (Aug),USD,0.2,0.6,0.6,0.4,High,200.0,%
+2023-09-13 12:30:00,US,Inflation Rate YoY (Aug),USD,3.2,3.6,3.7,0.5,High,15.625,%
+2023-09-13 12:30:00,US,Core Inflation Rate MoM (Aug),USD,0.2,0.2,0.3,0.1,High,50.0,%
+2023-09-13 12:30:00,US,Core Inflation Rate YoY (Aug),USD,4.7,4.3,4.3,-0.4,High,-8.511,%
+2023-09-14 12:30:00,US,Producer Price Index MoM (Aug),USD,0.4,0.4,0.7,0.3,High,75.0,%
+2023-09-14 12:30:00,US,Retail Sales MoM (Aug),USD,0.5,0.2,0.6,0.1,High,20.0,%
+2023-09-20 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2023-09-20 18:00:00,US,Fed Interest Rate Decision,USD,5.5,5.5,5.5,0.0,High,0.0,%
+2023-09-20 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2023-09-26 07:00:00,US,CB Consumer Confidence (Sep),USD,108.7,105.5,103.0,-5.7,High,-5.244,
+2023-09-27 12:30:00,US,Durable Goods Orders MoM (Aug),USD,-5.6,-0.5,0.2,5.8,High,103.571,%
+2023-09-28 05:30:00,US,Gross Domestic Product QoQ (Q2),USD,2.0,2.1,2.1,0.1,High,5.0,%
+2023-09-29 12:30:00,US,Personal Income MoM (Aug),USD,0.2,0.4,0.4,0.2,High,100.0,%
+2023-09-29 12:30:00,US,Core PCE Price Index MoM (Aug),USD,0.2,0.2,0.1,-0.1,High,-50.0,%
+2023-09-29 12:30:00,US,Personal Spending MoM (Aug),USD,0.9,0.4,0.4,-0.5,High,-55.556,%
+2023-10-02 14:00:00,US,ISM Manufacturing PMI (Sep),USD,47.6,47.8,49.0,1.4,High,2.941,
+2023-10-03 14:00:00,US,JOLTs Job Openings (Aug),USD,8.92,8.8,9.61,0.69,High,7.735,M
+2023-10-04 07:00:00,US,ISM Non-Manufacturing PMI (Sep),USD,54.5,53.6,53.6,-0.9,High,-1.651,
+2023-10-04 07:00:00,US,ISM Non-Manufacturing Prices (Sep),USD,58.9,,58.9,0.0,High,0.0,
+2023-10-04 14:00:00,US,ISM Services PMI (Sep),USD,54.5,53.6,53.6,-0.9,High,-1.651,
+2023-10-06 12:30:00,US,Non Farm Payrolls (Sep),USD,227.0,170.0,336.0,109.0,High,48.018,K
+2023-10-06 12:30:00,US,Unemployment Rate (Sep),USD,3.8,3.7,3.8,0.0,High,0.0,%
+2023-10-11 12:30:00,US,Producer Price Index MoM (Sep),USD,0.7,0.3,0.5,-0.2,High,-28.571,%
+2023-10-11 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2023-10-12 05:30:00,US,CPI MoM (Sep),USD,0.5,0.3,0.4,-0.1,High,-20.0,%
+2023-10-12 05:30:00,US,Core CPI MoM (Sep),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2023-10-12 05:30:00,US,CPI YoY (Sep),USD,3.7,3.6,3.7,0.0,High,0.0,%
+2023-10-12 12:30:00,US,Core Inflation Rate YoY (Sep),USD,4.3,4.1,4.1,-0.2,High,-4.651,%
+2023-10-12 12:30:00,US,Core Inflation Rate MoM (Sep),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2023-10-12 12:30:00,US,Inflation Rate MoM (Sep),USD,0.6,0.3,0.4,-0.2,High,-33.333,%
+2023-10-12 12:30:00,US,Inflation Rate YoY (Sep),USD,3.7,3.6,3.7,0.0,High,0.0,%
+2023-10-13 14:00:00,US,Michigan Consumer Sentiment (Oct),USD,68.1,67.2,63.0,-5.1,High,-7.489,
+2023-10-17 12:30:00,US,Retail Sales MoM (Sep),USD,0.8,0.3,0.7,-0.1,High,-12.5,%
+2023-10-19 16:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2023-10-25 20:35:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2023-10-26 12:30:00,US,Durable Goods Orders MoM (Sep),USD,-0.1,1.7,4.7,4.8,High,4800.0,%
+2023-10-27 12:30:00,US,Personal Spending MoM (Sep),USD,0.4,0.5,0.7,0.3,High,75.0,%
+2023-10-27 12:30:00,US,Core PCE Price Index MoM (Sep),USD,0.1,0.3,0.3,0.2,High,200.0,%
+2023-10-27 12:30:00,US,Personal Income MoM (Sep),USD,0.4,0.4,0.3,-0.1,High,-25.0,%
+2023-10-31 08:00:00,US,CB Consumer Confidence (Oct),USD,104.3,100.0,102.6,-1.7,High,-1.63,
+2023-11-01 12:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2023-11-01 12:30:00,US,Press Conference,USD,,,,,High,0.0,
+2023-11-01 14:00:00,US,JOLTs Job Openings (Sep),USD,9.497,9.25,9.553,0.056,High,0.59,M
+2023-11-01 14:00:00,US,ISM Manufacturing PMI (Oct),USD,49.0,49.0,46.7,-2.3,High,-4.694,
+2023-11-01 18:00:00,US,Fed Interest Rate Decision,USD,5.5,5.5,5.5,0.0,High,0.0,%
+2023-11-01 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2023-11-03 08:00:00,US,ISM Non-Manufacturing Prices (Oct),USD,58.9,56.6,58.6,-0.3,High,-0.509,
+2023-11-03 08:00:00,US,ISM Non-Manufacturing PMI (Oct),USD,53.6,53.0,51.8,-1.8,High,-3.358,
+2023-11-03 12:30:00,US,Non Farm Payrolls (Oct),USD,297.0,180.0,150.0,-147.0,High,-49.495,K
+2023-11-03 12:30:00,US,Unemployment Rate (Oct),USD,3.8,3.8,3.9,0.1,High,2.632,%
+2023-11-03 14:00:00,US,ISM Services PMI (Oct),USD,53.6,53.0,51.8,-1.8,High,-3.358,
+2023-11-08 14:15:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2023-11-09 19:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2023-11-10 15:00:00,US,Michigan Consumer Sentiment (Nov),USD,63.8,63.7,60.4,-3.4,High,-5.329,
+2023-11-14 07:30:00,US,CPI MoM (Oct),USD,0.4,0.1,0.0,-0.4,High,-100.0,%
+2023-11-14 07:30:00,US,CPI YoY (Oct),USD,3.7,3.3,3.2,-0.5,High,-13.514,%
+2023-11-14 07:30:00,US,Core CPI MoM (Oct),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2023-11-14 13:30:00,US,Core Inflation Rate MoM (Oct),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2023-11-14 13:30:00,US,Core Inflation Rate YoY (Oct),USD,4.1,4.1,4.0,-0.1,High,-2.439,%
+2023-11-14 13:30:00,US,Inflation Rate MoM (Oct),USD,0.4,0.1,0.0,-0.4,High,-100.0,%
+2023-11-14 13:30:00,US,Inflation Rate YoY (Oct),USD,3.7,3.3,3.2,-0.5,High,-13.514,%
+2023-11-15 13:30:00,US,Producer Price Index MoM (Oct),USD,0.4,0.1,-0.5,-0.9,High,-225.0,%
+2023-11-15 13:30:00,US,Retail Sales MoM (Oct),USD,0.9,-0.3,-0.1,-1.0,High,-111.111,%
+2023-11-21 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2023-11-22 13:30:00,US,Durable Goods Orders MoM (Oct),USD,4.0,-3.1,-5.4,-9.4,High,-235.0,%
+2023-11-28 09:00:00,US,CB Consumer Confidence (Nov),USD,99.1,101.0,102.0,2.9,High,2.926,
+2023-11-29 13:30:00,US,GDP Growth Rate QoQ (Q3),USD,2.1,5.0,5.2,3.1,High,147.619,%
+2023-11-30 13:30:00,US,Personal Income MoM (Oct),USD,0.4,0.2,0.2,-0.2,High,-50.0,%
+2023-11-30 13:30:00,US,Personal Spending MoM (Oct),USD,0.7,0.2,0.2,-0.5,High,-71.429,%
+2023-11-30 13:30:00,US,Core PCE Price Index MoM (Oct),USD,0.3,0.2,0.2,-0.1,High,-33.333,%
+2023-12-01 15:00:00,US,ISM Manufacturing PMI (Nov),USD,46.7,47.6,46.7,0.0,High,0.0,
+2023-12-01 16:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2023-12-05 09:00:00,US,ISM Non-Manufacturing PMI (Nov),USD,51.8,52.0,52.7,0.9,High,1.737,
+2023-12-05 09:00:00,US,ISM Non-Manufacturing Prices (Nov),USD,58.6,58.0,58.3,-0.3,High,-0.512,
+2023-12-05 15:00:00,US,ISM Services PMI (Nov),USD,51.8,52.0,52.7,0.9,High,1.737,
+2023-12-05 15:00:00,US,JOLTs Job Openings (Oct),USD,9.35,9.3,8.733,-0.617,High,-6.599,M
+2023-12-08 13:30:00,US,Unemployment Rate (Nov),USD,3.9,3.9,3.7,-0.2,High,-5.128,%
+2023-12-08 13:30:00,US,Non Farm Payrolls (Nov),USD,150.0,180.0,199.0,49.0,High,32.667,K
+2023-12-08 15:00:00,US,Michigan Consumer Sentiment (Dec),USD,61.3,62.0,69.4,8.1,High,13.214,
+2023-12-12 07:30:00,US,CPI MoM (Nov),USD,0.1,0.0,0.1,0.0,High,0.0,%
+2023-12-12 07:30:00,US,CPI YoY (Nov),USD,3.2,3.1,3.1,-0.1,High,-3.125,%
+2023-12-12 07:30:00,US,Core CPI MoM (Nov),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2023-12-12 13:30:00,US,Core Inflation Rate MoM (Nov),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2023-12-12 13:30:00,US,Inflation Rate YoY (Nov),USD,3.2,3.1,3.1,-0.1,High,-3.125,%
+2023-12-12 13:30:00,US,Inflation Rate MoM (Nov),USD,0.0,0.0,0.1,0.1,High,0.0,%
+2023-12-12 13:30:00,US,Core Inflation Rate YoY (Nov),USD,4.0,4.0,4.0,0.0,High,0.0,%
+2023-12-13 13:30:00,US,Producer Price Index MoM (Nov),USD,-0.4,0.1,0.0,0.4,High,100.0,%
+2023-12-13 13:30:00,US,Press Conference,USD,,,,,High,0.0,
+2023-12-13 19:00:00,US,Fed Interest Rate Decision,USD,5.5,5.5,5.5,0.0,High,0.0,%
+2023-12-13 19:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2023-12-13 19:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2023-12-14 13:30:00,US,Retail Sales MoM (Nov),USD,-0.2,-0.1,0.3,0.5,High,250.0,%
+2023-12-20 09:00:00,US,CB Consumer Confidence (Dec),USD,101.0,103.8,110.7,9.7,High,9.604,
+2023-12-21 07:30:00,US,Gross Domestic Product QoQ (Q3),USD,2.1,5.2,4.9,2.8,High,133.333,%
+2023-12-22 13:30:00,US,Core PCE Price Index MoM (Nov),USD,0.1,0.2,0.1,0.0,High,0.0,%
+2023-12-22 13:30:00,US,Personal Spending MoM (Nov),USD,0.1,0.3,0.2,0.1,High,100.0,%
+2023-12-22 13:30:00,US,Durable Goods Orders MoM (Nov),USD,-5.1,2.2,5.4,10.5,High,205.882,%
+2023-12-22 13:30:00,US,Personal Income MoM (Nov),USD,0.3,0.4,0.4,0.1,High,33.333,%
+2024-01-03 15:00:00,US,JOLTs Job Openings (Nov),USD,8.852,8.85,8.79,-0.062,High,-0.7,M
+2024-01-03 15:00:00,US,ISM Manufacturing PMI (Dec),USD,46.7,47.1,47.4,0.7,High,1.499,
+2024-01-03 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2024-01-05 13:30:00,US,Non Farm Payrolls (Dec),USD,173.0,170.0,216.0,43.0,High,24.855,K
+2024-01-05 15:00:00,US,ISM Non-Manufacturing Prices (Dec),USD,58.3,57.3,57.4,-0.9,High,-1.544,
+2024-01-05 15:00:00,US,ISM Services PMI (Dec),USD,52.7,52.6,50.6,-2.1,High,-3.985,
+2024-01-05 15:00:00,US,ISM Non-Manufacturing PMI (Dec),USD,52.7,52.6,50.6,-2.1,High,-3.985,
+2024-01-11 13:30:00,US,CPI MoM (Dec),USD,0.2,0.2,0.3,0.1,High,50.0,%
+2024-01-11 13:30:00,US,Core Inflation Rate YoY (Dec),USD,4.0,3.8,3.9,-0.1,High,-2.5,%
+2024-01-11 13:30:00,US,Core CPI MoM (Dec),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2024-01-11 13:30:00,US,CPI YoY (Dec),USD,3.1,3.2,3.4,0.3,High,9.677,%
+2024-01-11 13:30:00,US,Core Inflation Rate MoM (Dec),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2024-01-11 13:30:00,US,Inflation Rate YoY (Dec),USD,3.1,3.2,3.4,0.3,High,9.677,%
+2024-01-11 13:30:00,US,Inflation Rate MoM (Dec),USD,0.1,0.2,0.3,0.2,High,200.0,%
+2024-01-12 13:30:00,US,Producer Price Index MoM (Dec),USD,-0.1,0.1,-0.1,0.0,High,0.0,%
+2024-01-17 13:30:00,US,Retail Sales MoM (Dec),USD,0.3,0.4,0.6,0.3,High,100.0,%
+2024-01-18 13:30:00,US,Building Permits (Dec),USD,1.467,1.48,1.495,0.028,High,1.909,M
+2024-01-19 15:00:00,US,Michigan Consumer Sentiment (Jan),USD,69.7,70.0,78.8,9.1,High,13.056,
+2024-01-25 13:30:00,US,Durable Goods Orders MoM (Dec),USD,5.5,1.1,0.0,-5.5,High,-100.0,%
+2024-01-26 13:30:00,US,Personal Spending MoM (Dec),USD,0.4,0.4,0.7,0.3,High,75.0,%
+2024-01-26 13:30:00,US,Personal Income MoM (Dec),USD,0.4,0.3,0.3,-0.1,High,-25.0,%
+2024-01-26 13:30:00,US,Core PCE Price Index MoM (Dec),USD,0.1,0.2,0.2,0.1,High,100.0,%
+2024-01-30 15:00:00,US,JOLTs Job Openings (Dec),USD,8.925,8.75,9.026,0.101,High,1.132,M
+2024-01-30 15:00:00,US,CB Consumer Confidence (Jan),USD,108.0,114.2,114.8,6.8,High,6.296,
+2024-01-31 19:00:00,US,FOMC Economic Projections,USD,,,,,High,,
+2024-01-31 19:00:00,US,Fed Interest Rate Decision,USD,5.5,5.5,5.5,0.0,High,0.0,%
+2024-01-31 19:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2024-01-31 19:30:00,US,Press Conference,USD,,,,,High,,
+2024-02-01 15:00:00,US,ISM Manufacturing PMI (Jan),USD,47.1,47.0,49.1,2.0,High,4.246,
+2024-02-02 13:30:00,US,Non Farm Payrolls (Jan),USD,333.0,180.0,353.0,20.0,High,6.006,K
+2024-02-02 13:30:00,US,Unemployment Rate (Jan),USD,3.7,3.8,3.7,0.0,High,0.0,%
+2024-02-05 15:00:00,US,ISM Non-Manufacturing PMI (Jan),USD,50.5,52.0,53.4,2.9,High,5.743,
+2024-02-05 15:00:00,US,ISM Non-Manufacturing Prices (Jan),USD,57.4,56.5,64.0,6.6,High,11.498,
+2024-02-05 15:00:00,US,ISM Services PMI (Jan),USD,50.5,52.0,53.4,2.9,High,5.743,
+2024-02-13 13:30:00,US,Inflation Rate MoM (Jan),USD,0.2,0.2,0.3,0.1,High,50.0,%
+2024-02-13 13:30:00,US,Core Inflation Rate MoM (Jan),USD,0.3,0.3,0.4,0.1,High,33.333,%
+2024-02-13 13:30:00,US,Core Inflation Rate YoY (Jan),USD,3.9,3.7,3.9,0.0,High,0.0,%
+2024-02-13 13:30:00,US,CPI MoM (Jan),USD,0.2,0.2,0.3,0.1,High,50.0,%
+2024-02-13 13:30:00,US,CPI YoY (Jan),USD,3.4,2.9,3.1,-0.3,High,-8.824,%
+2024-02-13 13:30:00,US,Inflation Rate YoY (Jan),USD,3.4,2.9,3.1,-0.3,High,-8.824,%
+2024-02-13 13:30:00,US,Core CPI MoM (Jan),USD,0.3,0.3,0.4,0.1,High,33.333,%
+2024-02-15 13:30:00,US,Retail Sales MoM (Jan),USD,0.4,-0.1,-0.8,-1.2,High,-300.0,%
+2024-02-16 13:30:00,US,Producer Price Index MoM (Jan),USD,-0.1,0.1,0.3,0.4,High,400.0,%
+2024-02-16 13:30:00,US,Building Permits (Jan),USD,1.493,1.509,1.47,-0.023,High,-1.541,M
+2024-02-16 15:00:00,US,Michigan Consumer Sentiment (Feb),USD,79.0,80.0,79.6,0.6,High,0.759,
+2024-02-21 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2024-02-27 13:30:00,US,Durable Goods Orders MoM (Jan),USD,-0.3,-4.5,-6.1,-5.8,High,-1933.333,%
+2024-02-27 15:00:00,US,CB Consumer Confidence (Feb),USD,110.9,114.8,106.7,-4.2,High,-3.787,
+2024-02-29 13:30:00,US,Personal Spending MoM (Jan),USD,0.7,0.2,0.2,-0.5,High,-71.429,%
+2024-02-29 13:30:00,US,Personal Income MoM (Jan),USD,0.3,0.4,1.0,0.7,High,233.333,%
+2024-02-29 13:30:00,US,Core PCE Price Index MoM (Jan),USD,0.1,0.4,0.4,0.3,High,300.0,%
+2024-03-01 15:00:00,US,Monetary Policy Report,USD,,,,,High,,
+2024-03-01 15:00:00,US,ISM Manufacturing PMI (Feb),USD,49.1,49.5,47.8,-1.3,High,-2.648,
+2024-03-05 15:00:00,US,ISM Services PMI (Feb),USD,53.4,53.0,52.6,-0.8,High,-1.498,
+2024-03-05 15:00:00,US,ISM Non-Manufacturing Prices (Feb),USD,64.0,62.0,58.6,-5.4,High,-8.438,
+2024-03-05 15:00:00,US,ISM Non-Manufacturing PMI (Feb),USD,53.4,53.0,52.6,-0.8,High,-1.498,
+2024-03-06 15:00:00,US,JOLTs Job Openings (Jan),USD,8.889,8.9,8.863,-0.026,High,-0.292,M
+2024-03-07 15:00:00,US,Fed Chair Powell Testimony,USD,,,,,High,0.0,
+2024-03-08 13:30:00,US,Non Farm Payrolls (Feb),USD,229.0,200.0,275.0,46.0,High,20.087,K
+2024-03-08 13:30:00,US,Unemployment Rate (Feb),USD,3.7,3.7,3.9,0.2,High,5.405,%
+2024-03-12 12:30:00,US,Inflation Rate YoY (Feb),USD,3.1,3.1,3.2,0.1,High,3.226,%
+2024-03-12 12:30:00,US,Inflation Rate MoM (Feb),USD,0.3,0.4,0.4,0.1,High,33.333,%
+2024-03-12 12:30:00,US,CPI YoY (Feb),USD,3.1,3.1,3.2,0.1,High,3.226,%
+2024-03-12 12:30:00,US,Core Inflation Rate YoY (Feb),USD,3.9,3.7,3.8,-0.1,High,-2.564,%
+2024-03-12 12:30:00,US,CPI MoM (Feb),USD,0.3,0.4,0.4,0.1,High,33.333,%
+2024-03-12 12:30:00,US,Core CPI MoM (Feb),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2024-03-12 12:30:00,US,Core Inflation Rate MoM (Feb),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2024-03-14 12:30:00,US,Retail Sales MoM (Feb),USD,-1.1,0.8,0.6,1.7,High,154.545,%
+2024-03-14 12:30:00,US,Producer Price Index MoM (Feb),USD,0.3,0.3,0.6,0.3,High,100.0,%
+2024-03-20 18:00:00,US,Fed Interest Rate Decision,USD,5.5,5.5,5.5,0.0,High,0.0,%
+2024-03-20 18:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2024-03-20 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2024-03-20 18:30:00,US,Press Conference,USD,,,,,High,,
+2024-03-26 12:30:00,US,Durable Goods Orders MoM (Feb),USD,-6.9,1.1,1.4,8.3,High,120.29,%
+2024-03-26 14:00:00,US,CB Consumer Confidence (Mar),USD,104.8,106.9,104.7,-0.1,High,-0.095,
+2024-03-28 12:30:00,US,Gross Domestic Product QoQ (Q4),USD,4.9,3.2,3.4,-1.5,High,-30.612,%
+2024-03-28 12:30:00,US,GDP Growth Rate QoQ (Q4),USD,4.9,3.2,3.4,-1.5,High,-30.612,%
+2024-03-29 12:30:00,US,Core PCE Price Index MoM (Feb),USD,0.5,0.3,0.3,-0.2,High,-40.0,%
+2024-03-29 12:30:00,US,Personal Spending MoM (Feb),USD,0.2,0.5,0.8,0.6,High,300.0,%
+2024-03-29 12:30:00,US,Personal Income MoM (Feb),USD,1.0,0.4,0.3,-0.7,High,-70.0,%
+2024-03-29 15:30:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-04-01 14:00:00,US,ISM Manufacturing PMI (Mar),USD,47.8,48.4,50.3,2.5,High,5.23,
+2024-04-02 14:00:00,US,JOLTs Job Openings (Feb),USD,8.748,8.75,8.756,0.008,High,0.091,M
+2024-04-03 14:00:00,US,ISM Services PMI (Mar),USD,52.6,52.7,51.4,-1.2,High,-2.281,
+2024-04-03 14:00:00,US,ISM Non-Manufacturing Prices (Mar),USD,58.6,58.4,53.4,-5.2,High,-8.874,
+2024-04-03 14:00:00,US,ISM Non-Manufacturing PMI (Mar),USD,52.6,52.8,51.4,-1.2,High,-2.281,
+2024-04-03 16:10:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-04-05 12:30:00,US,Unemployment Rate (Mar),USD,3.9,3.9,3.8,-0.1,High,-2.564,%
+2024-04-05 12:30:00,US,Non Farm Payrolls (Mar),USD,270.0,200.0,303.0,33.0,High,12.222,K
+2024-04-10 12:30:00,US,Core Inflation Rate YoY (Mar),USD,3.8,3.7,3.8,0.0,High,0.0,%
+2024-04-10 12:30:00,US,Core Inflation Rate MoM (Mar),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2024-04-10 12:30:00,US,Inflation Rate YoY (Mar),USD,3.2,3.4,3.5,0.3,High,9.375,%
+2024-04-10 12:30:00,US,Inflation Rate MoM (Mar),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2024-04-10 12:30:00,US,Core CPI MoM (Mar),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2024-04-10 12:30:00,US,CPI YoY (Mar),USD,3.2,3.4,3.5,0.3,High,9.375,%
+2024-04-10 12:30:00,US,CPI MoM (Mar),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2024-04-10 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2024-04-11 12:30:00,US,Producer Price Index MoM (Mar),USD,0.6,0.3,0.2,-0.4,High,-66.667,%
+2024-04-15 12:30:00,US,Retail Sales MoM (Mar),USD,0.9,0.3,0.7,-0.2,High,-22.222,%
+2024-04-16 17:15:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-04-24 12:30:00,US,Durable Goods Orders MoM (Mar),USD,0.7,2.5,2.6,1.9,High,271.429,%
+2024-04-25 12:30:00,US,GDP Growth Rate QoQ (Q1),USD,3.4,2.5,1.6,-1.8,High,-52.941,%
+2024-04-26 12:30:00,US,Core PCE Price Index MoM (Mar),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2024-04-26 12:30:00,US,Personal Spending MoM (Mar),USD,0.8,0.6,0.8,0.0,High,0.0,%
+2024-04-26 12:30:00,US,Personal Income MoM (Mar),USD,0.3,0.5,0.5,0.2,High,66.667,%
+2024-04-30 07:00:00,US,CB Consumer Confidence (Apr),USD,103.1,104.0,97.0,-6.1,High,-5.917,
+2024-05-01 11:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2024-05-01 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2024-05-01 14:00:00,US,ISM Manufacturing PMI (Apr),USD,50.3,50.0,49.2,-1.1,High,-2.187,
+2024-05-01 14:00:00,US,JOLTs Job Openings (Mar),USD,8.813,8.69,8.488,-0.325,High,-3.688,M
+2024-05-01 18:00:00,US,Fed Interest Rate Decision,USD,5.5,5.5,5.5,0.0,High,0.0,%
+2024-05-01 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2024-05-03 07:00:00,US,ISM Non-Manufacturing Prices (Apr),USD,53.4,55.0,59.2,5.8,High,10.861,
+2024-05-03 07:00:00,US,ISM Non-Manufacturing PMI (Apr),USD,51.4,52.0,49.4,-2.0,High,-3.891,
+2024-05-03 12:30:00,US,Non Farm Payrolls (Apr),USD,315.0,243.0,175.0,-140.0,High,-44.444,K
+2024-05-03 12:30:00,US,Unemployment Rate (Apr),USD,3.8,3.8,3.9,0.1,High,2.632,%
+2024-05-03 14:00:00,US,ISM Services PMI (Apr),USD,51.4,52.0,49.4,-2.0,High,-3.891,
+2024-05-14 12:30:00,US,Producer Price Index MoM (Apr),USD,-0.1,0.3,0.5,0.6,High,600.0,%
+2024-05-14 14:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-05-15 05:30:00,US,CPI YoY (Apr),USD,3.5,3.4,3.4,-0.1,High,-2.857,%
+2024-05-15 05:30:00,US,CPI MoM (Apr),USD,0.4,0.4,0.3,-0.1,High,-25.0,%
+2024-05-15 05:30:00,US,Core CPI MoM (Apr),USD,0.4,0.3,0.3,-0.1,High,-25.0,%
+2024-05-15 12:30:00,US,Inflation Rate YoY (Apr),USD,3.5,3.4,3.4,-0.1,High,-2.857,%
+2024-05-15 12:30:00,US,Core Inflation Rate YoY (Apr),USD,3.8,3.6,3.6,-0.2,High,-5.263,%
+2024-05-15 12:30:00,US,Retail Sales MoM (Apr),USD,0.6,0.4,0.0,-0.6,High,-100.0,%
+2024-05-15 12:30:00,US,Inflation Rate MoM (Apr),USD,0.4,0.4,0.3,-0.1,High,-25.0,%
+2024-05-15 12:30:00,US,Core Inflation Rate MoM (Apr),USD,0.4,0.3,0.3,-0.1,High,-25.0,%
+2024-05-19 19:30:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-05-21 08:00:00,US,Fed Chair Yellen Speaks,USD,,,,,High,0.0,
+2024-05-21 08:00:00,US,Treasury Secretary Yellen Speech,USD,,,,0.0,High,0.0,
+2024-05-22 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2024-05-24 12:30:00,US,Durable Goods Orders MoM (Apr),USD,0.8,-0.8,0.7,-0.1,High,-12.5,%
+2024-05-28 07:00:00,US,CB Consumer Confidence (May),USD,97.5,96.0,102.0,4.5,High,4.615,
+2024-05-31 12:30:00,US,Core PCE Price Index MoM (Apr),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2024-05-31 12:30:00,US,Personal Spending MoM (Apr),USD,0.7,0.3,0.2,-0.5,High,-71.429,%
+2024-05-31 12:30:00,US,Personal Income MoM (Apr),USD,0.5,0.3,0.3,-0.2,High,-40.0,%
+2024-06-03 14:00:00,US,ISM Manufacturing PMI (May),USD,49.2,49.6,48.7,-0.5,High,-1.016,
+2024-06-04 14:00:00,US,JOLTs Job Openings (Apr),USD,8.355,8.34,8.059,-0.296,High,-3.543,M
+2024-06-05 07:00:00,US,ISM Non-Manufacturing PMI (May),USD,49.4,51.0,53.8,4.4,High,8.907,
+2024-06-05 07:00:00,US,ISM Non-Manufacturing Prices (May),USD,59.2,59.0,58.1,-1.1,High,-1.858,
+2024-06-05 14:00:00,US,ISM Services PMI (May),USD,49.4,50.8,53.8,4.4,High,8.907,
+2024-06-07 12:30:00,US,Non Farm Payrolls (May),USD,165.0,185.0,272.0,107.0,High,64.848,K
+2024-06-07 12:30:00,US,Unemployment Rate (May),USD,3.9,3.9,4.0,0.1,High,2.564,%
+2024-06-12 05:30:00,US,Core CPI MoM (May),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2024-06-12 05:30:00,US,CPI MoM (May),USD,0.3,0.1,0.0,-0.3,High,-100.0,%
+2024-06-12 05:30:00,US,CPI YoY (May),USD,3.4,3.4,3.3,-0.1,High,-2.941,%
+2024-06-12 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2024-06-12 12:30:00,US,Inflation Rate MoM (May),USD,0.3,0.1,0.0,-0.3,High,-100.0,%
+2024-06-12 12:30:00,US,Core Inflation Rate YoY (May),USD,3.6,3.5,3.4,-0.2,High,-5.556,%
+2024-06-12 12:30:00,US,Inflation Rate YoY (May),USD,3.4,3.4,3.3,-0.1,High,-2.941,%
+2024-06-12 12:30:00,US,Core Inflation Rate MoM (May),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2024-06-12 18:00:00,US,Fed Interest Rate Decision,USD,5.5,5.5,5.5,0.0,High,0.0,%
+2024-06-12 18:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2024-06-12 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2024-06-13 12:30:00,US,Producer Price Index MoM (May),USD,0.5,0.1,-0.2,-0.7,High,-140.0,%
+2024-06-18 12:30:00,US,Retail Sales MoM (May),USD,-0.2,0.2,0.1,0.3,High,150.0,%
+2024-06-25 07:00:00,US,CB Consumer Confidence (Jun),USD,101.3,100.0,100.4,-0.9,High,-0.888,
+2024-06-27 05:30:00,US,Gross Domestic Product QoQ (Q1),USD,3.4,1.3,1.4,-2.0,High,-58.824,%
+2024-06-27 12:30:00,US,Durable Goods Orders MoM (May),USD,0.2,-0.1,0.1,-0.1,High,-50.0,%
+2024-06-28 12:30:00,US,Core PCE Price Index MoM (May),USD,0.3,0.1,0.1,-0.2,High,-66.667,%
+2024-06-28 12:30:00,US,Personal Spending MoM (May),USD,0.1,0.3,0.2,0.1,High,100.0,%
+2024-06-28 12:30:00,US,Personal Income MoM (May),USD,0.3,0.4,0.5,0.2,High,66.667,%
+2024-07-01 14:00:00,US,ISM Manufacturing PMI (Jun),USD,48.7,49.1,48.5,-0.2,High,-0.411,
+2024-07-02 13:30:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-07-02 14:00:00,US,JOLTs Job Openings (May),USD,7.919,7.91,8.14,0.221,High,2.791,M
+2024-07-03 07:00:00,US,ISM Non-Manufacturing PMI (Jun),USD,53.8,52.6,48.8,-5.0,High,-9.294,
+2024-07-03 07:00:00,US,ISM Non-Manufacturing Prices (Jun),USD,58.1,56.7,56.3,-1.8,High,-3.098,
+2024-07-03 14:00:00,US,ISM Services PMI (Jun),USD,53.8,52.5,48.8,-5.0,High,-9.294,
+2024-07-03 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2024-07-05 08:00:00,US,Monetary Policy Report,USD,,,,,High,0.0,
+2024-07-05 12:30:00,US,Non Farm Payrolls (Jun),USD,218.0,190.0,206.0,-12.0,High,-5.505,K
+2024-07-05 12:30:00,US,Unemployment Rate (Jun),USD,4.0,4.0,4.1,0.1,High,2.5,%
+2024-07-09 14:00:00,US,Fed Chair Powell Testimony,USD,,,,,High,0.0,
+2024-07-10 14:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-07-11 05:30:00,US,Core CPI MoM (Jun),USD,0.2,0.2,0.1,-0.1,High,-50.0,%
+2024-07-11 05:30:00,US,CPI YoY (Jun),USD,3.3,3.1,3.0,-0.3,High,-9.091,%
+2024-07-11 05:30:00,US,CPI MoM (Jun),USD,0.0,0.1,-0.1,-0.1,High,0.0,%
+2024-07-11 12:30:00,US,Core Inflation Rate YoY (Jun),USD,3.4,3.4,3.3,-0.1,High,-2.941,%
+2024-07-11 12:30:00,US,Core Inflation Rate MoM (Jun),USD,0.2,0.2,0.1,-0.1,High,-50.0,%
+2024-07-11 12:30:00,US,Inflation Rate YoY (Jun),USD,3.3,3.1,3.0,-0.3,High,-9.091,%
+2024-07-11 12:30:00,US,Inflation Rate MoM (Jun),USD,0.0,0.1,-0.1,-0.1,High,0.0,%
+2024-07-12 12:30:00,US,Producer Price Index MoM (Jun),USD,0.0,0.1,0.2,0.2,High,0.0,%
+2024-07-15 16:30:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-07-16 12:30:00,US,Retail Sales MoM (Jun),USD,0.3,0.0,0.0,-0.3,High,-100.0,%
+2024-07-25 12:30:00,US,Durable Goods Orders MoM (Jun),USD,0.1,0.3,-6.6,-6.7,High,-6700.0,%
+2024-07-26 12:30:00,US,Core PCE Price Index MoM (Jun),USD,0.1,0.1,0.2,0.1,High,100.0,%
+2024-07-26 12:30:00,US,Personal Spending MoM (Jun),USD,0.4,0.3,0.3,-0.1,High,-25.0,%
+2024-07-26 12:30:00,US,Personal Income MoM (Jun),USD,0.4,0.4,0.2,-0.2,High,-50.0,%
+2024-07-30 07:00:00,US,CB Consumer Confidence (Jul),USD,97.8,99.7,100.3,2.5,High,2.556,
+2024-07-30 14:00:00,US,JOLTs Job Openings (Jun),USD,8.23,8.0,8.184,-0.046,High,-0.559,M
+2024-07-31 11:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2024-07-31 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2024-07-31 18:00:00,US,Fed Interest Rate Decision,USD,5.5,5.5,5.5,0.0,High,0.0,%
+2024-07-31 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2024-08-01 14:00:00,US,ISM Manufacturing PMI (Jul),USD,48.5,48.8,46.8,-1.7,High,-3.505,
+2024-08-02 12:30:00,US,Non Farm Payrolls (Jul),USD,179.0,175.0,114.0,-65.0,High,-36.313,K
+2024-08-02 12:30:00,US,Unemployment Rate (Jul),USD,4.1,4.1,4.3,0.2,High,4.878,%
+2024-08-05 07:00:00,US,ISM Non-Manufacturing PMI (Jul),USD,48.8,51.4,51.4,2.6,High,5.328,
+2024-08-05 07:00:00,US,ISM Non-Manufacturing Prices (Jul),USD,56.3,56.0,57.0,0.7,High,1.243,
+2024-08-05 14:00:00,US,ISM Services PMI (Jul),USD,48.8,51.0,51.4,2.6,High,5.328,
+2024-08-13 12:30:00,US,Producer Price Index MoM (Jul),USD,0.2,0.2,0.1,-0.1,High,-50.0,%
+2024-08-14 05:30:00,US,CPI MoM (Jul),USD,-0.1,0.2,0.2,0.3,High,300.0,%
+2024-08-14 05:30:00,US,Core CPI MoM (Jul),USD,0.1,0.2,0.2,0.1,High,100.0,%
+2024-08-14 05:30:00,US,CPI YoY (Jul),USD,3.0,3.0,2.9,-0.1,High,-3.333,%
+2024-08-14 12:30:00,US,Inflation Rate MoM (Jul),USD,-0.1,0.2,0.2,0.3,High,300.0,%
+2024-08-14 12:30:00,US,Core Inflation Rate MoM (Jul),USD,0.1,0.2,0.2,0.1,High,100.0,%
+2024-08-14 12:30:00,US,Core Inflation Rate YoY (Jul),USD,3.3,3.2,3.2,-0.1,High,-3.03,%
+2024-08-14 12:30:00,US,Inflation Rate YoY (Jul),USD,3.0,3.0,2.9,-0.1,High,-3.333,%
+2024-08-15 12:30:00,US,Retail Sales MoM (Jul),USD,-0.2,0.3,1.0,1.2,High,600.0,%
+2024-08-21 14:00:00,US,Non Farm Payrolls (Mar),USD,-187.0,,-818.0,-631.0,High,-337.433,K
+2024-08-21 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2024-08-23 14:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-08-26 12:30:00,US,Durable Goods Orders MoM (Jul),USD,-6.9,5.0,9.9,16.8,High,243.478,%
+2024-08-27 07:00:00,US,CB Consumer Confidence (Aug),USD,101.9,100.9,103.3,1.4,High,1.374,
+2024-08-30 12:30:00,US,Personal Income MoM (Jul),USD,0.2,0.2,0.3,0.1,High,50.0,%
+2024-08-30 12:30:00,US,Personal Spending MoM (Jul),USD,0.3,0.5,0.5,0.2,High,66.667,%
+2024-08-30 12:30:00,US,Core PCE Price Index MoM (Jul),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2024-09-03 14:00:00,US,ISM Manufacturing PMI (Aug),USD,46.8,47.5,47.2,0.4,High,0.855,
+2024-09-04 14:00:00,US,JOLTs Job Openings (Jul),USD,7.91,8.1,7.673,-0.237,High,-2.996,M
+2024-09-05 07:00:00,US,ISM Non-Manufacturing Prices (Aug),USD,57.0,56.0,57.3,0.3,High,0.526,
+2024-09-05 07:00:00,US,ISM Non-Manufacturing PMI (Aug),USD,51.4,51.3,51.5,0.1,High,0.195,
+2024-09-05 14:00:00,US,ISM Services PMI (Aug),USD,51.4,51.1,51.5,0.1,High,0.195,
+2024-09-06 12:30:00,US,Non Farm Payrolls (Aug),USD,89.0,160.0,142.0,53.0,High,59.551,K
+2024-09-06 12:30:00,US,Unemployment Rate (Aug),USD,4.3,4.2,4.2,-0.1,High,-2.326,%
+2024-09-11 05:30:00,US,CPI MoM (Aug),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2024-09-11 05:30:00,US,Core CPI MoM (Aug),USD,0.2,0.2,0.3,0.1,High,50.0,%
+2024-09-11 05:30:00,US,CPI YoY (Aug),USD,2.9,2.5,2.5,-0.4,High,-13.793,%
+2024-09-11 12:30:00,US,Core Inflation Rate MoM (Aug),USD,0.2,0.2,0.3,0.1,High,50.0,%
+2024-09-11 12:30:00,US,Inflation Rate MoM (Aug),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2024-09-11 12:30:00,US,Core Inflation Rate YoY (Aug),USD,3.2,3.2,3.2,0.0,High,0.0,%
+2024-09-11 12:30:00,US,Inflation Rate YoY (Aug),USD,2.9,2.6,2.5,-0.4,High,-13.793,%
+2024-09-12 12:30:00,US,Producer Price Index MoM (Aug),USD,0.0,0.1,0.2,0.2,High,0.0,%
+2024-09-17 12:30:00,US,Retail Sales MoM (Aug),USD,1.1,-0.2,0.1,-1.0,High,-90.909,%
+2024-09-18 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2024-09-18 18:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2024-09-18 18:00:00,US,Fed Interest Rate Decision,USD,5.5,5.25,5.0,-0.5,High,-9.091,%
+2024-09-18 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2024-09-24 07:00:00,US,CB Consumer Confidence (Sep),USD,105.6,103.9,98.7,-6.9,High,-6.534,
+2024-09-26 05:30:00,US,Gross Domestic Product QoQ (Q2),USD,1.6,3.0,3.0,1.4,High,87.5,%
+2024-09-26 12:30:00,US,GDP Growth Rate QoQ (Q2),USD,1.6,3.0,3.0,1.4,High,87.5,%
+2024-09-26 12:30:00,US,Durable Goods Orders MoM (Aug),USD,9.8,-2.6,0.0,-9.8,High,-100.0,%
+2024-09-26 13:20:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-09-27 12:30:00,US,Personal Income MoM (Aug),USD,0.3,0.4,0.2,-0.1,High,-33.333,%
+2024-09-27 12:30:00,US,Personal Spending MoM (Aug),USD,0.5,0.3,0.2,-0.3,High,-60.0,%
+2024-09-27 12:30:00,US,Core PCE Price Index MoM (Aug),USD,0.2,0.2,0.1,-0.1,High,-50.0,%
+2024-09-30 17:55:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-10-01 14:00:00,US,ISM Manufacturing PMI (Sep),USD,47.2,47.5,47.2,0.0,High,0.0,
+2024-10-01 14:00:00,US,JOLTs Job Openings (Aug),USD,7.711,7.655,8.04,0.329,High,4.267,M
+2024-10-03 07:00:00,US,ISM Non-Manufacturing Prices (Sep),USD,57.3,56.3,59.4,2.1,High,3.665,
+2024-10-03 07:00:00,US,ISM Non-Manufacturing PMI (Sep),USD,51.5,51.7,54.9,3.4,High,6.602,
+2024-10-03 14:00:00,US,ISM Services PMI (Sep),USD,51.5,51.7,54.9,3.4,High,6.602,
+2024-10-04 12:30:00,US,Non Farm Payrolls (Sep),USD,159.0,140.0,254.0,95.0,High,59.748,K
+2024-10-04 12:30:00,US,Unemployment Rate (Sep),USD,4.2,4.2,4.1,-0.1,High,-2.381,%
+2024-10-09 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2024-10-10 05:30:00,US,CPI MoM (Sep),USD,0.2,0.1,0.2,0.0,High,0.0,%
+2024-10-10 05:30:00,US,Core CPI MoM (Sep),USD,0.3,0.2,0.3,0.0,High,0.0,%
+2024-10-10 05:30:00,US,CPI YoY (Sep),USD,2.5,2.3,2.4,-0.1,High,-4.0,%
+2024-10-10 12:30:00,US,Core Inflation Rate MoM (Sep),USD,0.3,0.2,0.3,0.0,High,0.0,%
+2024-10-10 12:30:00,US,Inflation Rate MoM (Sep),USD,0.2,0.1,0.2,0.0,High,0.0,%
+2024-10-10 12:30:00,US,Inflation Rate YoY (Sep),USD,2.5,2.3,2.4,-0.1,High,-4.0,%
+2024-10-10 12:30:00,US,Core Inflation Rate YoY (Sep),USD,3.2,3.2,3.3,0.1,High,3.125,%
+2024-10-11 12:30:00,US,Producer Price Index MoM (Sep),USD,0.2,0.1,0.0,-0.2,High,-100.0,%
+2024-10-17 12:30:00,US,Retail Sales MoM (Sep),USD,0.1,0.3,0.4,0.3,High,300.0,%
+2024-10-25 12:30:00,US,Durable Goods Orders MoM (Sep),USD,-0.8,-1.0,-0.8,0.0,High,0.0,%
+2024-10-29 07:00:00,US,CB Consumer Confidence (Oct),USD,99.2,99.5,108.7,9.5,High,9.577,
+2024-10-29 14:00:00,US,JOLTs Job Openings (Sep),USD,7.861,7.99,7.443,-0.418,High,-5.317,M
+2024-10-31 12:30:00,US,Personal Spending MoM (Sep),USD,0.3,0.4,0.5,0.2,High,66.667,%
+2024-10-31 12:30:00,US,Core PCE Price Index MoM (Sep),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2024-10-31 12:30:00,US,Personal Income MoM (Sep),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2024-11-01 12:30:00,US,Unemployment Rate (Oct),USD,4.1,4.1,4.1,0.0,High,0.0,%
+2024-11-01 12:30:00,US,Non Farm Payrolls (Oct),USD,223.0,113.0,12.0,-211.0,High,-94.619,K
+2024-11-01 14:00:00,US,ISM Manufacturing PMI (Oct),USD,47.2,47.6,46.5,-0.7,High,-1.483,
+2024-11-05 04:00:00,US,Presidential Elections,USD,,,,,High,0.0,
+2024-11-05 09:00:00,US,ISM Non-Manufacturing Prices (Oct),USD,59.4,58.0,58.1,-1.3,High,-2.189,
+2024-11-05 09:00:00,US,ISM Non-Manufacturing PMI (Oct),USD,54.9,53.8,56.0,1.1,High,2.004,
+2024-11-05 15:00:00,US,ISM Services PMI (Oct),USD,54.9,53.8,56.0,1.1,High,2.004,
+2024-11-07 13:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2024-11-07 13:30:00,US,Press Conference,USD,,,,,High,0.0,
+2024-11-07 19:00:00,US,Fed Interest Rate Decision,USD,5.0,4.75,4.75,-0.25,High,-5.0,%
+2024-11-07 19:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2024-11-13 07:30:00,US,Core CPI MoM (Oct),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2024-11-13 07:30:00,US,CPI YoY (Oct),USD,2.4,2.6,2.6,0.2,High,8.333,%
+2024-11-13 07:30:00,US,CPI MoM (Oct),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2024-11-13 13:30:00,US,Inflation Rate YoY (Oct),USD,2.4,2.6,2.6,0.2,High,8.333,%
+2024-11-13 13:30:00,US,Core Inflation Rate YoY (Oct),USD,3.3,3.3,3.3,0.0,High,0.0,%
+2024-11-13 13:30:00,US,Inflation Rate MoM (Oct),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2024-11-13 13:30:00,US,Core Inflation Rate MoM (Oct),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2024-11-14 13:30:00,US,Producer Price Index MoM (Oct),USD,0.1,0.2,0.2,0.1,High,100.0,%
+2024-11-14 20:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-11-15 13:30:00,US,Retail Sales MoM (Oct),USD,0.8,0.3,0.4,-0.4,High,-50.0,%
+2024-11-26 09:00:00,US,CB Consumer Confidence (Nov),USD,109.6,111.8,111.7,2.1,High,1.916,
+2024-11-26 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2024-11-27 13:30:00,US,Durable Goods Orders MoM (Oct),USD,-0.4,0.5,0.2,0.6,High,150.0,%
+2024-11-27 13:30:00,US,GDP Growth Rate QoQ (Q3),USD,3.0,2.8,2.8,-0.2,High,-6.667,%
+2024-11-27 15:00:00,US,Core PCE Price Index MoM (Oct),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2024-11-27 15:00:00,US,Personal Income MoM (Oct),USD,0.3,0.3,0.6,0.3,High,100.0,%
+2024-11-27 15:00:00,US,Personal Spending MoM (Oct),USD,0.6,0.3,0.4,-0.2,High,-33.333,%
+2024-12-02 15:00:00,US,ISM Manufacturing PMI (Nov),USD,46.5,47.5,48.4,1.9,High,4.086,
+2024-12-03 15:00:00,US,JOLTs Job Openings (Oct),USD,7.372,7.48,7.744,0.372,High,5.046,M
+2024-12-04 09:00:00,US,ISM Non-Manufacturing PMI (Nov),USD,56.0,55.5,52.1,-3.9,High,-6.964,
+2024-12-04 09:00:00,US,ISM Non-Manufacturing Prices (Nov),USD,58.1,56.4,58.2,0.1,High,0.172,
+2024-12-04 15:00:00,US,ISM Services PMI (Nov),USD,56.0,55.5,52.1,-3.9,High,-6.964,
+2024-12-04 18:40:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2024-12-06 13:30:00,US,Non Farm Payrolls (Nov),USD,36.0,200.0,227.0,191.0,High,530.556,K
+2024-12-06 13:30:00,US,Unemployment Rate (Nov),USD,4.1,4.2,4.2,0.1,High,2.439,%
+2024-12-06 15:00:00,US,Michigan Consumer Sentiment (Dec),USD,71.8,73.0,74.0,2.2,High,3.064,
+2024-12-11 07:30:00,US,Core CPI MoM (Nov),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2024-12-11 07:30:00,US,CPI YoY (Nov),USD,2.6,2.7,2.7,0.1,High,3.846,%
+2024-12-11 07:30:00,US,CPI MoM (Nov),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2024-12-11 13:30:00,US,Inflation Rate MoM (Nov),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2024-12-11 13:30:00,US,Inflation Rate YoY (Nov),USD,2.6,2.7,2.7,0.1,High,3.846,%
+2024-12-11 13:30:00,US,Core Inflation Rate MoM (Nov),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2024-12-11 13:30:00,US,Core Inflation Rate YoY (Nov),USD,3.3,3.3,3.3,0.0,High,0.0,%
+2024-12-12 13:30:00,US,Producer Price Index MoM (Nov),USD,0.3,0.2,0.4,0.1,High,33.333,%
+2024-12-17 13:30:00,US,Retail Sales MoM (Nov),USD,0.5,0.5,0.7,0.2,High,40.0,%
+2024-12-18 13:30:00,US,Press Conference,USD,,,,,High,0.0,
+2024-12-18 19:00:00,US,Fed Interest Rate Decision,USD,4.75,4.5,4.5,-0.25,High,-5.263,%
+2024-12-18 19:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2024-12-18 19:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2024-12-19 07:30:00,US,Gross Domestic Product QoQ (Q3),USD,3.0,2.8,3.1,0.1,High,3.333,%
+2024-12-20 13:30:00,US,Personal Income MoM (Nov),USD,0.7,0.4,0.3,-0.4,High,-57.143,%
+2024-12-20 13:30:00,US,Core PCE Price Index MoM (Nov),USD,0.3,0.2,0.1,-0.2,High,-66.667,%
+2024-12-20 13:30:00,US,Personal Spending MoM (Nov),USD,0.3,0.5,0.4,0.1,High,33.333,%
+2024-12-23 09:00:00,US,CB Consumer Confidence (Dec),USD,112.8,112.9,104.7,-8.1,High,-7.181,
+2024-12-23 14:30:00,US,Durable Goods Orders MoM (Nov),USD,0.8,-0.4,-1.1,-1.9,High,-237.5,%
+2025-01-03 15:00:00,US,ISM Manufacturing PMI (Dec),USD,48.4,48.4,49.3,0.9,High,1.86,
+2025-01-07 15:00:00,US,ISM Services PMI (Dec),USD,52.1,53.3,54.1,2.0,High,3.839,
+2025-01-07 15:00:00,US,JOLTs Job Openings (Nov),USD,7.839,7.7,8.098,0.259,High,3.304,M
+2025-01-07 15:00:00,US,ISM Non-Manufacturing PMI (Dec),USD,52.1,53.5,54.1,2.0,High,3.839,
+2025-01-07 15:00:00,US,ISM Non-Manufacturing Prices (Dec),USD,58.2,57.5,64.4,6.2,High,10.653,
+2025-01-08 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2025-01-10 13:30:00,US,Non Farm Payrolls (Dec),USD,212.0,160.0,256.0,44.0,High,20.755,K
+2025-01-10 13:30:00,US,Unemployment Rate (Dec),USD,4.2,4.2,4.1,-0.1,High,-2.381,%
+2025-01-10 15:00:00,US,Michigan Consumer Sentiment (Jan),USD,74.0,73.8,73.2,-0.8,High,-1.081,
+2025-01-14 13:30:00,US,Producer Price Index MoM (Dec),USD,0.4,0.3,0.2,-0.2,High,-50.0,%
+2025-01-15 13:30:00,US,Core Inflation Rate MoM (Dec),USD,0.3,0.2,0.2,-0.1,High,-33.333,%
+2025-01-15 13:30:00,US,Core Inflation Rate YoY (Dec),USD,3.3,3.3,3.2,-0.1,High,-3.03,%
+2025-01-15 13:30:00,US,Inflation Rate YoY (Dec),USD,2.7,2.9,2.9,0.2,High,7.407,%
+2025-01-15 13:30:00,US,CPI MoM (Dec),USD,0.3,0.4,0.4,0.1,High,33.333,%
+2025-01-15 13:30:00,US,Core CPI MoM (Dec),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2025-01-15 13:30:00,US,CPI YoY (Dec),USD,2.7,2.9,2.9,0.2,High,7.407,%
+2025-01-15 13:30:00,US,Inflation Rate MoM (Dec),USD,0.3,0.3,0.4,0.1,High,33.333,%
+2025-01-16 13:30:00,US,Retail Sales MoM (Dec),USD,0.8,0.6,0.4,-0.4,High,-50.0,%
+2025-01-17 13:30:00,US,Housing Starts (Dec),USD,1.294,1.32,1.499,0.205,High,15.842,M
+2025-01-17 13:30:00,US,Building Permits (Dec),USD,1.493,1.46,1.483,-0.01,High,-0.67,M
+2025-01-20 17:00:00,US,Inauguration Day,USD,,,,,High,0.0,
+2025-01-24 15:00:00,US,Existing Home Sales (Dec),USD,4.15,4.19,4.24,0.09,High,2.169,M
+2025-01-28 13:30:00,US,Durable Goods Orders MoM (Dec),USD,-2.0,0.6,-2.2,-0.2,High,-10.0,%
+2025-01-28 15:00:00,US,CB Consumer Confidence (Jan),USD,109.5,105.7,104.1,-5.4,High,-4.932,
+2025-01-29 19:00:00,US,FOMC Economic Projections,USD,,,,,High,,
+2025-01-29 19:00:00,US,Fed Interest Rate Decision,USD,4.5,4.5,4.5,0.0,High,0.0,%
+2025-01-29 19:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2025-01-29 19:30:00,US,Press Conference,USD,,,,,High,,
+2025-01-31 13:30:00,US,Personal Spending MoM (Dec),USD,0.6,0.5,0.7,0.1,High,16.667,%
+2025-01-31 13:30:00,US,Core PCE Price Index MoM (Dec),USD,0.1,0.2,0.2,0.1,High,100.0,%
+2025-01-31 13:30:00,US,Personal Income MoM (Dec),USD,0.3,0.4,0.4,0.1,High,33.333,%
+2025-02-03 15:00:00,US,ISM Manufacturing PMI (Jan),USD,49.2,49.8,50.9,1.7,High,3.455,
+2025-02-04 15:00:00,US,JOLTs Job Openings (Dec),USD,8.156,8.0,7.6,-0.556,High,-6.817,M
+2025-02-05 15:00:00,US,ISM Services PMI (Jan),USD,54.0,54.3,52.8,-1.2,High,-2.222,
+2025-02-05 15:00:00,US,ISM Non-Manufacturing Prices (Jan),USD,64.4,,60.4,-4.0,High,-6.211,
+2025-02-05 15:00:00,US,ISM Non-Manufacturing PMI (Jan),USD,54.0,54.2,52.8,-1.2,High,-2.222,
+2025-02-07 13:30:00,US,Unemployment Rate (Jan),USD,4.1,4.1,4.0,-0.1,High,-2.439,%
+2025-02-07 13:30:00,US,Non Farm Payrolls (Jan),USD,307.0,170.0,143.0,-164.0,High,-53.42,K
+2025-02-07 15:00:00,US,Monetary Policy Report,USD,,,,,High,,
+2025-02-12 13:30:00,US,CPI MoM (Jan),USD,0.4,0.3,0.5,0.1,High,25.0,%
+2025-02-12 13:30:00,US,CPI YoY (Jan),USD,2.9,2.9,3.0,0.1,High,3.448,%
+2025-02-12 13:30:00,US,Core Inflation Rate MoM (Jan),USD,0.2,0.3,0.4,0.2,High,100.0,%
+2025-02-12 13:30:00,US,Inflation Rate MoM (Jan),USD,0.4,0.3,0.5,0.1,High,25.0,%
+2025-02-12 13:30:00,US,Core Inflation Rate YoY (Jan),USD,3.2,3.1,3.3,0.1,High,3.125,%
+2025-02-12 13:30:00,US,Core CPI MoM (Jan),USD,0.2,0.3,0.4,0.2,High,100.0,%
+2025-02-12 13:30:00,US,Inflation Rate YoY (Jan),USD,2.9,2.9,3.0,0.1,High,3.448,%
+2025-02-12 15:00:00,US,Fed Chair Powell Testimony,USD,,,,,High,0.0,
+2025-02-13 13:30:00,US,Producer Price Index MoM (Jan),USD,0.5,0.3,0.4,-0.1,High,-20.0,%
+2025-02-19 13:30:00,US,Housing Starts (Jan),USD,1.515,1.4,1.366,-0.149,High,-9.835,M
+2025-02-19 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2025-02-21 15:00:00,US,Existing Home Sales (Jan),USD,4.29,4.12,4.08,-0.21,High,-4.895,M
+2025-02-25 15:00:00,US,CB Consumer Confidence (Feb),USD,105.3,102.7,98.3,-7.0,High,-6.648,
+2025-02-27 13:30:00,US,Durable Goods Orders MoM (Jan),USD,-1.8,2.0,3.1,4.9,High,272.222,%
+2025-02-28 13:30:00,US,Core PCE Price Index MoM (Jan),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2025-02-28 13:30:00,US,Personal Income MoM (Jan),USD,0.4,0.3,0.9,0.5,High,125.0,%
+2025-02-28 13:30:00,US,Personal Spending MoM (Jan),USD,0.8,0.1,-0.2,-1.0,High,-125.0,%
+2025-03-03 15:00:00,US,ISM Manufacturing PMI (Feb),USD,50.9,50.5,50.3,-0.6,High,-1.179,
+2025-03-05 15:00:00,US,ISM Services PMI (Feb),USD,52.8,52.6,53.5,0.7,High,1.326,
+2025-03-05 15:00:00,US,ISM Non-Manufacturing Prices (Feb),USD,60.4,60.0,62.6,2.2,High,3.642,
+2025-03-05 15:00:00,US,ISM Non-Manufacturing PMI (Feb),USD,52.8,52.5,53.5,0.7,High,1.326,
+2025-03-07 13:30:00,US,Unemployment Rate (Feb),USD,4.0,4.0,4.1,0.1,High,2.5,%
+2025-03-07 13:30:00,US,Non Farm Payrolls (Feb),USD,125.0,160.0,151.0,26.0,High,20.8,K
+2025-03-07 17:00:00,US,Monetary Policy Report,USD,,,,,High,0.0,
+2025-03-07 17:30:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2025-03-11 14:00:00,US,JOLTs Job Openings (Jan),USD,7.508,7.63,7.74,0.232,High,3.09,M
+2025-03-12 12:30:00,US,Core Inflation Rate MoM (Feb),USD,0.4,0.3,0.2,-0.2,High,-50.0,%
+2025-03-12 12:30:00,US,Core CPI MoM (Feb),USD,0.4,0.3,0.2,-0.2,High,-50.0,%
+2025-03-12 12:30:00,US,Core Inflation Rate YoY (Feb),USD,3.3,3.2,3.1,-0.2,High,-6.061,%
+2025-03-12 12:30:00,US,Inflation Rate MoM (Feb),USD,0.5,0.3,0.2,-0.3,High,-60.0,%
+2025-03-12 12:30:00,US,CPI MoM (Feb),USD,0.5,0.3,0.2,-0.3,High,-60.0,%
+2025-03-12 12:30:00,US,Inflation Rate YoY (Feb),USD,3.0,2.9,2.8,-0.2,High,-6.667,%
+2025-03-12 12:30:00,US,CPI YoY (Feb),USD,3.0,2.9,2.8,-0.2,High,-6.667,%
+2025-03-13 12:30:00,US,Producer Price Index MoM (Feb),USD,0.6,0.3,0.0,-0.6,High,-100.0,%
+2025-03-17 12:30:00,US,Retail Sales MoM (Feb),USD,-1.2,0.6,0.2,1.4,High,116.667,%
+2025-03-18 12:30:00,US,Housing Starts (Feb),USD,1.35,1.38,1.501,0.151,High,11.185,M
+2025-03-19 18:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2025-03-19 18:00:00,US,Fed Interest Rate Decision,USD,4.5,4.5,4.5,0.0,High,0.0,%
+2025-03-19 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2025-03-19 18:30:00,US,Press Conference,USD,,,,,High,,
+2025-03-20 14:00:00,US,Existing Home Sales (Feb),USD,4.09,3.95,4.26,0.17,High,4.156,M
+2025-03-25 14:00:00,US,CB Consumer Confidence (Mar),USD,100.1,94.2,92.9,-7.2,High,-7.193,
+2025-03-26 12:30:00,US,Durable Goods Orders MoM (Feb),USD,3.3,-1.0,0.9,-2.4,High,-72.727,%
+2025-03-27 12:30:00,US,GDP Growth Rate QoQ (Q4),USD,3.1,2.3,2.4,-0.7,High,-22.581,%
+2025-03-27 12:30:00,US,Gross Domestic Product QoQ (Q4),USD,3.1,2.3,2.4,-0.7,High,-22.581,%
+2025-03-28 12:30:00,US,Personal Income MoM (Feb),USD,0.7,0.4,0.8,0.1,High,14.286,%
+2025-03-28 12:30:00,US,Core PCE Price Index MoM (Feb),USD,0.3,0.3,0.4,0.1,High,33.333,%
+2025-03-28 12:30:00,US,Personal Spending MoM (Feb),USD,-0.3,0.5,0.4,0.7,High,233.333,%
+2025-04-01 14:00:00,US,ISM Manufacturing PMI (Mar),USD,50.3,49.5,49.0,-1.3,High,-2.584,
+2025-04-01 14:00:00,US,JOLTs Job Openings (Feb),USD,7.762,7.63,7.568,-0.194,High,-2.499,M
+2025-04-03 14:00:00,US,ISM Services PMI (Mar),USD,53.5,53.0,50.8,-2.7,High,-5.047,
+2025-04-03 14:00:00,US,ISM Non-Manufacturing Prices (Mar),USD,62.6,63.1,60.9,-1.7,High,-2.716,
+2025-04-03 14:00:00,US,ISM Non-Manufacturing PMI (Mar),USD,53.5,53.0,50.8,-2.7,High,-5.047,
+2025-04-04 12:30:00,US,Unemployment Rate (Mar),USD,4.1,4.1,4.2,0.1,High,2.439,%
+2025-04-04 12:30:00,US,Non Farm Payrolls (Mar),USD,117.0,135.0,228.0,111.0,High,94.872,K
+2025-04-04 15:25:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2025-04-09 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2025-04-10 12:30:00,US,CPI MoM (Mar),USD,0.2,0.1,-0.1,-0.3,High,-150.0,%
+2025-04-10 12:30:00,US,CPI YoY (Mar),USD,2.8,2.5,2.4,-0.4,High,-14.286,%
+2025-04-10 12:30:00,US,Core CPI MoM (Mar),USD,0.2,0.3,0.1,-0.1,High,-50.0,%
+2025-04-10 12:30:00,US,Inflation Rate YoY (Mar),USD,2.8,2.6,2.4,-0.4,High,-14.286,%
+2025-04-10 12:30:00,US,Core Inflation Rate MoM (Mar),USD,0.2,0.3,0.1,-0.1,High,-50.0,%
+2025-04-10 12:30:00,US,Inflation Rate MoM (Mar),USD,0.2,0.1,-0.1,-0.3,High,-150.0,%
+2025-04-10 12:30:00,US,Core Inflation Rate YoY (Mar),USD,3.1,3.0,2.8,-0.3,High,-9.677,%
+2025-04-11 12:30:00,US,Producer Price Index MoM (Mar),USD,0.1,0.2,-0.4,-0.5,High,-500.0,%
+2025-04-16 12:30:00,US,Retail Sales MoM (Mar),USD,0.2,1.3,1.4,1.2,High,600.0,%
+2025-04-16 17:30:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2025-04-17 12:30:00,US,Housing Starts (Mar),USD,1.494,1.42,1.324,-0.17,High,-11.379,M
+2025-04-24 12:30:00,US,Durable Goods Orders MoM (Mar),USD,0.9,2.0,9.2,8.3,High,922.222,%
+2025-04-24 14:00:00,US,Existing Home Sales (Mar),USD,4.27,4.13,4.02,-0.25,High,-5.855,M
+2025-04-29 14:00:00,US,JOLTs Job Openings (Mar),USD,7.48,7.48,7.192,-0.288,High,-3.85,M
+2025-04-29 14:00:00,US,CB Consumer Confidence (Apr),USD,93.9,87.7,86.0,-7.9,High,-8.413,
+2025-04-30 12:30:00,US,GDP Growth Rate QoQ (Q1),USD,2.4,0.3,-0.3,-2.7,High,-112.5,%
+2025-04-30 14:00:00,US,Core PCE Price Index MoM (Mar),USD,0.5,0.1,0.0,-0.5,High,-100.0,%
+2025-04-30 14:00:00,US,Personal Income MoM (Mar),USD,0.7,0.4,0.5,-0.2,High,-28.571,%
+2025-04-30 14:00:00,US,Personal Spending MoM (Mar),USD,0.5,0.5,0.7,0.2,High,40.0,%
+2025-05-01 14:00:00,US,ISM Manufacturing PMI (Apr),USD,49.0,48.0,48.7,-0.3,High,-0.612,
+2025-05-02 12:30:00,US,Non Farm Payrolls (Apr),USD,185.0,130.0,177.0,-8.0,High,-4.324,K
+2025-05-02 12:30:00,US,Unemployment Rate (Apr),USD,4.2,4.2,4.2,0.0,High,0.0,%
+2025-05-05 14:00:00,US,ISM Services PMI (Apr),USD,50.8,50.6,51.6,0.8,High,1.575,
+2025-05-05 14:00:00,US,ISM Non-Manufacturing Prices (Apr),USD,60.9,61.2,65.1,4.2,High,6.897,
+2025-05-05 14:00:00,US,ISM Non-Manufacturing PMI (Apr),USD,50.8,50.2,51.6,0.8,High,1.575,
+2025-05-07 18:00:00,US,FOMC Economic Projections,USD,,,,,High,,
+2025-05-07 18:00:00,US,Fed Interest Rate Decision,USD,4.5,4.5,4.5,0.0,High,0.0,%
+2025-05-07 18:30:00,US,Press Conference,USD,,,,,High,,
+2025-05-07 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2025-05-13 12:30:00,US,Inflation Rate YoY (Apr),USD,2.4,2.4,2.3,-0.1,High,-4.167,%
+2025-05-13 12:30:00,US,Core Inflation Rate MoM (Apr),USD,0.1,0.3,0.2,0.1,High,100.0,%
+2025-05-13 12:30:00,US,Core Inflation Rate YoY (Apr),USD,2.8,2.8,2.8,0.0,High,0.0,%
+2025-05-13 12:30:00,US,Inflation Rate MoM (Apr),USD,-0.1,0.3,0.2,0.3,High,300.0,%
+2025-05-13 12:30:00,US,Core CPI MoM (Apr),USD,0.1,0.3,0.2,0.1,High,100.0,%
+2025-05-13 12:30:00,US,CPI YoY (Apr),USD,2.4,2.4,2.3,-0.1,High,-4.167,%
+2025-05-13 12:30:00,US,CPI MoM (Apr),USD,-0.1,0.3,0.2,0.3,High,300.0,%
+2025-05-15 12:30:00,US,Retail Sales MoM (Apr),USD,1.7,0.0,0.1,-1.6,High,-94.118,%
+2025-05-15 12:30:00,US,Producer Price Index MoM (Apr),USD,0.0,0.2,-0.5,-0.5,High,0.0,%
+2025-05-16 12:30:00,US,Housing Starts (Apr),USD,1.339,1.37,1.361,0.022,High,1.643,M
+2025-05-16 14:00:00,US,Michigan Consumer Sentiment (May),USD,52.2,53.4,50.8,-1.4,High,-2.682,
+2025-05-22 14:00:00,US,Existing Home Sales (Apr),USD,4.02,4.1,4.0,-0.02,High,-0.498,M
+2025-05-27 12:30:00,US,Durable Goods Orders MoM (Apr),USD,7.6,-7.8,-6.3,-13.9,High,-182.895,%
+2025-05-27 14:00:00,US,CB Consumer Confidence (May),USD,85.7,87.1,98.0,12.3,High,14.352,
+2025-05-28 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2025-05-30 12:30:00,US,Core PCE Price Index MoM (Apr),USD,0.1,0.1,0.1,0.0,High,0.0,%
+2025-05-30 12:30:00,US,Personal Spending MoM (Apr),USD,0.7,0.2,0.2,-0.5,High,-71.429,%
+2025-05-30 12:30:00,US,Personal Income MoM (Apr),USD,0.7,0.3,0.8,0.1,High,14.286,%
+2025-06-02 14:00:00,US,ISM Manufacturing PMI (May),USD,48.7,49.5,48.5,-0.2,High,-0.411,
+2025-06-02 17:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2025-06-03 14:00:00,US,JOLTs Job Openings (Apr),USD,7.2,7.1,7.391,0.191,High,2.653,M
+2025-06-04 14:00:00,US,ISM Services PMI (May),USD,51.6,52.0,49.9,-1.7,High,-3.295,
+2025-06-04 14:00:00,US,ISM Non-Manufacturing PMI (May),USD,51.6,52.0,49.9,-1.7,High,-3.295,
+2025-06-04 14:00:00,US,ISM Non-Manufacturing Prices (May),USD,65.1,65.1,68.7,3.6,High,5.53,
+2025-06-06 12:30:00,US,Unemployment Rate (May),USD,4.2,4.2,4.2,0.0,High,0.0,%
+2025-06-06 12:30:00,US,Non Farm Payrolls (May),USD,147.0,130.0,139.0,-8.0,High,-5.442,K
+2025-06-11 12:30:00,US,Core CPI MoM (May),USD,0.2,0.3,0.1,-0.1,High,-50.0,%
+2025-06-11 12:30:00,US,CPI MoM (May),USD,0.2,0.2,0.1,-0.1,High,-50.0,%
+2025-06-11 12:30:00,US,Inflation Rate MoM (May),USD,0.2,0.2,0.1,-0.1,High,-50.0,%
+2025-06-11 12:30:00,US,CPI YoY (May),USD,2.3,2.5,2.4,0.1,High,4.348,%
+2025-06-11 12:30:00,US,Core Inflation Rate MoM (May),USD,0.2,0.3,0.1,-0.1,High,-50.0,%
+2025-06-11 12:30:00,US,Core Inflation Rate YoY (May),USD,2.8,2.9,2.8,0.0,High,0.0,%
+2025-06-11 12:30:00,US,Inflation Rate YoY (May),USD,2.3,2.5,2.4,0.1,High,4.348,%
+2025-06-12 12:30:00,US,Producer Price Index MoM (May),USD,-0.2,0.2,0.1,0.3,High,150.0,%
+2025-06-13 14:00:00,US,Michigan Consumer Sentiment (Jun),USD,52.2,53.5,60.5,8.3,High,15.9,
+2025-06-17 12:30:00,US,Retail Sales MoM (May),USD,-0.1,-0.7,-0.9,-0.8,High,-800.0,%
+2025-06-18 12:30:00,US,Building Permits (May),USD,1.422,1.43,1.393,-0.029,High,-2.039,M
+2025-06-18 12:30:00,US,Housing Starts (May),USD,1.392,1.36,1.256,-0.136,High,-9.77,M
+2025-06-18 18:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2025-06-18 18:00:00,US,Fed Interest Rate Decision,USD,4.5,4.5,4.5,0.0,High,0.0,%
+2025-06-18 18:30:00,US,Press Conference,USD,,,,,High,,
+2025-06-18 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2025-06-20 15:00:00,US,Monetary Policy Report,USD,,,,,High,,
+2025-06-23 14:00:00,US,Existing Home Sales (May),USD,4.0,3.96,4.03,0.03,High,0.75,M
+2025-06-24 14:00:00,US,CB Consumer Confidence (Jun),USD,98.4,99.4,93.0,-5.4,High,-5.488,
+2025-06-24 14:00:00,US,Fed Chair Powell Testimony,USD,,,,,High,0.0,
+2025-06-26 12:30:00,US,Gross Domestic Product QoQ (Q1),USD,2.4,-0.2,-0.5,-2.9,High,-120.833,%
+2025-06-26 12:30:00,US,Durable Goods Orders MoM (May),USD,-6.6,8.5,16.4,23.0,High,348.485,%
+2025-06-27 12:30:00,US,Personal Spending MoM (May),USD,0.2,0.1,-0.1,-0.3,High,-150.0,%
+2025-06-27 12:30:00,US,Personal Income MoM (May),USD,0.7,0.3,-0.4,-1.1,High,-157.143,%
+2025-06-27 12:30:00,US,Core PCE Price Index MoM (May),USD,0.1,0.1,0.2,0.1,High,100.0,%
+2025-07-01 14:00:00,US,JOLTs Job Openings (May),USD,7.395,7.3,7.769,0.374,High,5.057,M
+2025-07-01 14:00:00,US,ISM Manufacturing PMI (Jun),USD,48.5,48.8,49.0,0.5,High,1.031,
+2025-07-03 12:30:00,US,Unemployment Rate (Jun),USD,4.2,4.3,4.1,-0.1,High,-2.381,%
+2025-07-03 12:30:00,US,Non Farm Payrolls (Jun),USD,144.0,110.0,147.0,3.0,High,2.083,K
+2025-07-03 14:00:00,US,ISM Non-Manufacturing PMI (Jun),USD,49.9,50.8,50.8,0.9,High,1.804,
+2025-07-03 14:00:00,US,ISM Non-Manufacturing Prices (Jun),USD,68.7,68.9,67.5,-1.2,High,-1.747,
+2025-07-03 14:00:00,US,ISM Services PMI (Jun),USD,49.9,50.5,50.8,0.9,High,1.804,
+2025-07-09 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2025-07-15 12:30:00,US,Core CPI MoM (Jun),USD,0.1,0.3,0.2,0.1,High,100.0,%
+2025-07-15 12:30:00,US,CPI YoY (Jun),USD,2.4,2.6,2.7,0.3,High,12.5,%
+2025-07-15 12:30:00,US,Core Inflation Rate YoY (Jun),USD,2.8,3.0,2.9,0.1,High,3.571,%
+2025-07-15 12:30:00,US,Core Inflation Rate MoM (Jun),USD,0.1,0.3,0.2,0.1,High,100.0,%
+2025-07-15 12:30:00,US,Inflation Rate YoY (Jun),USD,2.4,2.7,2.7,0.3,High,12.5,%
+2025-07-15 12:30:00,US,CPI MoM (Jun),USD,0.1,0.3,0.3,0.2,High,200.0,%
+2025-07-15 12:30:00,US,Inflation Rate MoM (Jun),USD,0.1,0.3,0.3,0.2,High,200.0,%
+2025-07-16 12:30:00,US,Producer Price Index MoM (Jun),USD,0.3,0.2,0.0,-0.3,High,-100.0,%
+2025-07-17 12:30:00,US,Retail Sales MoM (Jun),USD,-0.9,0.1,0.6,1.5,High,166.667,%
+2025-07-18 12:30:00,US,Building Permits (Jun),USD,1.394,1.39,1.397,0.003,High,0.215,M
+2025-07-18 12:30:00,US,Housing Starts (Jun),USD,1.263,1.3,1.321,0.058,High,4.592,M
+2025-07-18 14:00:00,US,Michigan Consumer Sentiment (Jul),USD,60.7,61.5,61.8,1.1,High,1.812,
+2025-07-22 12:30:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2025-07-23 14:00:00,US,Existing Home Sales (Jun),USD,4.04,4.01,3.93,-0.11,High,-2.723,M
+2025-07-25 12:30:00,US,Durable Goods Orders MoM (Jun),USD,16.5,-10.8,-9.3,-25.8,High,-156.364,%
+2025-07-29 14:00:00,US,CB Consumer Confidence (Jul),USD,95.2,95.9,97.2,2.0,High,2.101,
+2025-07-29 14:00:00,US,JOLTs Job Openings (Jun),USD,7.712,7.55,7.437,-0.275,High,-3.566,M
+2025-07-30 12:30:00,US,Gross Domestic Product QoQ (Q2),USD,-0.5,2.5,3.0,3.5,High,700.0,%
+2025-07-30 18:00:00,US,Fed Interest Rate Decision,USD,4.5,4.5,4.5,0.0,High,0.0,%
+2025-07-30 18:00:00,US,FOMC Economic Projections,USD,,,,,High,,
+2025-07-30 18:30:00,US,Press Conference,USD,,,,,High,,
+2025-07-30 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2025-07-31 12:30:00,US,Personal Spending MoM (Jun),USD,0.0,0.4,0.3,0.3,High,0.0,%
+2025-07-31 12:30:00,US,Personal Income MoM (Jun),USD,-0.4,0.2,0.3,0.7,High,175.0,%
+2025-07-31 12:30:00,US,Core PCE Price Index MoM (Jun),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2025-08-01 12:30:00,US,Unemployment Rate (Jul),USD,4.1,4.2,4.2,0.1,High,2.439,%
+2025-08-01 12:30:00,US,Non Farm Payrolls (Jul),USD,14.0,110.0,73.0,59.0,High,421.429,K
+2025-08-01 14:00:00,US,ISM Manufacturing PMI (Jul),USD,49.0,49.5,48.0,-1.0,High,-2.041,
+2025-08-05 07:00:00,US,ISM Non-Manufacturing Prices (Jul),USD,67.5,66.5,69.9,2.4,High,3.556,
+2025-08-05 07:00:00,US,ISM Non-Manufacturing PMI (Jul),USD,50.8,51.5,50.1,-0.7,High,-1.378,
+2025-08-05 14:00:00,US,ISM Services PMI (Jul),USD,50.8,51.5,50.1,-0.7,High,-1.378,
+2025-08-12 05:30:00,US,Core CPI MoM (Jul),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2025-08-12 05:30:00,US,CPI YoY (Jul),USD,2.7,2.8,2.7,0.0,High,0.0,%
+2025-08-12 05:30:00,US,CPI MoM (Jul),USD,0.3,0.2,0.2,-0.1,High,-33.333,%
+2025-08-12 12:30:00,US,Inflation Rate MoM (Jul),USD,0.3,0.2,0.2,-0.1,High,-33.333,%
+2025-08-12 12:30:00,US,Core Inflation Rate MoM (Jul),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2025-08-12 12:30:00,US,Core Inflation Rate YoY (Jul),USD,2.9,3.0,3.1,0.2,High,6.897,%
+2025-08-12 12:30:00,US,Inflation Rate YoY (Jul),USD,2.7,2.8,2.7,0.0,High,0.0,%
+2025-08-14 12:30:00,US,Producer Price Index MoM (Jul),USD,0.0,0.2,0.9,0.9,High,0.0,%
+2025-08-15 12:30:00,US,Retail Sales MoM (Jul),USD,0.9,0.5,0.5,-0.4,High,-44.444,%
+2025-08-19 12:30:00,US,Housing Starts (Jul),USD,1.358,1.29,1.428,0.07,High,5.155,M
+2025-08-20 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2025-08-21 14:00:00,US,Existing Home Sales (Jul),USD,3.93,3.92,4.01,0.08,High,2.036,M
+2025-08-22 14:00:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2025-08-26 07:00:00,US,CB Consumer Confidence (Aug),USD,98.7,96.4,97.4,-1.3,High,-1.317,
+2025-08-26 12:30:00,US,Durable Goods Orders MoM (Jul),USD,-9.4,-4.0,-2.8,6.6,High,70.213,%
+2025-08-29 12:30:00,US,Core PCE Price Index MoM (Jul),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2025-08-29 12:30:00,US,Personal Spending MoM (Jul),USD,0.4,0.5,0.5,0.1,High,25.0,%
+2025-08-29 12:30:00,US,Personal Income MoM (Jul),USD,0.3,0.4,0.4,0.1,High,33.333,%
+2025-09-02 14:00:00,US,ISM Manufacturing PMI (Aug),USD,48.0,49.0,48.7,0.7,High,1.458,
+2025-09-03 14:00:00,US,JOLTs Job Openings (Jul),USD,7.357,7.4,7.181,-0.176,High,-2.392,M
+2025-09-04 07:00:00,US,ISM Non-Manufacturing PMI (Aug),USD,50.1,50.9,52.0,1.9,High,3.792,
+2025-09-04 07:00:00,US,ISM Non-Manufacturing Prices (Aug),USD,69.9,69.5,69.2,-0.7,High,-1.001,
+2025-09-04 14:00:00,US,ISM Services PMI (Aug),USD,50.1,51.0,52.0,1.9,High,3.792,
+2025-09-05 12:30:00,US,Unemployment Rate (Aug),USD,4.2,4.3,4.3,0.1,High,2.381,%
+2025-09-05 12:30:00,US,Non Farm Payrolls (Aug),USD,79.0,75.0,22.0,-57.0,High,-72.152,K
+2025-09-10 12:30:00,US,Producer Price Index MoM (Aug),USD,0.7,0.3,-0.1,-0.8,High,-114.286,%
+2025-09-11 05:30:00,US,CPI MoM (Aug),USD,0.2,0.3,0.4,0.2,High,100.0,%
+2025-09-11 05:30:00,US,Core CPI MoM (Aug),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2025-09-11 05:30:00,US,CPI YoY (Aug),USD,2.7,2.9,2.9,0.2,High,7.407,%
+2025-09-11 12:30:00,US,Core Inflation Rate YoY (Aug),USD,3.1,3.1,3.1,0.0,High,0.0,%
+2025-09-11 12:30:00,US,Core Inflation Rate MoM (Aug),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2025-09-11 12:30:00,US,Inflation Rate MoM (Aug),USD,0.2,0.3,0.4,0.2,High,100.0,%
+2025-09-11 12:30:00,US,Inflation Rate YoY (Aug),USD,2.7,2.9,2.9,0.2,High,7.407,%
+2025-09-16 12:30:00,US,Retail Sales MoM (Aug),USD,0.6,0.2,0.6,0.0,High,0.0,%
+2025-09-17 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2025-09-17 12:30:00,US,Housing Starts (Aug),USD,1.429,1.37,1.307,-0.122,High,-8.537,M
+2025-09-17 18:00:00,US,Fed Interest Rate Decision,USD,4.5,4.25,4.25,-0.25,High,-5.556,%
+2025-09-17 18:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2025-09-17 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2025-09-23 16:35:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2025-09-25 12:30:00,US,Durable Goods Orders MoM (Aug),USD,-2.7,-0.5,2.9,5.6,High,207.407,%
+2025-09-25 12:30:00,US,GDP Growth Rate QoQ (Q2),USD,-0.6,3.3,3.8,4.4,High,733.333,%
+2025-09-25 13:45:00,US,Existing Home Sales (Aug),USD,4.01,3.96,4.0,-0.01,High,-0.249,M
+2025-09-26 12:30:00,US,Core PCE Price Index MoM (Aug),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2025-09-26 12:30:00,US,Personal Income MoM (Aug),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2025-09-26 12:30:00,US,Personal Spending MoM (Aug),USD,0.5,0.5,0.6,0.1,High,20.0,%
+2025-09-30 07:00:00,US,CB Consumer Confidence (Sep),USD,97.8,96.0,94.2,-3.6,High,-3.681,
+2025-09-30 14:00:00,US,JOLTs Job Openings (Aug),USD,7.208,7.2,7.227,0.019,High,0.264,M
+2025-10-01 14:00:00,US,ISM Manufacturing PMI (Sep),USD,48.7,49.0,49.1,0.4,High,0.821,
+2025-10-03 07:00:00,US,ISM Non-Manufacturing PMI (Sep),USD,52.0,51.8,50.0,-2.0,High,-3.846,
+2025-10-03 07:00:00,US,ISM Non-Manufacturing Prices (Sep),USD,69.2,68.0,69.4,0.2,High,0.289,
+2025-10-03 14:00:00,US,ISM Services PMI (Sep),USD,52.0,51.7,50.0,-2.0,High,-3.846,
+2025-10-08 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2025-10-14 16:20:00,US,Fed Chair Powell Speech,USD,,,,,High,0.0,
+2025-10-23 14:00:00,US,Existing Home Sales (Sep),USD,4.0,4.1,4.06,0.06,High,1.5,M
+2025-10-24 05:30:00,US,Core CPI MoM (Sep),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2025-10-24 05:30:00,US,CPI MoM (Sep),USD,0.4,0.4,0.3,-0.1,High,-25.0,%
+2025-10-24 05:30:00,US,CPI YoY (Sep),USD,2.9,3.1,3.0,0.1,High,3.448,%
+2025-10-24 12:30:00,US,Inflation Rate MoM (Sep),USD,0.4,0.4,0.3,-0.1,High,-25.0,%
+2025-10-24 12:30:00,US,Core Inflation Rate MoM (Sep),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2025-10-24 12:30:00,US,Inflation Rate YoY (Sep),USD,2.9,3.1,3.0,0.1,High,3.448,%
+2025-10-24 12:30:00,US,Core Inflation Rate YoY (Sep),USD,3.1,3.1,3.0,-0.1,High,-3.226,%
+2025-10-28 07:00:00,US,CB Consumer Confidence (Oct),USD,95.6,93.4,94.6,-1.0,High,-1.046,
+2025-10-29 11:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2025-10-29 11:30:00,US,Press Conference,USD,,,,,High,0.0,
+2025-10-29 18:00:00,US,Fed Interest Rate Decision,USD,4.25,4.0,4.0,-0.25,High,-5.882,%
+2025-10-29 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2025-11-03 15:00:00,US,ISM Manufacturing PMI (Oct),USD,49.1,49.5,48.7,-0.4,High,-0.815,
+2025-11-05 09:00:00,US,ISM Non-Manufacturing Prices (Oct),USD,69.4,68.0,70.0,0.6,High,0.865,
+2025-11-05 09:00:00,US,ISM Non-Manufacturing PMI (Oct),USD,50.0,50.7,52.4,2.4,High,4.8,
+2025-11-05 15:00:00,US,ISM Services PMI (Oct),USD,50.0,50.8,52.4,2.4,High,4.8,
+2025-11-07 13:30:00,US,Unemployment Rate (Oct),USD,,4.4,,,High,0.0,%
+2025-11-07 15:00:00,US,Michigan Consumer Sentiment (Nov),USD,53.6,53.2,50.3,-3.3,High,-6.157,
+2025-11-13 13:30:00,US,CPI YoY (Oct),USD,3.0,,,,High,0.0,%
+2025-11-13 13:30:00,US,Core Inflation Rate YoY (Oct),USD,3.0,3.0,,,High,0.0,%
+2025-11-13 13:30:00,US,Inflation Rate YoY (Oct),USD,3.0,3.0,,,High,0.0,%
+2025-11-13 13:30:00,US,Inflation Rate MoM (Oct),USD,0.3,0.2,,,High,0.0,%
+2025-11-13 13:30:00,US,Core Inflation Rate MoM (Oct),USD,0.2,0.3,,,High,0.0,%
+2025-11-19 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2025-11-20 13:30:00,US,Non Farm Payrolls (Sep),USD,-4.0,50.0,119.0,123.0,High,3075.0,K
+2025-11-20 13:30:00,US,Unemployment Rate (Sep),USD,4.3,4.3,4.4,0.1,High,2.326,%
+2025-11-20 15:00:00,US,Existing Home Sales (Oct),USD,4.05,4.08,4.1,0.05,High,1.235,M
+2025-11-25 09:00:00,US,CB Consumer Confidence (Nov),USD,95.5,93.5,88.7,-6.8,High,-7.12,
+2025-11-25 13:30:00,US,Producer Price Index MoM (Sep),USD,-0.1,0.3,0.3,0.4,High,400.0,%
+2025-11-25 13:30:00,US,Retail Sales MoM (Sep),USD,0.6,0.4,0.2,-0.4,High,-66.667,%
+2025-11-26 13:30:00,US,Goods Trade Balance (Oct),USD,,-89.0,,,High,0.0,B
+2025-11-26 13:30:00,US,Durable Goods Orders MoM (Sep),USD,3.0,0.3,0.5,-2.5,High,-83.333,%
+2025-12-01 15:00:00,US,ISM Manufacturing PMI (Nov),USD,48.7,48.6,48.2,-0.5,High,-1.027,
+2025-12-03 09:00:00,US,ISM Non-Manufacturing Prices (Nov),USD,70.0,68.0,65.4,-4.6,High,-6.571,
+2025-12-03 09:00:00,US,ISM Non-Manufacturing PMI (Nov),USD,52.4,52.0,52.6,0.2,High,0.382,
+2025-12-03 15:00:00,US,ISM Services PMI (Nov),USD,52.4,52.1,52.6,0.2,High,0.382,
+2025-12-05 15:00:00,US,Personal Income MoM (Sep),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2025-12-05 15:00:00,US,Core PCE Price Index MoM (Sep),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2025-12-05 15:00:00,US,Personal Spending MoM (Sep),USD,0.5,0.3,0.3,-0.2,High,-40.0,%
+2025-12-09 15:00:00,US,JOLTs Job Openings (Sep),USD,7.227,7.2,7.658,0.431,High,5.964,M
+2025-12-09 15:00:00,US,JOLTs Job Openings (Oct),USD,7.658,7.0,7.67,0.012,High,0.157,M
+2025-12-10 13:30:00,US,Press Conference,USD,,,,,High,0.0,
+2025-12-10 19:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2025-12-10 19:00:00,US,Fed Interest Rate Decision,USD,4.0,3.75,3.75,-0.25,High,-6.25,%
+2025-12-10 19:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2025-12-16 13:30:00,US,Non Farm Payrolls (Oct),USD,108.0,55.0,-105.0,-213.0,High,-197.222,K
+2025-12-16 13:30:00,US,Unemployment Rate (Nov),USD,4.4,4.4,4.6,0.2,High,4.545,%
+2025-12-16 13:30:00,US,Non Farm Payrolls (Nov),USD,-105.0,50.0,64.0,169.0,High,160.952,K
+2025-12-18 07:30:00,US,CPI YoY (Nov),USD,3.0,3.1,2.7,-0.3,High,-10.0,%
+2025-12-18 13:30:00,US,Core Inflation Rate YoY (Nov),USD,,3.0,2.6,,High,0.0,%
+2025-12-18 13:30:00,US,Inflation Rate MoM (Nov),USD,,0.3,,,High,0.0,%
+2025-12-18 13:30:00,US,Core Inflation Rate MoM (Nov),USD,,0.3,,,High,0.0,%
+2025-12-18 13:30:00,US,Core CPI MoM (Nov),USD,0.2,0.3,,,High,0.0,%
+2025-12-18 13:30:00,US,Inflation Rate YoY (Nov),USD,,3.1,2.7,,High,0.0,%
+2025-12-19 15:00:00,US,Existing Home Sales (Nov),USD,4.11,4.2,4.13,0.02,High,0.487,M
+2025-12-20 02:00:00,US,US President Trump Speech,USD,,,,,High,0.0,
+2025-12-23 09:00:00,US,CB Consumer Confidence (Dec),USD,92.9,91.7,89.1,-3.8,High,-4.09,
+2025-12-23 13:30:00,US,Durable Goods Orders MoM (Oct),USD,0.7,-1.5,-2.2,-2.9,High,-414.286,%
+2025-12-23 13:30:00,US,Core PCE Price Index MoM (Oct),USD,0.2,,,,High,0.0,%
+2025-12-23 13:30:00,US,GDP Growth Rate QoQ (Q3),USD,3.8,3.3,4.3,0.5,High,13.158,%
+2025-12-29 13:30:00,US,Goods Trade Balance (Nov),USD,,-86.0,,,High,0.0,B
+2025-12-30 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2026-01-05 15:00:00,US,ISM Manufacturing PMI (Dec),USD,48.2,48.3,47.9,-0.3,High,-0.622,
+2026-01-07 15:00:00,US,ISM Services PMI (Dec),USD,52.6,52.3,54.4,1.8,High,3.422,
+2026-01-07 15:00:00,US,JOLTs Job Openings (Nov),USD,7.449,7.6,7.146,-0.303,High,-4.068,M
+2026-01-07 15:00:00,US,ISM Non-Manufacturing PMI (Dec),USD,52.6,52.2,54.4,1.8,High,3.422,
+2026-01-07 15:00:00,US,ISM Non-Manufacturing Prices (Dec),USD,65.4,64.9,64.3,-1.1,High,-1.682,
+2026-01-09 13:30:00,US,Non Farm Payrolls (Dec),USD,56.0,60.0,50.0,-6.0,High,-10.714,K
+2026-01-09 13:30:00,US,Unemployment Rate (Dec),USD,4.5,4.5,4.4,-0.1,High,-2.222,%
+2026-01-09 13:30:00,US,Housing Starts (Sep),USD,1.291,1.33,1.306,0.015,High,1.162,M
+2026-01-09 13:30:00,US,Housing Starts (Oct),USD,1.306,1.33,1.246,-0.06,High,-4.594,M
+2026-01-13 13:30:00,US,Core Inflation Rate YoY (Dec),USD,2.6,2.7,2.6,0.0,High,0.0,%
+2026-01-13 13:30:00,US,CPI MoM (Oct),USD,0.3,,,,High,0.0,%
+2026-01-13 13:30:00,US,Inflation Rate YoY (Dec),USD,2.7,2.7,2.7,0.0,High,0.0,%
+2026-01-13 13:30:00,US,CPI MoM (Dec),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2026-01-13 13:30:00,US,Core Inflation Rate MoM (Dec),USD,,0.3,0.2,,High,0.0,%
+2026-01-13 13:30:00,US,Core CPI MoM (Dec),USD,0.2,0.3,0.2,0.0,High,0.0,%
+2026-01-13 13:30:00,US,CPI YoY (Dec),USD,2.7,2.7,2.7,0.0,High,0.0,%
+2026-01-13 13:30:00,US,Inflation Rate MoM (Dec),USD,,0.3,0.3,,High,0.0,%
+2026-01-13 13:30:00,US,Core CPI MoM (Oct),USD,0.2,,,,High,0.0,%
+2026-01-14 13:30:00,US,Producer Price Index MoM (Oct),USD,0.6,0.3,0.1,-0.5,High,-83.333,%
+2026-01-14 13:30:00,US,Retail Sales MoM (Nov),USD,-0.1,0.4,0.6,0.7,High,700.0,%
+2026-01-14 13:30:00,US,Producer Price Index MoM (Nov),USD,0.1,0.2,0.2,0.1,High,100.0,%
+2026-01-14 15:00:00,US,Existing Home Sales (Dec),USD,4.14,4.21,4.35,0.21,High,5.072,M
+2026-01-22 13:30:00,US,Gross Domestic Product QoQ (Q3),USD,3.8,4.3,4.4,0.6,High,15.789,%
+2026-01-22 15:00:00,US,Core PCE Price Index MoM (Nov),USD,0.2,0.2,0.2,0.0,High,0.0,%
+2026-01-22 15:00:00,US,Personal Income MoM (Nov),USD,0.1,0.4,0.3,0.2,High,200.0,%
+2026-01-22 15:00:00,US,Personal Income MoM (Oct),USD,0.4,0.3,0.1,-0.3,High,-75.0,%
+2026-01-22 15:00:00,US,Personal Spending MoM (Nov),USD,0.5,0.5,0.5,0.0,High,0.0,%
+2026-01-22 15:00:00,US,Personal Spending MoM (Oct),USD,0.4,0.1,0.5,0.1,High,25.0,%
+2026-01-26 13:30:00,US,Durable Goods Orders MoM (Nov),USD,-2.1,3.7,5.3,7.4,High,352.381,%
+2026-01-27 15:00:00,US,CB Consumer Confidence (Jan),USD,94.2,90.6,84.5,-9.7,High,-10.297,
+2026-01-28 19:00:00,US,Fed Interest Rate Decision,USD,3.75,3.75,3.75,0.0,High,0.0,%
+2026-01-28 19:00:00,US,FOMC Economic Projections,USD,,,,,High,,
+2026-01-28 19:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2026-01-28 19:30:00,US,Press Conference,USD,,,,,High,,
+2026-01-30 13:30:00,US,Producer Price Index MoM (Dec),USD,0.2,0.2,0.5,0.3,High,150.0,%
+2026-02-02 15:00:00,US,ISM Manufacturing PMI (Jan),USD,47.9,48.5,52.6,4.7,High,9.812,
+2026-02-04 15:00:00,US,ISM Services PMI (Jan),USD,53.8,53.5,53.8,0.0,High,0.0,
+2026-02-04 15:00:00,US,ISM Non-Manufacturing PMI (Jan),USD,53.8,53.5,53.8,0.0,High,0.0,
+2026-02-04 15:00:00,US,ISM Non-Manufacturing Prices (Jan),USD,65.1,65.0,66.6,1.5,High,2.304,
+2026-02-05 15:00:00,US,JOLTs Job Openings (Dec),USD,6.928,7.2,6.542,-0.386,High,-5.572,M
+2026-02-11 13:30:00,US,Unemployment Rate (Jan),USD,4.4,4.4,4.3,-0.1,High,-2.273,%
+2026-02-11 13:30:00,US,Non Farm Payrolls (Jan),USD,48.0,70.0,130.0,82.0,High,170.833,K
+2026-02-12 15:00:00,US,Existing Home Sales (Jan),USD,4.27,4.18,3.91,-0.36,High,-8.431,M
+2026-02-13 13:30:00,US,CPI YoY (Jan),USD,2.7,2.5,2.4,-0.3,High,-11.111,%
+2026-02-13 13:30:00,US,Core Inflation Rate MoM (Jan),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2026-02-13 13:30:00,US,CPI MoM (Jan),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2026-02-13 13:30:00,US,Inflation Rate MoM (Jan),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2026-02-13 13:30:00,US,Core Inflation Rate YoY (Jan),USD,2.6,2.5,2.5,-0.1,High,-3.846,%
+2026-02-13 13:30:00,US,Inflation Rate YoY (Jan),USD,2.7,2.5,2.4,-0.3,High,-11.111,%
+2026-02-18 13:30:00,US,Housing Starts (Nov),USD,1.272,1.27,1.322,0.05,High,3.931,M
+2026-02-18 13:30:00,US,Durable Goods Orders MoM (Dec),USD,5.4,-2.0,-1.4,-6.8,High,-125.926,%
+2026-02-18 13:30:00,US,Housing Starts (Dec),USD,1.322,1.33,1.404,0.082,High,6.203,M
+2026-02-18 19:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2026-02-20 13:30:00,US,Personal Spending MoM (Dec),USD,0.4,0.4,0.4,0.0,High,0.0,%
+2026-02-20 13:30:00,US,Personal Income MoM (Dec),USD,0.4,0.3,0.3,-0.1,High,-25.0,%
+2026-02-20 13:30:00,US,Core PCE Price Index MoM (Dec),USD,0.2,0.3,0.4,0.2,High,100.0,%
+2026-02-24 15:00:00,US,CB Consumer Confidence (Feb),USD,89.0,87.4,91.2,2.2,High,2.472,
+2026-02-27 13:30:00,US,Producer Price Index MoM (Jan),USD,0.4,0.3,0.5,0.1,High,25.0,%
+2026-03-02 15:00:00,US,ISM Manufacturing PMI (Feb),USD,52.6,51.8,52.4,-0.2,High,-0.38,
+2026-03-04 15:00:00,US,ISM Services PMI (Feb),USD,53.8,53.5,56.1,2.3,High,4.275,
+2026-03-04 15:00:00,US,ISM Non-Manufacturing PMI (Feb),USD,53.8,53.5,56.1,2.3,High,4.275,
+2026-03-04 15:00:00,US,ISM Non-Manufacturing Prices (Feb),USD,66.6,68.3,63.0,-3.6,High,-5.405,
+2026-03-06 13:30:00,US,Unemployment Rate (Feb),USD,4.3,4.3,4.4,0.1,High,2.326,%
+2026-03-06 13:30:00,US,Non Farm Payrolls (Feb),USD,126.0,59.0,-92.0,-218.0,High,-173.016,K
+2026-03-10 14:00:00,US,Existing Home Sales (Feb),USD,4.02,3.89,4.09,0.07,High,1.741,M
+2026-03-11 12:30:00,US,Core Inflation Rate YoY (Feb),USD,2.5,2.5,2.5,0.0,High,0.0,%
+2026-03-11 12:30:00,US,Core CPI MoM (Feb),USD,0.3,0.2,0.2,-0.1,High,-33.333,%
+2026-03-11 12:30:00,US,Inflation Rate YoY (Feb),USD,2.4,2.4,2.4,0.0,High,0.0,%
+2026-03-11 12:30:00,US,CPI YoY (Feb),USD,2.4,2.4,2.4,0.0,High,0.0,%
+2026-03-11 12:30:00,US,Core Inflation Rate MoM (Feb),USD,0.3,0.2,0.2,-0.1,High,-33.333,%
+2026-03-11 12:30:00,US,CPI MoM (Feb),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2026-03-11 12:30:00,US,Inflation Rate MoM (Feb),USD,0.2,0.3,0.3,0.1,High,50.0,%
+2026-03-12 12:30:00,US,Building Permits (Jan),USD,1.455,1.41,1.376,-0.079,High,-5.43,M
+2026-03-12 12:30:00,US,Housing Starts (Jan),USD,1.387,1.35,1.487,0.1,High,7.21,M
+2026-03-13 12:30:00,US,Personal Spending MoM (Jan),USD,0.4,0.3,0.4,0.0,High,0.0,%
+2026-03-13 12:30:00,US,Personal Income MoM (Jan),USD,0.3,0.5,0.4,0.1,High,33.333,%
+2026-03-13 12:30:00,US,Core PCE Price Index MoM (Jan),USD,0.4,0.4,0.4,0.0,High,0.0,%
+2026-03-13 12:30:00,US,Durable Goods Orders MoM (Jan),USD,-0.9,1.2,0.0,0.9,High,100.0,%
+2026-03-13 14:00:00,US,JOLTs Job Openings (Jan),USD,6.55,6.7,6.946,0.396,High,6.046,M
+2026-03-13 14:00:00,US,Michigan Consumer Sentiment (Mar),USD,56.6,55.0,55.5,-1.1,High,-1.943,
+2026-03-18 12:30:00,US,Producer Price Index MoM (Feb),USD,0.5,0.3,0.7,0.2,High,40.0,%
+2026-03-18 18:00:00,US,Fed Interest Rate Decision,USD,3.75,3.75,3.75,0.0,High,0.0,%
+2026-03-18 18:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2026-03-18 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2026-03-18 18:30:00,US,Press Conference,USD,,,,,High,,
+2026-03-31 14:00:00,US,JOLTs Job Openings (Feb),USD,7.24,6.92,6.882,-0.358,High,-4.945,M
+2026-03-31 14:00:00,US,CB Consumer Confidence (Mar),USD,91.0,87.8,91.8,0.8,High,0.879,
+2026-04-01 12:30:00,US,Retail Sales MoM (Feb),USD,-0.1,0.5,0.6,0.7,High,700.0,%
+2026-04-01 14:00:00,US,ISM Manufacturing PMI (Mar),USD,52.4,52.5,52.7,0.3,High,0.573,
+2026-04-02 01:00:00,US,US President Trump Speech,USD,,,,,High,0.0,
+2026-04-03 12:30:00,US,Non Farm Payrolls (Mar),USD,-133.0,60.0,178.0,311.0,High,233.835,K
+2026-04-03 12:30:00,US,Unemployment Rate (Mar),USD,4.4,4.4,4.3,-0.1,High,-2.273,%
+2026-04-06 14:00:00,US,ISM Non-Manufacturing PMI (Mar),USD,56.1,54.8,54.0,-2.1,High,-3.743,
+2026-04-06 14:00:00,US,ISM Non-Manufacturing Prices (Mar),USD,63.0,67.0,70.7,7.7,High,12.222,
+2026-04-06 14:00:00,US,ISM Services PMI (Mar),USD,56.1,55.0,54.0,-2.1,High,-3.743,
+2026-04-07 12:30:00,US,Durable Goods Orders MoM (Feb),USD,-0.5,-0.5,-1.4,-0.9,High,-180.0,%
+2026-04-07 12:30:00,US,Durable Goods Orders MoM,USD,0.0,,,,High,0.0,%
+2026-04-08 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2026-04-09 12:30:00,US,Personal Income MoM (Feb),USD,0.4,0.3,-0.1,-0.5,High,-125.0,%
+2026-04-09 12:30:00,US,Gross Domestic Product QoQ (Q4),USD,4.4,0.7,0.5,-3.9,High,-88.636,%
+2026-04-09 12:30:00,US,Core PCE Price Index MoM (Feb),USD,0.4,0.4,0.4,0.0,High,0.0,%
+2026-04-09 12:30:00,US,Personal Spending MoM (Feb),USD,0.3,0.5,0.5,0.2,High,66.667,%
+2026-04-10 12:30:00,US,Inflation Rate YoY (Mar),USD,2.4,3.3,3.3,0.9,High,37.5,%
+2026-04-10 12:30:00,US,Inflation Rate MoM (Mar),USD,0.3,0.9,0.9,0.6,High,200.0,%
+2026-04-10 12:30:00,US,Core Inflation Rate YoY (Mar),USD,2.5,2.7,2.6,0.1,High,4.0,%
+2026-04-10 12:30:00,US,Core Inflation Rate MoM (Mar),USD,0.2,0.3,0.2,0.0,High,0.0,%
+2026-04-10 12:30:00,US,CPI MoM (Mar),USD,0.3,1.0,0.9,0.6,High,200.0,%
+2026-04-10 12:30:00,US,Core CPI MoM (Mar),USD,0.2,0.3,0.2,0.0,High,0.0,%
+2026-04-10 12:30:00,US,CPI YoY (Mar),USD,2.4,3.4,3.3,0.9,High,37.5,%
+2026-04-10 14:00:00,US,Michigan Consumer Sentiment (Apr),USD,53.3,52.0,47.6,-5.7,High,-10.694,
+2026-04-13 14:00:00,US,Existing Home Sales (Mar),USD,4.13,4.06,3.98,-0.15,High,-3.632,M
+2026-04-14 12:30:00,US,Producer Price Index MoM (Mar),USD,0.5,1.1,0.5,0.0,High,0.0,%
+2026-04-21 12:30:00,US,Retail Sales MoM (Mar),USD,0.7,1.4,1.7,1.0,High,142.857,%
+2026-04-28 14:00:00,US,CB Consumer Confidence (Apr),USD,92.2,89.0,92.8,0.6,High,0.651,
+2026-04-29 12:30:00,US,Housing Starts (Feb),USD,1.398,1.41,1.356,-0.042,High,-3.004,M
+2026-04-29 12:30:00,US,Durable Goods Orders MoM (Mar),USD,-1.2,0.5,0.8,2.0,High,166.667,%
+2026-04-29 12:30:00,US,Housing Starts (Mar),USD,1.356,1.4,1.502,0.146,High,10.767,M
+2026-04-29 18:00:00,US,Fed Interest Rate Decision,USD,3.75,3.75,3.75,0.0,High,0.0,%
+2026-04-29 18:00:00,US,FOMC Economic Projections,USD,,,,,High,,
+2026-04-29 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2026-04-29 18:30:00,US,Press Conference,USD,,,,,High,,
+2026-04-30 12:30:00,US,Personal Income MoM (Mar),USD,0.0,0.3,0.6,0.6,High,0.0,%
+2026-04-30 12:30:00,US,Core PCE Price Index MoM (Mar),USD,0.4,0.3,0.3,-0.1,High,-25.0,%
+2026-04-30 12:30:00,US,Personal Spending MoM (Mar),USD,0.6,0.9,0.9,0.3,High,50.0,%
+2026-05-01 14:00:00,US,ISM Manufacturing PMI (Apr),USD,52.7,53.0,52.7,0.0,High,0.0,
+2026-05-05 14:00:00,US,JOLTs Job Openings (Mar),USD,6.922,6.84,6.866,-0.056,High,-0.809,M
+2026-05-05 14:00:00,US,ISM Services PMI (Apr),USD,54.0,53.7,53.6,-0.4,High,-0.741,
+2026-05-05 14:00:00,US,ISM Non-Manufacturing PMI (Apr),USD,54.0,53.7,53.6,-0.4,High,-0.741,
+2026-05-05 14:00:00,US,ISM Non-Manufacturing Prices (Apr),USD,70.7,73.7,70.7,0.0,High,0.0,
+2026-05-08 12:30:00,US,Non Farm Payrolls (Apr),USD,185.0,62.0,115.0,-70.0,High,-37.838,K
+2026-05-08 12:30:00,US,Unemployment Rate (Apr),USD,4.3,4.3,4.3,0.0,High,0.0,%
+2026-05-11 14:00:00,US,Existing Home Sales (Apr),USD,4.01,4.05,4.02,0.01,High,0.249,M
+2026-05-12 12:30:00,US,CPI MoM (Apr),USD,0.9,0.6,0.6,-0.3,High,-33.333,%
+2026-05-12 12:30:00,US,Inflation Rate YoY (Apr),USD,3.3,3.7,3.8,0.5,High,15.152,%
+2026-05-12 12:30:00,US,Core Inflation Rate MoM (Apr),USD,0.2,0.3,0.4,0.2,High,100.0,%
+2026-05-12 12:30:00,US,CPI YoY (Apr),USD,3.3,3.7,3.8,0.5,High,15.152,%
+2026-05-12 12:30:00,US,Core Inflation Rate YoY (Apr),USD,2.6,2.7,2.8,0.2,High,7.692,%
+2026-05-12 12:30:00,US,Inflation Rate MoM (Apr),USD,0.9,0.6,0.6,-0.3,High,-33.333,%
+2026-05-12 12:30:00,US,Core CPI MoM (Apr),USD,0.2,0.3,0.4,0.2,High,100.0,%
+2026-05-13 12:30:00,US,Producer Price Index MoM (Apr),USD,0.7,0.5,1.4,0.7,High,100.0,%
+2026-05-14 12:30:00,US,Retail Sales MoM (Apr),USD,1.6,0.5,0.5,-1.1,High,-68.75,%
+2026-05-20 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2026-05-21 12:30:00,US,Housing Starts (Apr),USD,1.507,1.41,1.465,-0.042,High,-2.787,M
+2026-05-26 14:00:00,US,CB Consumer Confidence (May),USD,93.8,91.9,93.1,-0.7,High,-0.746,
+2026-05-28 12:30:00,US,Core PCE Price Index MoM (Apr),USD,0.3,0.3,0.2,-0.1,High,-33.333,%
+2026-05-28 12:30:00,US,Personal Income MoM (Apr),USD,0.5,0.4,0.0,-0.5,High,-100.0,%
+2026-05-28 12:30:00,US,Durable Goods Orders MoM (Apr),USD,1.3,3.5,7.9,6.6,High,507.692,%
+2026-06-01 14:00:00,US,ISM Manufacturing PMI (May),USD,52.7,53.0,54.0,1.3,High,2.467,
+2026-06-02 14:00:00,US,JOLTs Job Openings (Apr),USD,6.887,6.88,7.618,0.731,High,10.614,M
+2026-06-03 14:00:00,US,ISM Non-Manufacturing Prices (May),USD,70.7,72.3,71.3,0.6,High,0.849,
+2026-06-03 14:00:00,US,ISM Non-Manufacturing PMI (May),USD,53.6,53.7,54.5,0.9,High,1.679,
+2026-06-03 14:00:00,US,ISM Services PMI (May),USD,53.6,53.8,54.5,0.9,High,1.679,
+2026-06-05 12:30:00,US,Unemployment Rate (May),USD,4.3,4.3,4.3,0.0,High,0.0,%
+2026-06-05 12:30:00,US,Non Farm Payrolls (May),USD,179.0,85.0,172.0,-7.0,High,-3.911,K
+2026-06-09 14:00:00,US,Existing Home Sales (May),USD,4.04,4.07,4.17,0.13,High,3.218,M
+2026-06-10 12:30:00,US,Inflation Rate MoM (May),USD,0.6,0.5,0.5,-0.1,High,-16.667,%
+2026-06-10 12:30:00,US,CPI YoY (May),USD,3.8,4.2,4.2,0.4,High,10.526,%
+2026-06-10 12:30:00,US,Core Inflation Rate YoY (May),USD,2.8,2.9,2.9,0.1,High,3.571,%
+2026-06-10 12:30:00,US,Inflation Rate YoY (May),USD,3.8,4.2,4.2,0.4,High,10.526,%
+2026-06-10 12:30:00,US,Core CPI MoM (May),USD,0.4,0.3,0.2,-0.2,High,-50.0,%
+2026-06-10 12:30:00,US,CPI MoM (May),USD,0.6,0.5,0.5,-0.1,High,-16.667,%
+2026-06-10 12:30:00,US,Core Inflation Rate MoM (May),USD,0.4,0.3,0.2,-0.2,High,-50.0,%
+2026-06-11 12:30:00,US,Producer Price Index MoM (May),USD,1.1,0.7,1.1,0.0,High,0.0,%
+2026-06-16 12:30:00,US,Housing Starts (May),USD,1.392,1.43,1.177,-0.215,High,-15.445,M
+2026-06-17 12:30:00,US,Retail Sales MoM (May),USD,0.4,0.5,0.9,0.5,High,125.0,%
+2026-06-17 18:00:00,US,FOMC Economic Projections,USD,,,,,High,0.0,
+2026-06-17 18:00:00,US,Fed Interest Rate Decision,USD,3.75,3.75,3.75,0.0,High,0.0,%
+2026-06-17 18:30:00,US,Press Conference,USD,,,,,High,,
+2026-06-17 18:30:00,US,Fed Press Conference,USD,,,,,High,0.0,
+2026-06-25 12:30:00,US,Durable Goods Orders MoM (May),USD,8.5,-4.5,-4.5,-13.0,High,-152.941,%
+2026-06-25 12:30:00,US,Personal Income MoM (May),USD,0.0,0.4,0.7,0.7,High,0.0,%
+2026-06-25 12:30:00,US,Personal Spending MoM (May),USD,0.4,0.6,0.7,0.3,High,75.0,%
+2026-06-25 12:30:00,US,GDP Growth Rate QoQ (Q1),USD,0.5,1.6,2.1,1.6,High,320.0,%
+2026-06-25 12:30:00,US,Core PCE Price Index MoM (May),USD,0.3,0.3,0.3,0.0,High,0.0,%
+2026-06-25 12:30:00,US,Gross Domestic Product QoQ (Q1),USD,0.5,1.6,2.1,1.6,High,320.0,%
+2026-06-30 14:00:00,US,CB Consumer Confidence (Jun),USD,90.6,94.4,91.2,0.6,High,0.662,
+2026-06-30 14:00:00,US,JOLTs Job Openings (May),USD,7.585,7.3,7.594,0.009,High,0.119,M
+2026-07-01 14:00:00,US,ISM Manufacturing PMI (Jun),USD,54.0,54.0,53.3,-0.7,High,-1.296,
+2026-07-02 12:30:00,US,Unemployment Rate (Jun),USD,4.3,4.3,4.2,-0.1,High,-2.326,%
+2026-07-02 12:30:00,US,Non Farm Payrolls (Jun),USD,129.0,110.0,57.0,-72.0,High,-55.814,K
+2026-07-06 14:00:00,US,ISM Non-Manufacturing PMI (Jun),USD,54.5,54.2,54.0,-0.5,High,-0.917,
+2026-07-06 14:00:00,US,ISM Non-Manufacturing Prices (Jun),USD,71.3,67.5,67.7,-3.6,High,-5.049,
+2026-07-06 14:00:00,US,ISM Services PMI (Jun),USD,54.5,54.0,54.0,-0.5,High,-0.917,
+2026-07-08 18:00:00,US,FOMC Minutes,USD,,,,,High,0.0,
+2026-07-09 14:00:00,US,Existing Home Sales (Jun),USD,4.19,4.2,4.09,-0.1,High,-2.387,M
+2026-07-10 15:00:00,US,Monetary Policy Report,USD,,,,,High,,
+2026-07-14 12:30:00,US,Core Inflation Rate YoY (Jun),USD,2.9,2.8,2.6,-0.3,High,-10.345,%
+2026-07-14 12:30:00,US,Inflation Rate MoM (Jun),USD,0.5,-0.1,-0.4,-0.9,High,-180.0,%
+2026-07-14 12:30:00,US,Core Inflation Rate MoM (Jun),USD,0.2,0.2,0.0,-0.2,High,-100.0,%
+2026-07-14 12:30:00,US,Core CPI MoM (Jun),USD,0.2,0.2,0.0,-0.2,High,-100.0,%
+2026-07-14 12:30:00,US,Inflation Rate YoY (Jun),USD,4.2,3.8,3.5,-0.7,High,-16.667,%
+2026-07-14 12:30:00,US,CPI MoM (Jun),USD,0.5,-0.1,-0.4,-0.9,High,-180.0,%
+2026-07-14 12:30:00,US,CPI YoY (Jun),USD,4.2,3.8,3.5,-0.7,High,-16.667,%
+2026-07-15 12:30:00,US,Producer Price Index MoM (Jun),USD,0.6,0.0,-0.3,-0.9,High,-150.0,%
+2026-07-17 12:30:00,US,Housing Starts (Jun),USD,1.199,1.31,1.427,0.228,High,19.016,M
+2026-07-17 12:30:00,US,Building Permits (Jun),USD,1.41,1.4,1.367,-0.043,High,-3.05,M
+2026-07-17 14:00:00,US,Michigan Consumer Sentiment (Jul),USD,49.5,51.0,54.4,4.9,High,9.899,
