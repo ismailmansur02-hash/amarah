@@ -370,3 +370,38 @@ real hypothesis: **USD weak Monday, strong Wednesday**). `multi_pair_dow.py`.
 account), but **the prop challenge stays a leverage/variance problem** — no
 free-lunch basket makes +10%-in-5-months a high-probability event. Best
 challenge basket remains EUR+GBP (the strongest signals).
+
+---
+
+## Final add-on audit (2026-07-20): GOLD, GBPJPY, NASDAQ-100
+
+User-requested last check: does the day-of-week edge exist on gold, GBPJPY, or
+NAS100? Script: `backtest/new_instruments_dow.py` (same Mon-LONG/Wed-SHORT
+method, daily open→close minus realistic FTMO spread; gold = GCUSD futures,
+NAS100 = QQQ proxy, GBPJPY built from the repo's GBPUSD×USDJPY legs).
+
+| Instrument | 2023 | 2024 | 2025 | 2026 | 2025→Jul26 | Verdict |
+|---|---|---|---|---|---|---|
+| GOLD (XAU) | −7.9% (t−1.2) | −6.8% (t−0.7) | +4.5% (t0.4) | −7.5% (t−0.6) | −3.3% (t−0.1) | **no edge** |
+| GBPJPY | – | – | +9.8% (t1.9) | +8.6% (t2.5) | +19.3% (t2.9) | works, but is the GBPUSD edge in disguise |
+| NAS100 o→c | +24.4% (t2.6) | +7.1% (t0.8) | −9.3% (t−0.6) | +5.4% (t0.8) | −4.4% (t−0.2) | **sign-flips by year — no stable edge** |
+| NAS100 c→c | +20.7% (t2.0) | +7.2% (t0.7) | −11.6% (t−0.6) | +2.2% (t0.3) | −9.7% (t−0.4) | same |
+| *GBPUSD ref* | – | – | +11.2% (t2.3) | +10.7% (t3.4) | +23.2% (t3.7) | already in the bot |
+
+Risk-normalized (0.5% risk, 1.5×ATR14 stop, real OHLC): gold 25+26 = **+0.01%/mo**
+(dead), NAS100 = +0.07%/mo with t=0.6 (noise). Correlation of daily strategy
+returns vs the live EUR+GBP book: gold +0.31, GBPJPY +0.22, NAS100 +0.15.
+
+**Why GBPJPY is rejected despite t=2.9:** long GBPJPY Monday = long GBPUSD +
+long USDJPY. The GBPUSD leg is the strongest signal we already trade (+23.2%,
+t3.7); the USDJPY leg is a known nothing (t0.3 in the 7-pair test) that only
+drags, and the cross costs ~2.5× the spread of GBPUSD. GBPJPY is strictly
+dominated by the GBPUSD position the bot already holds — adding it would just
+double GBP exposure at worse cost, exactly the correlated-breadth trap
+documented above. It also has no pre-Oct-2024 data here to prove regime
+robustness.
+
+**Conclusion: keep the bot at EURUSD+GBPUSD.** The edge remains a *risk-FX vs
+USD* effect. It does not exist on gold, is unstable (year-to-year sign flips)
+on equity indices, and on crosses like GBPJPY it is only the GBP leg showing
+through at higher cost. Nothing here earns a slot — spec stays frozen.
