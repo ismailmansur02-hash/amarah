@@ -300,3 +300,32 @@ so this is verified against a faithful mock of Safari's quirks plus the known
 iOS-Safari Web Speech API rules — not a live iPhone. Please confirm on a real
 device / TestFlight build; the fixes target the exact documented Safari failure
 modes.
+
+---
+
+# Round 4 — content-council (source-fidelity QA tool)
+
+Added `tools/content-council/` — a developer tool that adapts
+[karpathy/llm-council](https://github.com/karpathy/llm-council) from *answering*
+to *verifying*. A council of several LLMs independently checks the app's
+extracted content (questions, Constable Companion offences and powers) against a
+supplied source document, disputed items go to a peer-review round, and a
+chairman consolidates the final findings into a severity-ranked report.
+
+**Cardinal-rule posture:** it never writes, extends or corrects content — each
+model is instructed to use *only* the source text and judge fidelity
+(SUPPORTED / CONTRADICTED / NOT_IN_SOURCE). Output is an advisory report a human
+reviews; nothing changes in the app automatically. This turns the council's
+cross-checking strength onto the project's real need (content integrity) without
+putting model-generated legal content in front of officers.
+
+Files: `config.mjs`, `openrouter.mjs`, `extract-items.mjs`, `council.mjs`,
+`run.mjs` (CLI), `test-council.mjs`, `README.md`, `sample-source.txt`.
+
+**Verified offline** (no key/network): `test-council.mjs` passes 14/14 over a
+fully mocked council run (dispute detection → peer review → chairman → ranked
+report). Extraction verified against the real app (1000 checkable claims: 885
+questions + 91 offences + 24 powers), and a real-content integration run
+confirmed a disputed item is escalated and resolved and the report renders.
+Live model runs need an `OPENROUTER_API_KEY` and network to `openrouter.ai`
+(blocked in this build environment, so live calls are the owner's to run).

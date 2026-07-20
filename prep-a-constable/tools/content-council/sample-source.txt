@@ -1,0 +1,20 @@
+SAMPLE SOURCE — for demonstrating the content-council tool only.
+Replace this with Mr Mansur's real supplied document before any live run.
+(Public statutory wording, Theft Act 1968, used here purely as a demo input.)
+
+Section 1 Theft Act 1968 — Basic definition of theft
+A person is guilty of theft if he dishonestly appropriates property belonging to
+another with the intention of permanently depriving the other of it; and "thief"
+and "steal" shall be construed accordingly.
+
+It is immaterial whether the appropriation is made with a view to gain, or is made
+for the thief's own benefit.
+
+A person guilty of theft is liable on conviction on indictment to imprisonment for
+a term not exceeding seven years. Theft is triable either way.
+
+Section 8 Theft Act 1968 — Robbery
+A person is guilty of robbery if he steals, and immediately before or at the time
+of doing so, and in order to do so, he uses force on any person or puts or seeks
+to put any person in fear of being then and there subjected to force. A person
+guilty of robbery is liable on conviction on indictment to imprisonment for life.

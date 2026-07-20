@@ -1,0 +1,7 @@
+# Generated verification reports (run outputs) — never commit these
+content-council-report.md
+content-council-report.json
+*-report.md
+*-report.json
+.env
+node_modules/
