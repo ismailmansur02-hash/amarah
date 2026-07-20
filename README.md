@@ -1,3 +1,8 @@
+> This repo also contains **[prep-a-constable/](prep-a-constable/)** — the Prep a
+> Constable app workspace with its own full audit
+> ([prep-a-constable/AUDIT.md](prep-a-constable/AUDIT.md)) and project rules
+> ([prep-a-constable/CLAUDE.md](prep-a-constable/CLAUDE.md)).
+
 # ALGAY 3.0 "inversion" — audit & backtest
 
 EURUSD mean-reversion bot (15M signals inside UK-anchored 4H sessions) plus a full

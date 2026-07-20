@@ -1,0 +1,24 @@
+{
+  "name": "prep-a-constable-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Supabase + RevenueCat integration modules for the Prep a Constable app (auth, cloud sync, payments, account deletion).",
+  "scripts": {
+    "extract-contract": "node scripts/extract-contract.js ../prep-a-constable.jsx",
+    "test": "node scripts/test-contract.cjs",
+    "loadtest": "node scripts/loadtest.mjs"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.1.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "expo-apple-authentication": "~7.1.0",
+    "expo-auth-session": "~6.0.0",
+    "expo-linking": "~7.0.0",
+    "expo-web-browser": "~14.0.0",
+    "react-native-purchases": "^8.2.0",
+    "react-native-url-polyfill": "^2.0.0"
+  },
+  "notes": {
+    "versions": "Dependency versions are indicative and should be aligned to your installed Expo SDK with `npx expo install` (which pins compatible versions). Do not npm-install these blindly into an Expo project — always use expo install for native modules."
+  }
+}
