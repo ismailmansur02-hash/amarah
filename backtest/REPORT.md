@@ -405,3 +405,37 @@ robustness.
 USD* effect. It does not exist on gold, is unstable (year-to-year sign flips)
 on equity indices, and on crosses like GBPJPY it is only the GBP leg showing
 through at higher cost. Nothing here earns a slot — spec stays frozen.
+
+---
+
+## FundingPips "1-Step Flex" pass simulation (2026-07-20)
+
+Ad rules: **12% max loss, STATIC** (never trailing), no min days, no
+consistency rules, no time limit. Assumed (not in ad, verify before buying):
+profit target +10%, daily-loss rule unknown. Script:
+`backtest/fundingpips_sim.py` — real strategy days from the acceptance engine,
+every historical start date = one path, walk to +10% or −12%.
+
+357 historical starts, ALL data 2023→Jul 2026 (includes dead 2024):
+
+| Sizing | Pass | Fail (count) | Median time | 90th pct | Worst day |
+|---|---|---|---|---|---|
+| 0.50%/pair (live spec) | 87% | 0 | 18 mo | 35 mo | −1.0% |
+| **0.75%/pair** | **93%** | **0** | **11 mo** | 30 mo | −1.5% |
+| 1.00%/pair | 95% | 1 (trough −12.2%) | 9 mo | 25 mo | −2.0% |
+| 1.50%/pair | 86% | 42 (12%) | 4.4 mo | 12 mo | −3.0% |
+| 2.00%/pair | 84% | 55 (15%) | 2.8 mo | 8 mo | −4.0% |
+
+("Fail 0" at 0.5–0.75% with the remainder right-censored paths still alive —
+no time limit means those keep going, virtually all to eventual pass.)
+2025→Jul26-regime-only windows are much faster (0.75%: ~8 mo; 1.0%: ~5.5 mo).
+
+**Verdict: yes — this challenge is qualitatively passable by the bot, unlike
+the FTMO-style 10%-with-daily-DD race.** Static 12% + no clock turns it into a
+survival problem, which suits a small-but-real edge. Recommended: 0.75%/pair
+(zero historical busts, ~11 months median, ~8 if the current regime holds);
+1.0%/pair if accepting a ~0.3% historical bust rate for ~9 months. 1.5%+ is
+the coin-flip zone again. Before buying: confirm profit target, daily-loss
+rule, and **that FundingPips offers MT5** (the bot is MT5-only; several prop
+firms moved to other platforms in 2024-25). Config for a challenge account:
+`RISK_PER_PAIR=0.0075`, raise `MAX_DD_HALT` to ~10% (inside the 12% floor).
