@@ -329,3 +329,51 @@ questions + 91 offences + 24 powers), and a real-content integration run
 confirmed a disputed item is escalated and resolved and the report renders.
 Live model runs need an `OPENROUTER_API_KEY` and network to `openrouter.ai`
 (blocked in this build environment, so live calls are the owner's to run).
+
+---
+
+# Round 5 — Constable Companion "Situation → offence" finder
+
+New feature (requested): describe a situation in the Constable Companion and get
+the likely offences, why each fits, and what has to be proved.
+
+**Built as a deterministic, offline matcher over the EXISTING 91 offences — no
+LLM, no network, no invented law.** An in-app AI that "decides" the offence would
+break the cardinal rule (model-generated legal reasoning shown to officers), so
+this instead ranks offences whose own `definition` / `pointsToProve` best match
+the words in the description, and always shows the full points-to-prove the
+officer must confirm. New "Situation" tab (now the default CC tab): a text box →
+ranked offence cards, each with:
+- **Matched on** — the words from your description that hit this offence (so the
+  ranking is transparent/auditable).
+- **What has to be proved — ALL of these** — the full points-to-prove as a
+  checklist, each marked ✓ (your description touches it) or ○ (still to
+  establish). This directly answers "what it has to be to be that offence".
+- Mode, max sentence, and a link to the full card.
+- A prominent **"Suggestions only… not legal advice or a charging decision"**
+  banner.
+
+**Cardinal-rule surface:** the only authored content is a plain-English **synonym
+map** (`CC_SITUATION_SYNONYMS`) that bridges casual words ("took", "smashed",
+"pretending") to the formal vocabulary already in the offences' own wording. It
+makes no legal claims (it never says "situation X = offence Y"); the score comes
+from overlap with each offence's own verified text. This map is the one place to
+review if a match ever looks off — extend it with more everyday words as needed.
+Known limit of keyword matching: a word that also appears in an unrelated
+offence's wording (e.g. a stolen "phone" also matching the mobile-phone driving
+offence) can surface that offence — the disclaimer and the ranked list cover this,
+and the correct offences still appear.
+
+**Verified:** esbuild parse, 885-question structural scan, 27/27 contract tests,
+and a headless-Chromium smoke test — CC opens on the Situation tab, a scenario
+("smashed a car window and took a bag") returns ranked offences including Criminal
+Damage with the ✓/○ points-to-prove checklist, the full-card modal opens, the
+other CC tabs still work, and garbage input shows a graceful "No results". The
+matcher was tuned offline against all 91 real offences across eight varied
+scenarios (burglary, drink-driving, public order, fraud, bladed article, robbery)
+before wiring the UI. The main-app smoke test (shuffle-aware grading, untimed-mock
+timing) still passes.
+
+_Product note:_ the Situation tab is set as the **default** CC tab for prominence.
+If you'd rather CC still open on Daily-use (quick reference first), that's a
+one-line change — say the word.

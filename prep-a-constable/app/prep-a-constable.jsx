@@ -8571,8 +8571,93 @@ function ResultsScreen({ attempt, go }) {
 // CONSTABLE COMPANION — Pocket Sergeant reference
 // ============================================================
 
+// ---- Situation → offence finder --------------------------------------------
+// Deterministic, OFFLINE matcher over the EXISTING offence library. It does NOT
+// decide the law and never invents content: it ranks offences whose own
+// definition / points-to-prove best match the words in a described situation,
+// shows which elements are touched, and always surfaces the full points-to-prove
+// the officer must confirm. The only authored layer is a plain-English synonym
+// map bridging casual words ("took", "smashed") to the formal vocabulary already
+// in the offences' own wording — it asserts no legal conclusions. Suggestions
+// only; never a charging decision.
+const CC_STOPWORDS = new Set("a an and the of to in on at for with he she they it his her their them then there here was were is are be been being had has have do does did will would can could i you we my me our your this that these those as by from into onto under about after before while during who whom which what when where why how not no nor yes if but or so than very just also more most some any all one two someone somebody something person people man men woman women male female guy other another each through around outside inside over across along near next".split(/\s+/));
+// Gentle singularise: drop a trailing "s" for longer words, but leave ss/us/is/as/os
+// (so "damages"→"damage" and "premises"→"premise", but "cannabis"/"bus" are kept).
+const ccStem = (w) => (w.length > 4 && w.endsWith("s") && !/(ss|us|is|as|os)$/.test(w) ? w.slice(0, -1) : w);
+const ccWords = (s) => (typeof s === "string" ? s : "")
+  .toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean)
+  .map(ccStem).filter((w) => w.length > 1 && !CC_STOPWORDS.has(w));
+const ccTokenSet = (s) => new Set(ccWords(s));
+const CC_SITUATION_SYNONYMS = {
+  took: ["appropriate","steal","theft","property"], take: ["appropriate","steal","theft","property"], taking: ["appropriate","steal","theft"], takes: ["appropriate","steal","theft"],
+  stole: ["appropriate","steal","theft","property"], stolen: ["appropriate","steal","theft","property"], nick: ["steal","theft"], pinched: ["steal","theft"],
+  grabbed: ["steal","appropriate"], snatched: ["steal","robbery","force"], robbed: ["robbery","force","steal"], mugged: ["robbery","force"],
+  pushed: ["force","assault"], push: ["force","assault"], shoved: ["force","assault"], shove: ["force","assault"], barged: ["force"],
+  pretending: ["false","representation","fraud","dishonest"], pretended: ["false","representation","fraud"], posing: ["false","representation","fraud"], impersonating: ["false","representation","fraud"], claiming: ["false","representation"],
+  smashed: ["damage","destroy","criminal"], broke: ["damage","destroy"], broken: ["damage","destroy"], damaged: ["damage","destroy","criminal"], vandalised: ["damage","criminal"], vandalized: ["damage","criminal"], destroyed: ["destroy","damage"],
+  graffiti: ["damage","criminal"], scratched: ["damage"], keyed: ["damage"], arson: ["destroy","damage","fire"],
+  hit: ["assault","force","injury"], punched: ["assault","force","injury"], kicked: ["assault","force","injury"], slapped: ["assault","force"], attacked: ["assault","force","injury"], assaulted: ["assault","force"], headbutted: ["assault","force","injury"],
+  hurt: ["injury","harm","bodily"], injured: ["injury","harm","bodily","wounding"], stabbed: ["wounding","bladed","injury"], glassed: ["wounding","injury"],
+  threatened: ["threat","fear","violence"], threat: ["threat","fear","violence"], scared: ["fear"], frightened: ["fear"], intimidated: ["fear","harassment"],
+  knife: ["bladed","pointed","article"], blade: ["bladed","pointed","article"], machete: ["bladed","article"], sword: ["bladed","article"],
+  weapon: ["offensive","weapon"], cosh: ["offensive","weapon"], knuckleduster: ["offensive","weapon"], bat: ["offensive","weapon"], baton: ["offensive","weapon"], corrosive: ["corrosive"], acid: ["corrosive"],
+  car: ["vehicle","conveyance"], vehicle: ["vehicle","conveyance"], van: ["vehicle"], motorbike: ["vehicle"], moped: ["vehicle"], scooter: ["vehicle"],
+  house: ["building","dwelling","premises"], home: ["dwelling","building"], flat: ["dwelling","building"], shed: ["building","premises"], garage: ["building","premises"], premises: ["building","premises"],
+  burgled: ["burglary","enter","trespasser"], burglary: ["burglary","enter","trespasser"], trespassing: ["trespasser","enter"], intruder: ["trespasser","enter","burglary"],
+  drunk: ["alcohol","drink","unfit"], drink: ["alcohol","drink"], alcohol: ["alcohol","drink"], breathalyser: ["specimen","alcohol"], breathalyzer: ["specimen","alcohol"],
+  drug: ["drug","controlled","misuse"], cannabis: ["drug","controlled"], cocaine: ["drug","controlled"], heroin: ["drug","controlled"], weed: ["drug","controlled"], dealing: ["supply","drug"],
+  driving: ["driving","vehicle"], driver: ["driving","vehicle"], speeding: ["speed"], uninsured: ["insurance"], insurance: ["insurance"],
+  scam: ["fraud","false","dishonest","gain"], scammed: ["fraud","false","dishonest"], deceived: ["false","representation","fraud"], lied: ["false","representation"], fraudulent: ["fraud","false"], conned: ["fraud","false","dishonest"],
+  harassed: ["harassment","distress"], stalked: ["stalking","harassment"], stalking: ["stalking","harassment"], abusive: ["harassment","abuse"],
+  fight: ["affray","violence","fear"], fighting: ["affray","violence"], brawl: ["affray","violence"], riot: ["affray","violence","riot"],
+  shouting: ["harassment","distress","alarm"], swearing: ["harassment","distress","alarm"], racist: ["racially","hostility","aggravated"], racial: ["racially","hostility","aggravated"],
+};
+const CC_CAT_LABEL = (catId) => (OFFENCE_CATEGORIES.find((c) => c.id === catId) || {}).label || "";
+// Precompute each offence's weighted token sets once (fast per-keystroke search).
+const CC_OFFENCE_INDEX = OFFENCES.map((o) => ({
+  offence: o,
+  fields: [
+    { w: 3.5, set: ccTokenSet((o.pointsToProve || []).join(" ")) },
+    { w: 2.5, set: ccTokenSet(o.definition) },
+    { w: 2.5, set: ccTokenSet(o.title) },
+    { w: 1.5, set: ccTokenSet(CC_CAT_LABEL(o.category)) },
+    { w: 1, set: ccTokenSet((o.act || "") + " " + (o.section || "")) },
+    { w: 0.5, set: ccTokenSet(o.notes) },
+  ],
+}));
+const findOffencesForSituation = (text, limit = 6) => {
+  const base = ccWords(text);
+  const concepts = new Set(base);
+  for (const w of base) { const syn = CC_SITUATION_SYNONYMS[w]; if (syn) for (const s of syn) for (const x of ccWords(s)) concepts.add(x); }
+  const low = " " + (text || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ") + " ";
+  if (low.includes(" broke in") || low.includes(" broke into") || low.includes(" got in")) ["burglary", "enter", "trespasser", "building"].forEach((c) => concepts.add(c));
+  if (low.includes(" without paying") || low.includes(" did not pay") || low.includes(" didn t pay") || low.includes(" ran off without")) ["making", "payment", "dishonest"].forEach((c) => concepts.add(c));
+  if (!concepts.size) return [];
+  const results = [];
+  for (const entry of CC_OFFENCE_INDEX) {
+    let score = 0; const matched = new Set();
+    for (const c of concepts) {
+      let best = 0;
+      for (const f of entry.fields) if (f.set.has(c)) best = Math.max(best, f.w);
+      if (best > 0) { score += best; matched.add(c); }
+    }
+    if (score <= 0) continue;
+    const o = entry.offence;
+    const matchedElements = (o.pointsToProve || []).filter((pt) => {
+      const s = ccTokenSet(pt);
+      for (const m of matched) if (s.has(m)) return true;
+      return false;
+    });
+    const matchedInput = [...new Set(base.filter((w) => matched.has(w) || (CC_SITUATION_SYNONYMS[w] || []).some((s) => ccWords(s).some((x) => matched.has(x)))))];
+    results.push({ offence: o, score, matchedInput, matchedElements });
+  }
+  results.sort((a, b) => b.score - a.score || ((b.offence.daily === true) - (a.offence.daily === true)) || a.offence.title.localeCompare(b.offence.title));
+  return results.slice(0, limit);
+};
+
 function ConstableCompanionScreen({ go }) {
-  const [tab, setTab] = useState("daily"); // daily | az | powers
+  const [tab, setTab] = useState("situation"); // situation | daily | az | powers
+  const [situationText, setSituationText] = useState("");
   const [query, setQuery] = useState("");
   const [openItem, setOpenItem] = useState(null); // {type:'offence'|'power', id}
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -8692,6 +8777,8 @@ function ConstableCompanionScreen({ go }) {
       : POWERS.find((p) => p.id === openItem.id)
     : null;
 
+  const situationMatches = tab === "situation" ? findOffencesForSituation(situationText) : [];
+
   return (
     <ScreenShell>
       <Header title="Constable Companion" onBack={() => go({ name: "home" })} />
@@ -8706,6 +8793,7 @@ function ConstableCompanionScreen({ go }) {
         zIndex: 10,
       }}>
         {[
+          { id: "situation", label: "Situation" },
           { id: "daily", label: "Daily-use" },
           { id: "az", label: "A–Z" },
           { id: "powers", label: "Powers" },
@@ -8732,8 +8820,17 @@ function ConstableCompanionScreen({ go }) {
         ))}
       </div>
 
-      {/* Search bar */}
+      {/* Search bar / situation input */}
       <div style={{ padding: "12px 16px 0", background: "white" }}>
+        {tab === "situation" ? (
+          <textarea
+            value={situationText}
+            onChange={(e) => setSituationText(e.target.value)}
+            placeholder="Describe what happened — e.g. he smashed a car window and took a bag from the seat…"
+            rows={3}
+            style={{ width: "100%", boxSizing: "border-box", padding: "11px 14px", fontSize: 14.5, fontFamily: fontBody, border: `1.5px solid ${C.border}`, borderRadius: 10, background: C.paper, outline: "none", resize: "vertical", lineHeight: 1.5 }}
+          />
+        ) : (
         <div style={{ position: "relative" }}>
           <input
             type="text"
@@ -8778,6 +8875,7 @@ function ConstableCompanionScreen({ go }) {
             >×</button>
           )}
         </div>
+        )}
       </div>
 
       {/* Category filter (for A-Z and Powers tabs) */}
@@ -8829,6 +8927,84 @@ function ConstableCompanionScreen({ go }) {
 
       {/* Content area */}
       <div style={{ padding: "14px 16px 100px" }}>
+
+        {/* SITUATION tab — describe a scenario, get likely offences from the library */}
+        {tab === "situation" && (
+          <>
+            <div style={{ background: C.flagBg, border: `1px solid ${C.flag}`, borderRadius: 12, padding: "12px 14px", marginBottom: 14 }}>
+              <div style={{ fontSize: 12.5, lineHeight: 1.55, color: C.text }}>
+                <strong>Suggestions only.</strong> These are possible offences from your reference library, ranked by how your words match each offence's own wording. Confirm every point to prove is met before you rely on any of them — this is a memory aid, not legal advice or a charging decision.
+              </div>
+            </div>
+
+            {!situationText.trim() ? (
+              <div style={{ textAlign: "center", padding: "30px 20px", color: C.textMuted }}>
+                <div style={{ fontSize: 32, marginBottom: 10, opacity: 0.5 }}>📝</div>
+                <div style={{ fontFamily: fontDisplay, fontSize: 17, fontWeight: 500, marginBottom: 6, color: C.text }}>Describe the situation</div>
+                <div style={{ fontSize: 13.5, lineHeight: 1.5 }}>
+                  e.g. “He smashed a car window and took a bag from the seat.” You'll get the likely offences, why each fits, and exactly what has to be proved.
+                </div>
+              </div>
+            ) : situationMatches.length === 0 ? (
+              <EmptyState query={situationText} />
+            ) : (
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1, color: C.textFaint, textTransform: "uppercase", marginBottom: 10 }}>
+                  {situationMatches.length} possible offence{situationMatches.length === 1 ? "" : "s"} — best match first
+                </div>
+                {situationMatches.map(({ offence: o, matchedInput, matchedElements }, i) => {
+                  const elementSet = new Set(matchedElements);
+                  return (
+                    <div key={o.id} style={{ background: "white", border: `1px solid ${C.border}`, borderLeft: `3px solid ${i === 0 ? C.navy : C.border}`, borderRadius: 10, padding: "14px 16px", marginBottom: 10 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
+                        <div style={{ fontFamily: fontDisplay, fontSize: 17, fontWeight: 600, color: C.text, lineHeight: 1.25 }}>{o.title}</div>
+                        {i === 0 && <span style={{ fontSize: 10, fontWeight: 700, color: C.navy, background: "#E8EFF8", padding: "2px 8px", borderRadius: 999, textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap" }}>Top match</span>}
+                      </div>
+                      <div style={{ fontFamily: fontMono, fontSize: 11.5, color: C.navyLight, marginTop: 3 }}>{o.section} · {o.act}</div>
+
+                      {matchedInput.length > 0 && (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10, alignItems: "center" }}>
+                          <span style={{ fontSize: 11, color: C.textMuted, fontWeight: 600 }}>Matched on:</span>
+                          {matchedInput.map((w) => (
+                            <span key={w} style={{ fontSize: 11, background: "#EDF2ED", color: C.green, borderRadius: 999, padding: "1px 8px", fontWeight: 600 }}>{w}</span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div style={{ marginTop: 12 }}>
+                        <CCLabel>What has to be proved — ALL of these</CCLabel>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                          {(o.pointsToProve || []).map((pt, j) => {
+                            const touched = elementSet.has(pt);
+                            return (
+                              <div key={j} style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 13, lineHeight: 1.45 }}>
+                                <span style={{ flexShrink: 0, marginTop: 1, color: touched ? C.green : C.textFaint, fontWeight: 700 }}>{touched ? "✓" : "○"}</span>
+                                <span style={{ color: touched ? C.text : C.textMuted }}>{pt}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div style={{ fontSize: 11, color: C.textFaint, marginTop: 6, lineHeight: 1.5 }}>
+                          ✓ your description touches this element · ○ still to establish
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: 10, marginTop: 10, fontSize: 12, color: C.textMuted }}>
+                        <span><strong style={{ color: C.text }}>Mode:</strong> {o.mode}</span>
+                        <span>·</span>
+                        <span><strong style={{ color: C.text }}>Max:</strong> {o.sentence}</span>
+                      </div>
+
+                      <button onClick={() => setOpenItem({ type: "offence", id: o.id })} style={{ marginTop: 12, background: "white", border: `1.5px solid ${C.navy}`, color: C.navy, borderRadius: 8, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", fontFamily: fontBody }}>
+                        Full card &amp; definition →
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
 
         {/* Intro for first-time users */}
         {tab === "daily" && !query && (
