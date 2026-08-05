@@ -8580,7 +8580,12 @@ function ResultsScreen({ attempt, go }) {
 // map bridging casual words ("took", "smashed") to the formal vocabulary already
 // in the offences' own wording — it asserts no legal conclusions. Suggestions
 // only; never a charging decision.
-const CC_STOPWORDS = new Set("a an and the of to in on at for with he she they it his her their them then there here was were is are be been being had has have do does did will would can could i you we my me our your this that these those as by from into onto under about after before while during who whom which what when where why how not no nor yes if but or so than very just also more most some any all one two someone somebody something person people man men woman women male female guy other another each through around outside inside over across along near next".split(/\s+/));
+const CC_STOPWORDS = new Set("a an and the of to in on at for with he she they it his her their them then there here was were is are be been being had has have do does did will would can could i you we my me our your this that these those as by from into onto under about after before while during who whom which what when where why how not no nor yes if but or so than very just also more most some any all one two someone somebody something person people man men woman women male female guy other another each through around outside inside over across along near next himself herself themselves myself yourself itself oneself".split(/\s+/));
+// Anatomical / very-generic words that DO appear in offence definitions (e.g. the
+// anatomy listed in the penetration offences) but are far too low-signal to drive
+// a match on their own. A weak word only counts if the offence ALSO matched a
+// non-weak word — otherwise a lone "anus" would wrongly surface Rape.
+const CC_WEAK = new Set("anus vagina mouth penis genitals genital breast breasts buttocks body bodily part parts area hand held see saw look looked show showed showing".split(/\s+/));
 // Gentle singularise: drop a trailing "s" for longer words, but leave ss/us/is/as/os
 // (so "damages"→"damage" and "premises"→"premise", but "cannabis"/"bus" are kept).
 const ccStem = (w) => (w.length > 4 && w.endsWith("s") && !/(ss|us|is|as|os)$/.test(w) ? w.slice(0, -1) : w);
@@ -8611,6 +8616,11 @@ const CC_SITUATION_SYNONYMS = {
   harassed: ["harassment","distress"], stalked: ["stalking","harassment"], stalking: ["stalking","harassment"], abusive: ["harassment","abuse"],
   fight: ["affray","violence","fear"], fighting: ["affray","violence"], brawl: ["affray","violence"], riot: ["affray","violence","riot"],
   shouting: ["harassment","distress","alarm"], swearing: ["harassment","distress","alarm"], racist: ["racially","hostility","aggravated"], racial: ["racially","hostility","aggravated"],
+  // Sexual offences. Exposure words map to the offence's distinctive title token
+  // "exposure" (the verb "expose" is avoided — it also appears in the Fraud Act
+  // "expose to a risk of loss" wording).
+  flashed: ["exposure"], flashing: ["exposure"], flasher: ["exposure"], exposed: ["exposure"], exposing: ["exposure"], exposes: ["exposure"], indecently: ["exposure","indecent"],
+  raped: ["rape","penetrate"], penetrated: ["penetrate"], voyeur: ["voyeurism","observe"], spying: ["voyeurism","observe"], peeping: ["voyeurism","observe"],
 };
 const CC_CAT_LABEL = (catId) => (OFFENCE_CATEGORIES.find((c) => c.id === catId) || {}).label || "";
 // Precompute each offence's weighted token sets once (fast per-keystroke search).
@@ -8635,13 +8645,17 @@ const findOffencesForSituation = (text, limit = 6) => {
   if (!concepts.size) return [];
   const results = [];
   for (const entry of CC_OFFENCE_INDEX) {
-    let score = 0; const matched = new Set();
+    let strong = 0, weak = 0; const mStrong = new Set(), mWeak = new Set();
     for (const c of concepts) {
       let best = 0;
       for (const f of entry.fields) if (f.set.has(c)) best = Math.max(best, f.w);
-      if (best > 0) { score += best; matched.add(c); }
+      if (best > 0) { if (CC_WEAK.has(c)) { weak += best; mWeak.add(c); } else { strong += best; mStrong.add(c); } }
     }
-    if (score <= 0) continue;
+    // A weak-only match (e.g. a lone anatomical word from a definition) is not a
+    // reliable suggestion — skip it rather than surface a misleading serious offence.
+    if (mStrong.size === 0) continue;
+    const score = strong + weak;
+    const matched = new Set([...mStrong, ...mWeak]);
     const o = entry.offence;
     const matchedElements = (o.pointsToProve || []).filter((pt) => {
       const s = ccTokenSet(pt);

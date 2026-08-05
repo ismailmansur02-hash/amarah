@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "esbuild entry.jsx --bundle --loader:.jsx=jsx --minify --define:process.env.NODE_ENV='\"production\"' --outfile=dist/bundle.js && cp index.html dist/"
+  },
   "dependencies": {
     "esbuild": "^0.28.1",
     "react": "^18.3.1",

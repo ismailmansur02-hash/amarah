@@ -1,0 +1,17 @@
+# Netlify build config for the Prep a Constable web preview.
+#
+# This is INERT for manual drag-and-drop deploys (the current workflow). It only
+# takes effect when the GitHub repo is connected to a Netlify site for continuous
+# deploys — then every push to the connected branch rebuilds and publishes the
+# preview automatically, instead of manual drops.
+#
+# To use it: in the Netlify dashboard, link the `prep-a-constable-preview` site
+# to this GitHub repo and pick the branch. Netlify reads the settings below.
+
+[build]
+  base = "prep-a-constable/preview"
+  command = "npm install && npm run build"
+  publish = "dist"            # relative to `base` → prep-a-constable/preview/dist
+
+[build.environment]
+  NODE_VERSION = "20"
