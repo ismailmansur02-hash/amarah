@@ -377,3 +377,34 @@ timing) still passes.
 _Product note:_ the Situation tab is set as the **default** CC tab for prominence.
 If you'd rather CC still open on Daily-use (quick reference first), that's a
 one-line change — say the word.
+
+---
+
+# Round 6 — Constable Companion offence import (Police Offences Compendium)
+
+Owner supplied `Police_Offences_Compendium.docx` (a PCEP revision reference).
+Parsed it and added **60 new offence cards** to the Constable Companion
+(**91 → 151 offences**), plus two new categories (**Terrorism**, **Other
+Operational**). Full detail and the conflict list are in
+`docs/COMPENDIUM-IMPORT.md`.
+
+**Cardinal-rule discipline:** every field (definition, points to prove, mode,
+maximum penalty) was parsed **verbatim** from the supplied document — nothing
+written from model knowledge. Statute abbreviations were expanded to full names
+for rule 2 (same acts, spelled out). The **57** offences already present in CC
+were **not overwritten**; only genuinely new offences were added.
+
+**Conflicts flagged, not fixed:** where the compendium's penalty differs
+substantively from an existing card (12 cases), the existing card was left
+untouched and the discrepancy documented for the owner to resolve — and they cut
+both ways (e.g. the existing ABH card is *more* current than the compendium;
+the existing Possession-of-drugs card appears to carry supply-level penalties).
+Nothing was auto-corrected. New driving offences carry mode + penalty but no DVLA
+endorsement block (the compendium gave no codes — flagged, not invented).
+
+**Verified:** esbuild parse, balance 0/0, structural scan (OFFENCES 151, all
+categories valid, unique ids, no dup questions), statute-abbreviation scan clean,
+27/27 contract tests, and headless-Chromium checks — new offences are searchable
+(A–Z finds "Outraging Public Decency", card shows Common Law · Either way), the
+new Terrorism category chip is present, the Situation finder and other CC tabs
+still work, no JS errors. About-page count updated to 151 offences.
