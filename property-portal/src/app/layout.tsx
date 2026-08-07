@@ -50,12 +50,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 {BRAND.mark} <span className="text-slate-400">{BRAND.rest}</span>
               </Link>
               <div className="flex items-center gap-2 text-sm sm:gap-4">
-                <span className="whitespace-nowrap text-slate-300">
+                <Link href="/account" className="whitespace-nowrap text-slate-300 hover:text-white">
                   <span className="hidden sm:inline">{session.name}</span>
                   <span className="rounded bg-slate-700 px-2 py-0.5 text-xs uppercase tracking-wide sm:ml-2">
                     {session.role}
                   </span>
-                </span>
+                </Link>
                 <LogoutButton />
               </div>
             </div>

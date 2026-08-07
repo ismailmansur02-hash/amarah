@@ -139,12 +139,33 @@ no published demo passwords. Set `SEED_DEMO_DATA=1` if you do want the sample da
 Sign in as the manager, then create client logins from the dashboard and hand each
 client their username and password.
 
-### Before going live
+### Going live
 
-- Serve over **HTTPS** — required both for session cookie security and for the app to
-  be installable.
-- Change the initial manager password if you did not set it via environment variable.
-- Back up `data/portal.db` and `data/uploads/` — they hold every record and document.
+**[DEPLOY.md](DEPLOY.md) is the step-by-step guide** — hosting, HTTPS, your own domain,
+backups, restores, and how clients install the app. Short version:
+
+```bash
+fly launch --no-deploy --copy-config
+fly volumes create portal_data --size 3
+fly secrets set SESSION_SECRET="$(openssl rand -base64 32)" \
+                INITIAL_MANAGER_PASSWORD="a-strong-password"
+fly deploy
+```
+
+The host must have a **persistent disk** — the database and uploaded documents are
+files, so platforms with ephemeral filesystems (Vercel, Netlify) would wipe them on
+every deploy. A `Dockerfile` and `docker-compose.yml` are included if you would rather
+run it on your own server.
+
+### Passwords and backups
+
+- Anyone can change their own password at `/account` (current password required).
+- A manager can reset any client's password from the dashboard — the "client lost their
+  login" flow. Clients can never change anyone else's password, manager included.
+- `npm run backup` snapshots the database *and* uploaded documents to
+  `data/backups/`, keeping the newest 14. It uses SQLite's online backup API, so it is
+  safe to run while the app is serving traffic. Run it nightly and keep copies
+  off-server; restore steps are in [DEPLOY.md](DEPLOY.md).
 
 ---
 

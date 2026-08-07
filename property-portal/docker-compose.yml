@@ -1,0 +1,19 @@
+services:
+  portal:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Required. Generate once with: openssl rand -base64 32
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env before starting}
+      # Used only the very first time the database is created.
+      INITIAL_MANAGER_USERNAME: ${INITIAL_MANAGER_USERNAME:-manager}
+      INITIAL_MANAGER_PASSWORD: ${INITIAL_MANAGER_PASSWORD:?set INITIAL_MANAGER_PASSWORD in .env}
+      INITIAL_MANAGER_NAME: ${INITIAL_MANAGER_NAME:-Property Manager}
+    volumes:
+      # Everything irreplaceable — database and uploaded documents.
+      - portal-data:/app/data
+
+volumes:
+  portal-data:

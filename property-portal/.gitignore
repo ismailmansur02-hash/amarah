@@ -2,10 +2,12 @@ node_modules/
 .next/
 out/
 
-# Local database and uploaded documents — real client data, never commit.
+# Local database, uploaded documents and backups — real client data,
+# never commit.
 data/*.db
 data/*.db-*
 data/uploads/
+data/backups/
 
 .env*.local
 *.tsbuildinfo

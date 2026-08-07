@@ -20,8 +20,11 @@ function getSecret(): Uint8Array {
   return cachedSecret;
 }
 
-/** Reachable without a session: login, the login API, and the install guide. */
-const PUBLIC_PATHS = ["/login", "/api/login", "/install"];
+/**
+ * Reachable without a session: login, the login API, the install guide, and
+ * the health probe the host calls before traffic is routed.
+ */
+const PUBLIC_PATHS = ["/login", "/api/login", "/install", "/api/health"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

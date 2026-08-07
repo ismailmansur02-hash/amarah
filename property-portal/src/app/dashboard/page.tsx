@@ -174,17 +174,43 @@ export default async function ManagerDashboard() {
                 <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500">
                   <th className="px-4 py-2.5">Name</th>
                   <th className="px-4 py-2.5">Username</th>
-                  <th className="px-4 py-2.5">Email</th>
+                  <th className="px-4 py-2.5">Reset password</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {clients.map((c) => (
                   <tr key={c.id}>
-                    <td className="px-4 py-2.5">{c.name}</td>
+                    <td className="px-4 py-2.5">
+                      {c.name}
+                      {c.email && <p className="text-xs text-slate-400">{c.email}</p>}
+                    </td>
                     <td className="px-4 py-2.5 font-mono text-xs">{c.username}</td>
-                    <td className="px-4 py-2.5 text-slate-500">{c.email || "—"}</td>
+                    <td className="px-4 py-2.5">
+                      <ApiForm
+                        action={`/api/users/${c.id}/password`}
+                        submitLabel="Set"
+                        buttonClassName="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-50"
+                      >
+                        <input
+                          name="password"
+                          type="text"
+                          required
+                          minLength={8}
+                          placeholder="New password"
+                          aria-label={`New password for ${c.name}`}
+                          className="w-36 rounded-md border border-slate-300 px-2 py-1 text-xs focus:border-slate-500 focus:outline-none"
+                        />
+                      </ApiForm>
+                    </td>
                   </tr>
                 ))}
+                {clients.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="px-4 py-6 text-center text-slate-400">
+                      No client logins yet — create one below.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
