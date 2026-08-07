@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { sql, one } from "@/lib/db";
 import { PropertyRow } from "@/lib/access";
 import { UserRow, LedgerRow } from "@/lib/types";
 import { money, fmtDate, STATUS_LABELS, STATUS_COLORS, feeLabel } from "@/lib/format";
@@ -16,41 +16,29 @@ export default async function ManagerDashboard() {
   if (!session) redirect("/login");
   if (session.role !== "manager") redirect("/my");
 
-  const properties = db
-    .prepare(
-      `SELECT p.*, u.name AS client_name FROM properties p
-       JOIN users u ON u.id = p.client_id ORDER BY p.name`
-    )
-    .all() as (PropertyRow & { client_name: string })[];
+  const [properties, clients, checklistTotals, openRequests, scheduledPayouts, rentRoll] =
+    await Promise.all([
+      sql<PropertyRow & { client_name: string }>`
+        SELECT p.*, u.name AS client_name FROM properties p
+        JOIN users u ON u.id = p.client_id ORDER BY p.name`,
+      sql<UserRow>`
+        SELECT id, username, name, email, role, created_at FROM users
+        WHERE role = 'client' ORDER BY name`,
+      sql<{ property_id: number; total: number; done: number }>`
+        SELECT property_id, COUNT(*)::int AS total,
+               COUNT(*) FILTER (WHERE completed)::int AS done
+        FROM checklist_steps GROUP BY property_id`,
+      one<{ n: number }>(sql`
+        SELECT COUNT(*)::int AS n FROM maintenance_requests WHERE status <> 'resolved'`),
+      sql<LedgerRow & { property_name: string }>`
+        SELECT l.*, p.name AS property_name FROM ledger_entries l
+        JOIN properties p ON p.id = l.property_id
+        WHERE l.payout_status = 'scheduled' ORDER BY l.payout_date NULLS LAST`,
+      one<{ total: number }>(sql`
+        SELECT COALESCE(SUM(monthly_rent), 0) AS total FROM leases WHERE status = 'active'`),
+    ]);
 
-  const clients = db
-    .prepare("SELECT id, username, name, email, role, created_at FROM users WHERE role = 'client' ORDER BY name")
-    .all() as UserRow[];
-
-  const checklistTotals = db
-    .prepare(
-      `SELECT property_id, COUNT(*) AS total, SUM(completed) AS done
-       FROM checklist_steps GROUP BY property_id`
-    )
-    .all() as { property_id: number; total: number; done: number }[];
   const progressByProperty = new Map(checklistTotals.map((r) => [r.property_id, r]));
-
-  const openRequests = db
-    .prepare("SELECT COUNT(*) AS n FROM maintenance_requests WHERE status != 'resolved'")
-    .get() as { n: number };
-
-  const scheduledPayouts = db
-    .prepare(
-      `SELECT l.*, p.name AS property_name FROM ledger_entries l
-       JOIN properties p ON p.id = l.property_id
-       WHERE l.payout_status = 'scheduled' ORDER BY l.payout_date`
-    )
-    .all() as (LedgerRow & { property_name: string })[];
-
-  const rentRoll = db
-    .prepare("SELECT COALESCE(SUM(monthly_rent), 0) AS total FROM leases WHERE status = 'active'")
-    .get() as { total: number };
-
   const occupied = properties.filter((p) => p.status === "occupied").length;
 
   return (
@@ -62,8 +50,8 @@ export default async function ManagerDashboard() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Properties" value={String(properties.length)} sub={`${occupied} occupied`} />
-        <StatCard label="Monthly rent roll" value={money(rentRoll.total)} sub="active leases" />
-        <StatCard label="Open requests" value={String(openRequests.n)} sub="maintenance & management" />
+        <StatCard label="Monthly rent roll" value={money(rentRoll?.total ?? 0)} sub="active leases" />
+        <StatCard label="Open requests" value={String(openRequests?.n ?? 0)} sub="maintenance & management" />
         <StatCard
           label="Payouts scheduled"
           value={String(scheduledPayouts.length)}
@@ -109,8 +97,10 @@ export default async function ManagerDashboard() {
                         {STATUS_LABELS[p.status]}
                       </span>
                     </td>
-                    <td className="px-4 py-3 min-w-40"><ProgressBar percent={pct} /></td>
-                    <td className="px-4 py-3 text-slate-600">{feeLabel(p.management_fee_type, p.management_fee_value)}</td>
+                    <td className="min-w-40 px-4 py-3"><ProgressBar percent={pct} /></td>
+                    <td className="px-4 py-3 text-slate-600">
+                      {feeLabel(p.management_fee_type, p.management_fee_value)}
+                    </td>
                     <td className="px-4 py-3 text-slate-600">{fmtDate(p.takeover_date)}</td>
                   </tr>
                 );
@@ -220,8 +210,8 @@ export default async function ManagerDashboard() {
             className="mt-3 rounded-xl border border-slate-200 bg-white p-4"
           >
             <p className="mb-2 text-xs text-slate-500">
-              Create a pre-made login and hand the username & password to your client. They will only
-              see their own properties.
+              Create a pre-made login and hand the username &amp; password to your client. They will
+              only see their own properties.
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <input name="name" required placeholder="Full name" className={inputCls} />

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { db } from "@/lib/db";
+import { sql, one } from "@/lib/db";
 import { requireApiSession, isResponse, jsonError, str } from "@/lib/api";
 
 /**
@@ -19,11 +19,11 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
   const targetId = Number(id);
   if (!Number.isInteger(targetId)) return jsonError("Invalid user id", 400);
 
-  const target = db
-    .prepare("SELECT id, username, name, role, password_hash FROM users WHERE id = ?")
-    .get(targetId) as
-    | { id: number; username: string; name: string; role: "manager" | "client"; password_hash: string }
-    | undefined;
+  const target = await one<{
+    id: number;
+    role: "manager" | "client";
+    password_hash: string;
+  }>(sql`SELECT id, role, password_hash FROM users WHERE id = ${targetId}`);
   if (!target) return jsonError("User not found", 404);
 
   const isSelf = target.id === session.uid;
@@ -44,8 +44,6 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
     }
   }
 
-  db.prepare("UPDATE users SET password_hash = ? WHERE id = ?")
-    .run(bcrypt.hashSync(newPassword, 10), target.id);
-
+  await sql`UPDATE users SET password_hash = ${bcrypt.hashSync(newPassword, 10)} WHERE id = ${target.id}`;
   return NextResponse.json({ ok: true });
 }

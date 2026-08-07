@@ -2,7 +2,7 @@ export type UserRow = {
   id: number;
   username: string;
   name: string;
-  email: string | null;
+  email: string;
   role: "manager" | "client";
   created_at: string;
 };
@@ -14,8 +14,10 @@ export type DocumentRow = {
   title: string;
   doc_type: string;
   notes: string;
-  file_path: string | null;
+  /** Key into the document blob store; null when only metadata was filed. */
+  blob_key: string | null;
   original_name: string | null;
+  content_type: string;
   uploaded_at: string;
 };
 
@@ -25,7 +27,7 @@ export type ChecklistStepRow = {
   position: number;
   title: string;
   description: string;
-  completed: number;
+  completed: boolean;
   completed_at: string | null;
 };
 

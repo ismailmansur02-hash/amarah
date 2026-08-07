@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
-import { db } from "@/lib/db";
+import { sql, one } from "@/lib/db";
+import { getDocument } from "@/lib/blobs";
 import { requireApiSession, isResponse, jsonError } from "@/lib/api";
 import { getPropertyForSession } from "@/lib/access";
 
-const UPLOAD_DIR = path.join(process.cwd(), "data", "uploads");
-
-/** Download a stored document file; access limited to the property's owner and managers. */
+/** Download a stored document; access limited to the property's owner and managers. */
 export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const session = await requireApiSession();
   if (isResponse(session)) return session;
@@ -16,26 +13,30 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
   const docId = Number(id);
   if (!Number.isInteger(docId)) return jsonError("Invalid document id", 400);
 
-  const doc = db
-    .prepare("SELECT id, property_id, file_path, original_name, title FROM documents WHERE id = ?")
-    .get(docId) as
-    | { id: number; property_id: number; file_path: string | null; original_name: string | null; title: string }
-    | undefined;
-  if (!doc || !getPropertyForSession(doc.property_id, session)) {
+  const doc = await one<{
+    id: number;
+    property_id: number;
+    blob_key: string | null;
+    original_name: string | null;
+    title: string;
+    content_type: string;
+  }>(sql`SELECT id, property_id, blob_key, original_name, title, content_type
+         FROM documents WHERE id = ${docId}`);
+
+  // The access check is the point of this route: a client may only download
+  // documents belonging to a property they own.
+  if (!doc || !(await getPropertyForSession(doc.property_id, session))) {
     return jsonError("Document not found", 404);
   }
-  if (!doc.file_path) return jsonError("No file attached to this document", 404);
+  if (!doc.blob_key) return jsonError("No file attached to this document", 404);
 
-  const resolved = path.resolve(UPLOAD_DIR, doc.file_path);
-  if (!resolved.startsWith(path.resolve(UPLOAD_DIR) + path.sep) || !fs.existsSync(resolved)) {
-    return jsonError("File missing from storage", 404);
-  }
+  const data = await getDocument(doc.blob_key);
+  if (!data) return jsonError("File missing from storage", 404);
 
-  const data = fs.readFileSync(resolved);
   const filename = (doc.original_name || doc.title || "document").replace(/[^\w.\- ]/g, "_");
-  return new NextResponse(data, {
+  return new NextResponse(new Uint8Array(data), {
     headers: {
-      "Content-Type": "application/octet-stream",
+      "Content-Type": doc.content_type || "application/octet-stream",
       "Content-Disposition": `attachment; filename="${filename}"`,
     },
   });

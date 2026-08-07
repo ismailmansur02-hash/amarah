@@ -9,13 +9,13 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
   if (session.role !== "manager") return jsonError("Managers only", 403);
 
   const { id } = await ctx.params;
-  const property = resolveProperty(id, session);
+  const property = await resolveProperty(id, session);
   if (isResponse(property)) return property;
 
   const form = await req.formData();
   const action = str(form, "action");
   if (!action) return jsonError("A description is required");
 
-  logActivity(property.id, session.uid, action, str(form, "detail"));
+  await logActivity(property.id, session.uid, action, str(form, "detail"));
   return NextResponse.json({ ok: true });
 }

@@ -1,13 +1,11 @@
 node_modules/
 .next/
 out/
+.netlify/
 
-# Local database, uploaded documents and backups — real client data,
-# never commit.
-data/*.db
-data/*.db-*
-data/uploads/
-data/backups/
+# Local uploads used by the filesystem fallback in development — real client
+# data, never commit.
+data/
 
 .env*.local
 *.tsbuildinfo

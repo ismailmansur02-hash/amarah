@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { sql, one } from "@/lib/db";
 import { getPropertyForSession } from "@/lib/access";
 import {
   ActivityRow, ChecklistStepRow, DocumentRow, LeaseRow, LedgerRow,
@@ -41,46 +41,31 @@ export default async function PropertyPage({
   const propertyId = Number(id);
   if (!Number.isInteger(propertyId)) notFound();
 
-  const property = getPropertyForSession(propertyId, session);
+  const property = await getPropertyForSession(propertyId, session);
   if (!property) notFound();
 
   const isManager = session.role === "manager";
   const tab = TABS.some((t) => t.key === tabParam) ? (tabParam as string) : "overview";
 
-  const client = db
-    .prepare("SELECT name, username, email FROM users WHERE id = ?")
-    .get(property.client_id) as { name: string; username: string; email: string | null };
+  const [client, docs, steps, tasks, tenants, leases, ledger, requests, activity] =
+    await Promise.all([
+      one<{ name: string; username: string; email: string }>(
+        sql`SELECT name, username, email FROM users WHERE id = ${property.client_id}`
+      ),
+      sql<DocumentRow>`SELECT * FROM documents WHERE property_id = ${property.id} ORDER BY uploaded_at DESC`,
+      sql<ChecklistStepRow>`SELECT * FROM checklist_steps WHERE property_id = ${property.id} ORDER BY position`,
+      sql<RenovationTaskRow>`SELECT * FROM renovation_tasks WHERE property_id = ${property.id} ORDER BY created_at`,
+      sql<TenantRow>`SELECT * FROM tenants WHERE property_id = ${property.id} ORDER BY created_at`,
+      sql<LeaseRow>`SELECT * FROM leases WHERE property_id = ${property.id} ORDER BY start_date DESC`,
+      sql<LedgerRow>`SELECT * FROM ledger_entries WHERE property_id = ${property.id} ORDER BY month`,
+      sql<MaintenanceRow>`SELECT * FROM maintenance_requests WHERE property_id = ${property.id} ORDER BY created_at DESC`,
+      sql<ActivityRow>`
+        SELECT a.*, u.name AS actor_name FROM activity_log a
+        LEFT JOIN users u ON u.id = a.actor_id
+        WHERE a.property_id = ${property.id} ORDER BY a.created_at DESC`,
+    ]);
 
-  const docs = db
-    .prepare("SELECT * FROM documents WHERE property_id = ? ORDER BY uploaded_at DESC")
-    .all(property.id) as DocumentRow[];
   const docsBySection = (section: string) => docs.filter((d) => d.section === section);
-
-  const steps = db
-    .prepare("SELECT * FROM checklist_steps WHERE property_id = ? ORDER BY position")
-    .all(property.id) as ChecklistStepRow[];
-  const tasks = db
-    .prepare("SELECT * FROM renovation_tasks WHERE property_id = ? ORDER BY created_at")
-    .all(property.id) as RenovationTaskRow[];
-  const tenants = db
-    .prepare("SELECT * FROM tenants WHERE property_id = ? ORDER BY created_at")
-    .all(property.id) as TenantRow[];
-  const leases = db
-    .prepare("SELECT * FROM leases WHERE property_id = ? ORDER BY start_date DESC")
-    .all(property.id) as LeaseRow[];
-  const ledger = db
-    .prepare("SELECT * FROM ledger_entries WHERE property_id = ? ORDER BY month")
-    .all(property.id) as LedgerRow[];
-  const requests = db
-    .prepare("SELECT * FROM maintenance_requests WHERE property_id = ? ORDER BY created_at DESC")
-    .all(property.id) as MaintenanceRow[];
-  const activity = db
-    .prepare(
-      `SELECT a.*, u.name AS actor_name FROM activity_log a
-       LEFT JOIN users u ON u.id = a.actor_id
-       WHERE a.property_id = ? ORDER BY a.created_at DESC`
-    )
-    .all(property.id) as ActivityRow[];
 
   return (
     <div className="space-y-6">
@@ -96,7 +81,7 @@ export default async function PropertyPage({
             <h1 className="text-2xl font-semibold tracking-tight">{property.name}</h1>
             <p className="text-sm text-slate-500">
               {property.address}, {property.city} {property.state} {property.zip}
-              {" · "}Owner: {client.name}
+              {" · "}Owner: {client?.name}
               {" · "}Takeover {fmtDate(property.takeover_date)}
             </p>
           </div>
@@ -134,7 +119,7 @@ export default async function PropertyPage({
         />
       )}
       {tab === "info" && (
-        <PropertyInfo property={property} client={client} isManager={isManager} docs={docsBySection("property")} />
+        <PropertyInfo property={property} client={client!} isManager={isManager} docs={docsBySection("property")} />
       )}
       {tab === "legal" && (
         <Legal property={property} isManager={isManager} steps={steps} docs={docsBySection("legal")} />

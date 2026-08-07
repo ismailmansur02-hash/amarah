@@ -10,7 +10,7 @@ export default function PropertyInfo({
   docs,
 }: {
   property: PropertyRow;
-  client: { name: string; username: string; email: string | null };
+  client: { name: string; username: string; email: string };
   isManager: boolean;
   docs: DocumentRow[];
 }) {

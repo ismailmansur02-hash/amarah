@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { sql, one } from "./db";
 import { Session } from "./auth";
 
 export type PropertyRow = {
@@ -19,20 +19,21 @@ export type PropertyRow = {
 };
 
 /** Returns the property only if this session is allowed to see it. */
-export function getPropertyForSession(propertyId: number, session: Session): PropertyRow | null {
-  const property = db
-    .prepare("SELECT * FROM properties WHERE id = ?")
-    .get(propertyId) as PropertyRow | undefined;
+export async function getPropertyForSession(
+  propertyId: number,
+  session: Session
+): Promise<PropertyRow | null> {
+  const property = await one<PropertyRow>(
+    sql<PropertyRow>`SELECT * FROM properties WHERE id = ${propertyId}`
+  );
   if (!property) return null;
   if (session.role !== "manager" && property.client_id !== session.uid) return null;
   return property;
 }
 
-export function listPropertiesForSession(session: Session): PropertyRow[] {
+export async function listPropertiesForSession(session: Session): Promise<PropertyRow[]> {
   if (session.role === "manager") {
-    return db.prepare("SELECT * FROM properties ORDER BY name").all() as PropertyRow[];
+    return sql<PropertyRow>`SELECT * FROM properties ORDER BY name`;
   }
-  return db
-    .prepare("SELECT * FROM properties WHERE client_id = ? ORDER BY name")
-    .all(session.uid) as PropertyRow[];
+  return sql<PropertyRow>`SELECT * FROM properties WHERE client_id = ${session.uid} ORDER BY name`;
 }

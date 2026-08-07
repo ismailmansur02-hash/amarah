@@ -40,7 +40,7 @@ export default function DocSection({
                 {d.notes && <p className="mt-0.5 text-xs text-slate-500">{d.notes}</p>}
                 <p className="mt-0.5 text-xs text-slate-400">Filed {fmtDate(d.uploaded_at)}</p>
               </div>
-              {d.file_path && (
+              {d.blob_key && (
                 <a
                   href={`/api/documents/${d.id}/download`}
                   className="shrink-0 text-sm font-medium text-sky-700 hover:underline"

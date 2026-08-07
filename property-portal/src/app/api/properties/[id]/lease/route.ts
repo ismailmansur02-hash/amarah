@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, logActivity } from "@/lib/db";
+import { sql, logActivity } from "@/lib/db";
 import { requireApiSession, isResponse, resolveProperty, jsonError, str, num } from "@/lib/api";
 
 /** Manager records a new lease; any previously active lease is marked ended. */
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
   if (session.role !== "manager") return jsonError("Managers only", 403);
 
   const { id } = await ctx.params;
-  const property = resolveProperty(id, session);
+  const property = await resolveProperty(id, session);
   if (isResponse(property)) return property;
 
   const form = await req.formData();
@@ -20,21 +20,16 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
     return jsonError("Start date, end date, and monthly rent are required");
   }
 
-  db.prepare("UPDATE leases SET status = 'ended' WHERE property_id = ? AND status = 'active'")
-    .run(property.id);
-  db.prepare(
-    `INSERT INTO leases (property_id, start_date, end_date, monthly_rent, deposit, due_day, status, notes)
-     VALUES (?,?,?,?,?,?,?,?)`
-  ).run(
+  await sql`UPDATE leases SET status = 'ended' WHERE property_id = ${property.id} AND status = 'active'`;
+  await sql`INSERT INTO leases (property_id, start_date, end_date, monthly_rent, deposit, due_day, status, notes)
+            VALUES (${property.id}, ${startDate}::date, ${endDate}::date, ${rent},
+                    ${num(form, "deposit") ?? 0}, ${num(form, "due_day") ?? 1},
+                    ${str(form, "status") === "pending" ? "pending" : "active"}, ${str(form, "notes")})`;
+  await logActivity(
     property.id,
-    startDate,
-    endDate,
-    rent,
-    num(form, "deposit") ?? 0,
-    num(form, "due_day") ?? 1,
-    str(form, "status") === "pending" ? "pending" : "active",
-    str(form, "notes")
+    session.uid,
+    "Lease recorded",
+    `$${rent}/mo, ${startDate} to ${endDate}`
   );
-  logActivity(property.id, session.uid, "Lease recorded", `$${rent}/mo, ${startDate} to ${endDate}`);
   return NextResponse.json({ ok: true });
 }

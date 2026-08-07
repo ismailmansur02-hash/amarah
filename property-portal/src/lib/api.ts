@@ -17,13 +17,13 @@ export function isResponse(x: unknown): x is NextResponse {
 }
 
 /** Resolves the property if the session may access it; otherwise a 404 response. */
-export function resolveProperty(
+export async function resolveProperty(
   idParam: string,
   session: Session
-): PropertyRow | NextResponse {
+): Promise<PropertyRow | NextResponse> {
   const id = Number(idParam);
   if (!Number.isInteger(id)) return jsonError("Invalid property id", 400);
-  const property = getPropertyForSession(id, session);
+  const property = await getPropertyForSession(id, session);
   if (!property) return jsonError("Property not found", 404);
   return property;
 }

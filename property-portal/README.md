@@ -107,75 +107,62 @@ screen rather than stale financial data.
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
+netlify dev          # http://localhost:8888 — provisions the database and blobs
 ```
 
-Development seeds a demo dataset: two clients, two properties (one fully rent-ready
-and occupied, one mid-renovation), documents, leases, ledger months, and activity.
-
-**Demo logins (development only):**
-
-| Role | Username | Password |
-|---|---|---|
-| Manager | `manager` | `manager123` |
-| Client — John Smith | `jsmith` | `client123` |
-| Client — Ana Garcia | `agarcia` | `client123` |
-
-### Production
+`netlify dev` is what gives you the real platform locally. To run against a plain
+Postgres instead:
 
 ```bash
-export SESSION_SECRET="$(openssl rand -base64 32)"   # required
-export INITIAL_MANAGER_USERNAME="yourname"           # optional, defaults to 'manager'
-export INITIAL_MANAGER_PASSWORD="a-strong-password"  # optional but strongly advised
-npm run build
-npm run start
+psql "$DATABASE_URL" -f netlify/database/migrations/001_initial-schema/migration.sql
+DATABASE_URL=postgres://… SESSION_SECRET=dev INITIAL_MANAGER_PASSWORD=devpassword npm run dev
 ```
+
+Off Netlify, uploaded documents fall back to `data/uploads/` on disk.
+
+There is **no demo data** and no built-in demo passwords. The first sign-in against
+an empty database creates a single manager account from `INITIAL_MANAGER_USERNAME`
+and `INITIAL_MANAGER_PASSWORD`; everything else you create through the UI.
 
 In production the app **refuses to authenticate without `SESSION_SECRET`** — otherwise
 session cookies would be signed with a public development key and anyone could forge a
-login. It also seeds **only** the manager account: no demo clients, no demo properties,
-no published demo passwords. Set `SEED_DEMO_DATA=1` if you do want the sample data.
-
-Sign in as the manager, then create client logins from the dashboard and hand each
-client their username and password.
+login.
 
 ### Going live
 
-**[DEPLOY.md](DEPLOY.md) is the step-by-step guide** — hosting, HTTPS, your own domain,
-backups, restores, and how clients install the app. Short version:
+**[DEPLOY.md](DEPLOY.md) is the step-by-step guide** — deploy, HTTPS, your own domain,
+backups, and how clients install the app. Short version:
 
 ```bash
-fly launch --no-deploy --copy-config
-fly volumes create portal_data --size 3
-fly secrets set SESSION_SECRET="$(openssl rand -base64 32)" \
-                INITIAL_MANAGER_PASSWORD="a-strong-password"
-fly deploy
+netlify init
+netlify env:set SESSION_SECRET "$(openssl rand -base64 32)" --secret
+netlify env:set INITIAL_MANAGER_PASSWORD "a-strong-password" --secret
+netlify deploy --build --prod
 ```
 
-The host must have a **persistent disk** — the database and uploaded documents are
-files, so platforms with ephemeral filesystems (Vercel, Netlify) would wipe them on
-every deploy. A `Dockerfile` and `docker-compose.yml` are included if you would rather
-run it on your own server.
+Netlify functions have **no persistent filesystem**, so nothing is stored on disk:
+records go to **Netlify DB** (Postgres) and documents to **Netlify Blobs**, both
+provisioned automatically on deploy. Deploy previews get their own isolated database
+copy, so testing a branch cannot touch real client records.
 
 ### Passwords and backups
 
 - Anyone can change their own password at `/account` (current password required).
 - A manager can reset any client's password from the dashboard — the "client lost their
   login" flow. Clients can never change anyone else's password, manager included.
-- `npm run backup` snapshots the database *and* uploaded documents to
-  `data/backups/`, keeping the newest 14. It uses SQLite's online backup API, so it is
-  safe to run while the app is serving traffic. Run it nightly and keep copies
-  off-server; restore steps are in [DEPLOY.md](DEPLOY.md).
+- Netlify DB is Postgres with managed backups and point-in-time restore. For an
+  independent copy you control, [DEPLOY.md](DEPLOY.md) has the `pg_dump` recipe.
 
 ---
 
 ## How it is built
 
 - **Next.js 15** (App Router, React 19, server components) + **Tailwind CSS 4**
-- **SQLite** via `better-sqlite3` — the whole dataset is one file, `data/portal.db`
+- **Netlify DB** (Postgres) via `@netlify/database`; schema in
+  `netlify/database/migrations/`, applied automatically on deploy
+- **Netlify Blobs** for uploaded documents, served only through an access-checked
+  route — never a public URL
 - **Sessions:** signed JWT in an httpOnly cookie (`jose`), passwords hashed with bcrypt
-- **Uploads:** stored under `data/uploads/<propertyId>/`, served only through an
-  access-checked route with path-traversal protection
 
 ```
 src/
@@ -184,26 +171,28 @@ src/
     my/                 client home — their properties, next payment, tax YTD
     property/[id]/      the property file
       sections/         the six tabs
+    account/            change your own password
     install/            public install guide for clients
     api/                mutation + export endpoints, all access-checked
   components/           forms, toggles, progress bar, install prompt
   lib/
-    db.ts               schema, migrations, seed
+    db.ts               Postgres connection, type decoding, first-run bootstrap
+    blobs.ts            document storage
     access.ts           who-can-see-what enforcement
     auth.ts             session signing / verification
     rentReadyTemplate.ts  the 14 legal steps
   middleware.ts         redirects unauthenticated traffic to /login
+netlify/database/migrations/   schema, applied by Netlify on deploy
 public/
   manifest.webmanifest, sw.js, offline.html, icons/
 ```
 
 ### Things worth knowing before extending it
 
-- **The database is a single file.** Fine for one manager and dozens of properties.
-  If this grows to multiple concurrent managers or gets deployed to a serverless
-  platform with an ephemeral filesystem, move to Postgres — `src/lib/db.ts` is the
-  only file with SQL in it.
-- **Uploads are on local disk.** Same constraint: move to object storage (S3, R2) if
-  the host's filesystem isn't persistent.
+- **Postgres type decoding is deliberate.** `src/lib/db.ts` registers parsers so
+  `NUMERIC` arrives as a number and dates as strings. Without them, money would come
+  back as strings and silently break arithmetic.
+- **The first manager account is created on first login**, not at startup —
+  serverless has no startup hook. See `ensureBootstrapManager()`.
 - **Money is stored as numbers, not integer cents.** Fine at these amounts; if exact
   accounting matters, switch to integer cents.

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { db } from "@/lib/db";
+import { sql, one } from "@/lib/db";
 import { requireApiSession, isResponse, jsonError, str } from "@/lib/api";
 
 /** Manager creates a pre-made client login to hand to the owner. */
@@ -23,12 +23,13 @@ export async function POST(req: NextRequest) {
   }
   if (password.length < 8) return jsonError("Password must be at least 8 characters");
 
-  const exists = db.prepare("SELECT id FROM users WHERE username = ?").get(username);
+  const exists = await one(sql`SELECT id FROM users WHERE username = ${username}`);
   if (exists) return jsonError("That username is already taken");
 
-  const info = db
-    .prepare("INSERT INTO users (username, password_hash, name, email, role) VALUES (?,?,?,?,'client')")
-    .run(username, bcrypt.hashSync(password, 10), name, email);
+  const created = await one<{ id: number }>(sql`
+    INSERT INTO users (username, password_hash, name, email, role)
+    VALUES (${username}, ${bcrypt.hashSync(password, 10)}, ${name}, ${email}, 'client')
+    RETURNING id`);
 
-  return NextResponse.json({ ok: true, id: Number(info.lastInsertRowid) });
+  return NextResponse.json({ ok: true, id: created!.id });
 }

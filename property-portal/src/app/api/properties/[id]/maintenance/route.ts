@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, logActivity } from "@/lib/db";
+import { sql, one, logActivity } from "@/lib/db";
 import { requireApiSession, isResponse, resolveProperty, jsonError, str, num } from "@/lib/api";
 
 /**
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
   if (isResponse(session)) return session;
 
   const { id } = await ctx.params;
-  const property = resolveProperty(id, session);
+  const property = await resolveProperty(id, session);
   if (isResponse(property)) return property;
 
   const form = await req.formData();
@@ -19,24 +19,24 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
 
   if (requestId !== null) {
     if (session.role !== "manager") return jsonError("Managers only", 403);
-    const request = db
-      .prepare("SELECT id, title, status FROM maintenance_requests WHERE id = ? AND property_id = ?")
-      .get(requestId, property.id) as { id: number; title: string; status: string } | undefined;
+
+    const request = await one<{ id: number; title: string; status: string }>(
+      sql`SELECT id, title, status FROM maintenance_requests
+          WHERE id = ${requestId} AND property_id = ${property.id}`
+    );
     if (!request) return jsonError("Request not found", 404);
 
     const status = str(form, "status");
     if (!["open", "in_progress", "resolved"].includes(status)) return jsonError("Invalid status");
     const cost = num(form, "cost");
-    db.prepare(
-      "UPDATE maintenance_requests SET status = ?, cost = COALESCE(?, cost), resolved_at = ? WHERE id = ?"
-    ).run(
-      status,
-      cost,
-      status === "resolved" ? new Date().toISOString().slice(0, 19).replace("T", " ") : null,
-      request.id
-    );
+
+    await sql`UPDATE maintenance_requests
+              SET status = ${status},
+                  cost = COALESCE(${cost}::numeric, cost),
+                  resolved_at = ${status === "resolved" ? new Date().toISOString() : null}::timestamptz
+              WHERE id = ${request.id}`;
     if (status === "resolved" && request.status !== "resolved") {
-      logActivity(property.id, session.uid, "Maintenance resolved", request.title);
+      await logActivity(property.id, session.uid, "Maintenance resolved", request.title);
     }
     return NextResponse.json({ ok: true });
   }
@@ -48,11 +48,10 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
     ? str(form, "priority")
     : "normal";
 
-  db.prepare(
-    `INSERT INTO maintenance_requests (property_id, title, description, category, priority, created_by)
-     VALUES (?,?,?,?,?,?)`
-  ).run(property.id, title, str(form, "description"), category, priority, session.uid);
-  logActivity(
+  await sql`INSERT INTO maintenance_requests (property_id, title, description, category, priority, created_by)
+            VALUES (${property.id}, ${title}, ${str(form, "description")}, ${category},
+                    ${priority}, ${session.uid})`;
+  await logActivity(
     property.id,
     session.uid,
     session.role === "client" ? "Owner request submitted" : "Request opened",
