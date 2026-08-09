@@ -1,13 +1,22 @@
+# Netlify build configuration for this repository.
+#
+# The property portal lives in the property-portal/ subfolder, so `base`
+# points Netlify at it. Netlify reads this file from the repository root
+# before anything else, which means no "base directory" needs to be set by
+# hand in the Netlify UI — selecting this branch is enough.
+#
+# Everything below is relative to `base`.
+
 [build]
+  base = "property-portal"
   command = "npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "22"
 
-# The Next.js runtime turns the App Router into Netlify functions and serves
-# static assets from the CDN. Installed automatically by Netlify for Next.js
-# sites; pinned here so builds are reproducible.
+# Turns the Next.js App Router into Netlify functions and serves static
+# assets from the CDN.
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 

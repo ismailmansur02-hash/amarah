@@ -14,6 +14,10 @@ and they shape the whole setup:
 
 ## Deploy
 
+The repository root has a `netlify.toml` that points Netlify at this subfolder
+(`base = "property-portal"`), so no "base directory" needs setting in the UI —
+selecting the branch is enough.
+
 From inside the `property-portal/` folder:
 
 ```bash
