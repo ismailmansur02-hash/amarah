@@ -7,6 +7,15 @@
 #
 # To use it: in the Netlify dashboard, link the `prep-a-constable-preview` site
 # to this GitHub repo and pick the branch. Netlify reads the settings below.
+#
+# IMPORTANT — pick the branch that actually contains this app. The repository's
+# DEFAULT branch (claude/algay-audit-backtest-jk84nh) does NOT contain
+# prep-a-constable/, so a site linked to the default branch fails immediately
+# with "base directory does not exist". Set the production branch to the branch
+# carrying the app (currently claude/full-app-audit-rraf3e).
+#
+# Verified: `npm install && npm run build` succeeds from a clean checkout of the
+# committed tree and emits dist/bundle.js + dist/index.html.
 
 [build]
   base = "prep-a-constable/preview"

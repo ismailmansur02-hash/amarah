@@ -90,11 +90,19 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
 ## Web preview build
 
 ```bash
-cd preview && npm i react@18 react-dom@18 esbuild && \
-npx esbuild entry.jsx --bundle --loader:.jsx=jsx --minify \
-  --define:process.env.NODE_ENV='"production"' --outfile=dist/bundle.js && cp index.html dist/
+cd preview && npm install && npm run build
 # deploy dist/ to Netlify site "prep-a-constable-preview" (drag-drop or CLI)
 ```
+
+The `build` script carries `--alias:react=./node_modules/react`. That alias is
+REQUIRED: `entry.jsx` imports `../app/prep-a-constable.jsx`, and esbuild resolves
+that file's `react` import upward from `app/` — where it never finds
+`preview/node_modules`. Without the alias a clean checkout fails with
+"Could not resolve react" (this broke the first Netlify build config).
+
+Continuous deploy: `netlify.toml` at the repo ROOT builds this preview
+(base `prep-a-constable/preview`, publish `dist`). It only applies to the branch
+the Netlify site is linked to.
 
 `preview/entry.jsx` imports `../app/prep-a-constable.jsx` — never fork the app file.
 
