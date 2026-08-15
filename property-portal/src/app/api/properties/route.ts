@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     return jsonError("Client, name, address, and takeover date are required");
   }
 
-  const client = await one(sql`SELECT id FROM users WHERE id = ${clientId} AND role = 'client'`);
+  const client = await one(sql`SELECT id FROM portal_users WHERE id = ${clientId} AND role = 'client'`);
   if (!client) return jsonError("Unknown client");
 
   const feeType = str(form, "management_fee_type") === "flat" ? "flat" : "percent";

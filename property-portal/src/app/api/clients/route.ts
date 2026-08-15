@@ -23,11 +23,11 @@ export async function POST(req: NextRequest) {
   }
   if (password.length < 8) return jsonError("Password must be at least 8 characters");
 
-  const exists = await one(sql`SELECT id FROM users WHERE username = ${username}`);
+  const exists = await one(sql`SELECT id FROM portal_users WHERE username = ${username}`);
   if (exists) return jsonError("That username is already taken");
 
   const created = await one<{ id: number }>(sql`
-    INSERT INTO users (username, password_hash, name, email, role)
+    INSERT INTO portal_users (username, password_hash, name, email, role)
     VALUES (${username}, ${bcrypt.hashSync(password, 10)}, ${name}, ${email}, 'client')
     RETURNING id`);
 

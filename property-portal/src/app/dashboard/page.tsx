@@ -20,9 +20,9 @@ export default async function ManagerDashboard() {
     await Promise.all([
       sql<PropertyRow & { client_name: string }>`
         SELECT p.*, u.name AS client_name FROM properties p
-        JOIN users u ON u.id = p.client_id ORDER BY p.name`,
+        JOIN portal_users u ON u.id = p.client_id ORDER BY p.name`,
       sql<UserRow>`
-        SELECT id, username, name, email, role, created_at FROM users
+        SELECT id, username, name, email, role, created_at FROM portal_users
         WHERE role = 'client' ORDER BY name`,
       sql<{ property_id: number; total: number; done: number }>`
         SELECT property_id, COUNT(*)::int AS total,

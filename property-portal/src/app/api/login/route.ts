@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     password_hash: string;
     name: string;
     role: "manager" | "client";
-  }>(sql`SELECT id, username, password_hash, name, role FROM users WHERE username = ${username}`);
+  }>(sql`SELECT id, username, password_hash, name, role FROM portal_users WHERE username = ${username}`);
 
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     return jsonError("Invalid credentials", 401);

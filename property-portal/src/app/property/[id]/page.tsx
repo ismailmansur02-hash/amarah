@@ -50,7 +50,7 @@ export default async function PropertyPage({
   const [client, docs, steps, tasks, tenants, leases, ledger, requests, activity] =
     await Promise.all([
       one<{ name: string; username: string; email: string }>(
-        sql`SELECT name, username, email FROM users WHERE id = ${property.client_id}`
+        sql`SELECT name, username, email FROM portal_users WHERE id = ${property.client_id}`
       ),
       sql<DocumentRow>`SELECT * FROM documents WHERE property_id = ${property.id} ORDER BY uploaded_at DESC`,
       sql<ChecklistStepRow>`SELECT * FROM checklist_steps WHERE property_id = ${property.id} ORDER BY position`,
@@ -61,7 +61,7 @@ export default async function PropertyPage({
       sql<MaintenanceRow>`SELECT * FROM maintenance_requests WHERE property_id = ${property.id} ORDER BY created_at DESC`,
       sql<ActivityRow>`
         SELECT a.*, u.name AS actor_name FROM activity_log a
-        LEFT JOIN users u ON u.id = a.actor_id
+        LEFT JOIN portal_users u ON u.id = a.actor_id
         WHERE a.property_id = ${property.id} ORDER BY a.created_at DESC`,
     ]);
 

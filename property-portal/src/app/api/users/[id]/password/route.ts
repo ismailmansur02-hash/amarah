@@ -23,7 +23,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
     id: number;
     role: "manager" | "client";
     password_hash: string;
-  }>(sql`SELECT id, role, password_hash FROM users WHERE id = ${targetId}`);
+  }>(sql`SELECT id, role, password_hash FROM portal_users WHERE id = ${targetId}`);
   if (!target) return jsonError("User not found", 404);
 
   const isSelf = target.id === session.uid;
@@ -44,6 +44,6 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
     }
   }
 
-  await sql`UPDATE users SET password_hash = ${bcrypt.hashSync(newPassword, 10)} WHERE id = ${target.id}`;
+  await sql`UPDATE portal_users SET password_hash = ${bcrypt.hashSync(newPassword, 10)} WHERE id = ${target.id}`;
   return NextResponse.json({ ok: true });
 }
