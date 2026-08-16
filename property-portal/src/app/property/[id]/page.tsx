@@ -8,27 +8,13 @@ import {
   MaintenanceRow, RenovationTaskRow, TenantRow,
 } from "@/lib/types";
 import { STATUS_LABELS, STATUS_COLORS, fmtDate } from "@/lib/format";
-import Overview from "./sections/Overview";
-import PropertyInfo from "./sections/PropertyInfo";
-import Legal from "./sections/Legal";
-import Renovation from "./sections/Renovation";
-import TenantsLease from "./sections/TenantsLease";
-import Accounting from "./sections/Accounting";
-import Maintenance from "./sections/Maintenance";
+import PropertyTabs from "./PropertyTabs";
 
 // Authenticated page: always render fresh, and never let a CDN hold on to
 // one person's view and hand it to somebody else.
 export const dynamic = "force-dynamic";
 
-const TABS = [
-  { key: "overview", label: "Overview" },
-  { key: "info", label: "1 · Property Info" },
-  { key: "legal", label: "2 · Legal" },
-  { key: "renovation", label: "3 · Renovation" },
-  { key: "tenants", label: "4 · Tenants & Lease" },
-  { key: "accounting", label: "5 · Accounting & Tax" },
-  { key: "maintenance", label: "6 · Maintenance" },
-];
+const TAB_KEYS = ["overview", "info", "legal", "renovation", "tenants", "accounting", "maintenance"];
 
 export default async function PropertyPage({
   params,
@@ -49,8 +35,11 @@ export default async function PropertyPage({
   if (!property) notFound();
 
   const isManager = session.role === "manager";
-  const tab = TABS.some((t) => t.key === tabParam) ? (tabParam as string) : "overview";
+  const initialTab = TAB_KEYS.includes(tabParam ?? "") ? (tabParam as string) : "overview";
 
+  // Loaded once for the whole file; the tabs then switch without touching the
+  // server. Issued together so they cost one round trip to the database
+  // rather than one each.
   const [client, docs, steps, tasks, tenants, leases, ledger, requests, activity] =
     await Promise.all([
       one<{ name: string; username: string; email: string }>(
@@ -68,8 +57,6 @@ export default async function PropertyPage({
         LEFT JOIN portal_users u ON u.id = a.actor_id
         WHERE a.property_id = ${property.id} ORDER BY a.created_at DESC`,
     ]);
-
-  const docsBySection = (section: string) => docs.filter((d) => d.section === section);
 
   return (
     <div className="space-y-6">
@@ -95,51 +82,20 @@ export default async function PropertyPage({
         </div>
       </div>
 
-      <nav className="flex flex-wrap gap-1 border-b border-slate-200 pb-px text-sm">
-        {TABS.map((t) => (
-          <Link
-            key={t.key}
-            href={`/property/${property.id}?tab=${t.key}`}
-            className={
-              t.key === tab
-                ? "rounded-t-md border border-b-white border-slate-200 bg-white px-3 py-2 font-medium text-slate-900"
-                : "rounded-t-md px-3 py-2 text-slate-500 hover:text-slate-800"
-            }
-          >
-            {t.label}
-          </Link>
-        ))}
-      </nav>
-
-      {tab === "overview" && (
-        <Overview
-          property={property}
-          isManager={isManager}
-          steps={steps}
-          tasks={tasks}
-          ledger={ledger}
-          activity={activity}
-          requests={requests}
-        />
-      )}
-      {tab === "info" && (
-        <PropertyInfo property={property} client={client!} isManager={isManager} docs={docsBySection("property")} />
-      )}
-      {tab === "legal" && (
-        <Legal property={property} isManager={isManager} steps={steps} docs={docsBySection("legal")} />
-      )}
-      {tab === "renovation" && (
-        <Renovation property={property} isManager={isManager} tasks={tasks} docs={docsBySection("renovation")} />
-      )}
-      {tab === "tenants" && (
-        <TenantsLease property={property} isManager={isManager} tenants={tenants} leases={leases} docs={docsBySection("lease")} />
-      )}
-      {tab === "accounting" && (
-        <Accounting property={property} isManager={isManager} ledger={ledger} docs={docsBySection("accounting")} />
-      )}
-      {tab === "maintenance" && (
-        <Maintenance property={property} isManager={isManager} requests={requests} docs={docsBySection("maintenance")} />
-      )}
+      <PropertyTabs
+        property={property}
+        isManager={isManager}
+        client={client!}
+        docs={docs}
+        steps={steps}
+        tasks={tasks}
+        tenants={tenants}
+        leases={leases}
+        ledger={ledger}
+        requests={requests}
+        activity={activity}
+        initialTab={initialTab}
+      />
     </div>
   );
 }

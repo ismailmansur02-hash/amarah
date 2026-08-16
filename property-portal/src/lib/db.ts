@@ -30,10 +30,13 @@ function getPool(): Pool {
     const isLocal = /@(localhost|127\.0\.0\.1)/.test(connectionString);
     pool = new Pool({
       connectionString,
-      // Each serverless instance keeps its own pool, so keep them small and
-      // let idle connections go rather than holding pooler slots open.
-      max: 3,
-      idleTimeoutMillis: 10_000,
+      // A page issues up to nine queries together. With a smaller pool they
+      // queue into several waves, and each wave is a full round trip to the
+      // database — so the pool must be at least as large as the widest batch.
+      // Supabase's transaction pooler multiplexes these onto far fewer server
+      // connections, so this is cheap.
+      max: 12,
+      idleTimeoutMillis: 30_000,
       connectionTimeoutMillis: 10_000,
       // Supabase terminates TLS at its pooler with a certificate that does not
       // chain to the public roots, so the chain is not verified. Traffic is
