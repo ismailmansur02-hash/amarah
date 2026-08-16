@@ -10,9 +10,6 @@ import {
 import { STATUS_LABELS, STATUS_COLORS, fmtDate } from "@/lib/format";
 import PropertyTabs from "./PropertyTabs";
 
-// Authenticated page: always render fresh, and never let a CDN hold on to
-// one person's view and hand it to somebody else.
-export const dynamic = "force-dynamic";
 
 const TAB_KEYS = ["overview", "info", "legal", "renovation", "tenants", "accounting", "maintenance"];
 

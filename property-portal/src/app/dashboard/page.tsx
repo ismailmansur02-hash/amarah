@@ -10,9 +10,6 @@ import ApiForm from "@/components/ApiForm";
 import Field from "@/components/Field";
 import GettingStarted from "@/components/GettingStarted";
 
-// Authenticated page: always render fresh, never cache one manager's or
-// client's view for anyone else.
-export const dynamic = "force-dynamic";
 
 const inputCls =
   "w-full rounded-md border border-slate-300 px-2 py-2 text-sm focus:border-slate-500 focus:outline-none";

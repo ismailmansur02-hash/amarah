@@ -7,9 +7,6 @@ import { LedgerRow } from "@/lib/types";
 import { money, fmtDate, STATUS_LABELS, STATUS_COLORS, feeLabel } from "@/lib/format";
 import ProgressBar from "@/components/ProgressBar";
 
-// Authenticated page: always render fresh, and never let a CDN hold on to
-// one person's view and hand it to somebody else.
-export const dynamic = "force-dynamic";
 
 export default async function ClientHome() {
   const session = await getSession();
