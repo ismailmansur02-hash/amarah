@@ -3,6 +3,10 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import ApiForm from "@/components/ApiForm";
 
+// Authenticated page: always render fresh, and never let a CDN hold on to
+// one person's view and hand it to somebody else.
+export const dynamic = "force-dynamic";
+
 const inputCls =
   "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none";
 

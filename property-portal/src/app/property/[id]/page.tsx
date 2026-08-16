@@ -16,6 +16,10 @@ import TenantsLease from "./sections/TenantsLease";
 import Accounting from "./sections/Accounting";
 import Maintenance from "./sections/Maintenance";
 
+// Authenticated page: always render fresh, and never let a CDN hold on to
+// one person's view and hand it to somebody else.
+export const dynamic = "force-dynamic";
+
 const TABS = [
   { key: "overview", label: "Overview" },
   { key: "info", label: "1 · Property Info" },
