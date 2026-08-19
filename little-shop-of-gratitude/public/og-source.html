@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- The source of /assets/img/og.png, the picture shown when the site is
+     shared. Re-render this page at 1200x630 after changing it. -->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Share card source</title>
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<style>
+  body { margin: 0; }
+  .og {
+    width: 1200px; height: 630px;
+    position: relative; overflow: hidden;
+    background: var(--sage); color: var(--cream);
+    display: grid; place-items: center; text-align: center;
+  }
+  .og .hero__mark { width: 330px; margin: 0 0 1.5rem; }
+  .og .hero__tagline { margin: 0; font-size: 1.5rem; }
+  .og .inner { position: relative; display: grid; justify-items: center; }
+</style>
+</head>
+<body>
+<div class="og">
+  <div class="grain" aria-hidden="true"></div>
+  <div class="inner">
+    <div class="hero__mark">
+      <svg class="ring" viewBox="0 0 400 400">
+        <defs>
+          <path id="topArc" d="M35 200 A165 165 0 0 1 365 200" fill="none"/>
+          <path id="bottomArc" d="M48 200 A152 152 0 0 0 352 200" fill="none"/>
+        </defs>
+        <text class="ring__small" text-anchor="middle"><textPath href="#topArc" startOffset="50%">THE LITTLE SHOP OF</textPath></text>
+        <text class="ring__big" text-anchor="middle"><textPath href="#bottomArc" startOffset="50%"><tspan class="ring__tm" fill="none">™</tspan>GRATITUDE<tspan class="ring__tm" dy="-13">™</tspan></textPath></text>
+      </svg>
+      <span class="wreath hero__wreath" aria-hidden="true"></span>
+    </div>
+    <p class="hero__tagline">Mindful pottery and gifts, chosen with intention.</p>
+  </div>
+</div>
+</body>
+</html>

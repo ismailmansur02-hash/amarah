@@ -1,0 +1,18 @@
+# The Little Shop of Gratitude — a static site with one serverless function for Stripe Checkout.
+# The site source lives in little-shop-of-gratitude/ so it sits alongside the rest of this repo.
+
+[build]
+  publish = "little-shop-of-gratitude/public"
+  functions = "little-shop-of-gratitude/netlify/functions"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
