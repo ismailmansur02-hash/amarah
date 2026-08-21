@@ -5,3 +5,7 @@ bot/dow_state.json
 bot/dow_calendar_cache.json
 bot/dow_bot.log
 bot/KILL
+
+# bot runtime output (never committed from the trading host)
+bot/ops/heartbeat.json
+.venv/

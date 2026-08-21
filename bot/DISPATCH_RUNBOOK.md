@@ -58,6 +58,32 @@ Confirm each; if any is false, fix or ask the user before proceeding:
 
 ---
 
+## 2a. FAST PATH — one command instead of §4–§6
+
+Steps 4 (dependencies), 5 (tests + acceptance gate) and the Task Scheduler part
+of 6 are automated. From the repo root, after §3 (credentials) is done:
+
+```
+powershell -ExecutionPolicy Bypass -File bot\ops\bootstrap_windows.ps1
+```
+
+It pre-flights the machine (Windows, Python 3.11+, MT5 path, credentials
+present, news feed reachable), builds a venv, installs dependencies, runs the 55
+unit tests, runs the acceptance gate, and registers two scheduled tasks:
+`DOWBot` (the loop, at logon, auto-restart) and `DOWBotStatus` (hourly
+heartbeat). **It refuses to register anything if the tests or the gate fail**,
+and it never starts trading by itself — that stays a deliberate human step.
+
+The heartbeat (`bot/ops/status_push.py`) publishes a no-secrets status summary
+to the `bot-status` branch so the scheduled cloud health review can see the bot.
+It never touches the working tree and never raises. Set `DOW_STATUS_NO_PUSH=1`
+to keep it local-only.
+
+Read §4–§6 anyway so you know what the script did; run them manually if it
+fails. Everything below still applies.
+
+---
+
 ## 3. Configure — where the user's details go
 
 Open `bot/dow_config.py` → the clearly-marked credentials block (spec §7.1).
@@ -127,10 +153,10 @@ its next 30 s poll. **After a risk halt:** review first, then
 `python bot/dow_bot.py --reset-halt` and start it again (spec: never restart a
 halt without review).
 
-**Auto-start on boot** (so a reboot resumes trading): Task Scheduler → Create
-Task → trigger "At log on" → action Start a program: program `python`,
-arguments `bot\dow_bot.py`, "Start in" = the repo root directory. MT5 itself
-must also auto-start and stay logged in.
+**Auto-start on boot** is already handled if you used the bootstrap script
+(§2a): it registers a `DOWBot` scheduled task that starts the bot at logon and
+auto-restarts it if it ever crashes. MT5 itself must also auto-start and stay
+logged in — set that in MT5's own options.
 
 ---
 
