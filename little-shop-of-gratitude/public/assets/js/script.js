@@ -7,8 +7,8 @@
 
 const SETTINGS = {
   /* The booking address. The part before the @ is confirmed; the domain
-     ending is not — the old site rendered it as .com. Change it here and
-     it updates everywhere it appears. */
+     ending is not — the original site rendered it as .com. Change it here
+     and it updates everywhere it appears. */
   emailUser: "greetings",
   emailDomain: "thelittleshopofgratitude.com",
 
@@ -20,50 +20,52 @@ const email = () => `${SETTINGS.emailUser}@${SETTINGS.emailDomain}`;
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const scrollTo = (id) =>
+  $(id).scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth" });
 
-/* ================================================ scroll reveals */
+/* ══════════════════════════════════════════════ scroll reveals ══ */
 
 function watchReveals() {
   const items = $$(".reveal");
   if (!("IntersectionObserver" in window) || reduceMotion()) {
-    items.forEach((el) => el.classList.add("is-in"));
+    items.forEach((el) => el.classList.add("visible"));
     return;
   }
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add("is-in");
+          entry.target.classList.add("visible");
           io.unobserve(entry.target);
         }
       });
     },
-    { rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
+    { threshold: 0.15 }
   );
   items.forEach((el) => io.observe(el));
 }
 
-/* ======================================================= actions */
+/* ═══════════════════════════════════════════════════ the actions ══ */
 
 function goExplore() {
-  $("#offerings").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth" });
+  scrollTo("#about");
 }
 
 function goMenu() {
-  $("#menu").scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth" });
-  if (!$("[data-expand]").classList.contains("is-open")) toggleMenu();
+  scrollTo("#menu");
+  if (!$("#menuExpand").classList.contains("open")) toggleMenu();
 }
 
 function toggleMenu() {
-  const panel = $("[data-expand]");
+  const panel = $("#menuExpand");
   const button = $('[data-action="menu-toggle"]');
-  const open = panel.classList.toggle("is-open");
+  const open = panel.classList.toggle("open");
   button.setAttribute("aria-expanded", String(open));
-  button.setAttribute("aria-label", open ? "Close the session details" : "Open the session details");
-  $("[data-menu-label]").textContent = open ? "Close" : "See the session";
+  button.setAttribute("aria-label", open ? "Close the menu of experiences" : "Open the menu of experiences");
+  $("[data-menu-label]").textContent = open ? "Close Menu" : "Open Menu";
 }
 
-/* ====================================== the say hello / booking panels */
+/* ═════════════════════════════════ say hello / booking overlays ══ */
 
 let lastFocused = null;
 let openPanel = null;
@@ -95,10 +97,11 @@ function openOverlay(id) {
   openPanel = panel;
   panel.hidden = false;
   document.body.style.overflow = "hidden";
-  requestAnimationFrame(() => panel.classList.add("is-open"));
+  void panel.offsetWidth;                 // let the browser see it before fading in
+  panel.classList.add("active");
 
-  const firstField = $("input:not([type=hidden]), textarea", panel);
-  (firstField || $("[data-close]", panel))?.focus({ preventScroll: true });
+  ($("input:not([type=hidden]), textarea", panel) || $("[data-close]", panel))
+    ?.focus({ preventScroll: true });
 
   /* so the phone's back button closes the panel rather than leaving the site */
   history.pushState({ overlay: id }, "", `#${id}`);
@@ -109,12 +112,12 @@ function closeOverlay({ fromHistory = false } = {}) {
   if (!panel) return;
 
   if (!fromHistory && history.state?.overlay) {
-    history.back();            // the popstate handler finishes the job
+    history.back();                       // the popstate handler finishes the job
     return;
   }
 
   openPanel = null;
-  panel.classList.remove("is-open");
+  panel.classList.remove("active");
   document.body.style.overflow = "";
 
   const finish = () => {
@@ -122,15 +125,15 @@ function closeOverlay({ fromHistory = false } = {}) {
     lastFocused?.focus({ preventScroll: true });
   };
   if (reduceMotion()) finish();
-  else setTimeout(finish, 450);
+  else setTimeout(finish, 620);
 }
 
-/* ================================================= the two forms */
+/* ═══════════════════════════════════════════════════ the forms ══ */
 
 async function sendForm(form) {
   const status = $("[data-status]", form);
   const button = $('button[type="submit"]', form);
-  const label = $(".logo-btn__label", button);
+  const label = $("[data-send-label]", button);
   const original = label.textContent;
 
   status.className = "form-status";
@@ -163,7 +166,7 @@ async function sendForm(form) {
   }
 }
 
-/* ============================================== the deposit, if switched on */
+/* ══════════════════════════════════ the deposit, if switched on ══ */
 
 let depositInfo = null;
 
@@ -188,10 +191,12 @@ function offerDeposit(form) {
 
   const pay = document.createElement("button");
   pay.type = "button";
-  pay.className = "logo-btn logo-btn--send";
+  pay.className = "logo-btn";
+  pay.style.alignSelf = "center";
   pay.setAttribute("aria-label", `Pay the ${depositInfo.formatted} deposit now`);
-  pay.innerHTML = `<span class="wreath" aria-hidden="true"></span>
-    <span class="logo-btn__label">Pay deposit ${depositInfo.formatted}</span>`;
+  pay.innerHTML =
+    `<img src="/assets/img/wreath.png" alt="" width="58" height="72">` +
+    `<span>Pay Deposit ${depositInfo.formatted}</span>`;
 
   pay.addEventListener("click", async () => {
     pay.disabled = true;
@@ -213,7 +218,7 @@ function offerDeposit(form) {
   status.after(pay);
 }
 
-/* ============================================================ wire */
+/* ══════════════════════════════════════════════════════════ wire ══ */
 
 function wire() {
   watchReveals();

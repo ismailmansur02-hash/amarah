@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Little Shop of Gratitude — mindful pottery and gifts</title>
-<meta name="description" content="Mindful pottery and gifts, chosen with intention. Gratitude keepsakes, forever love keepsakes, and paint your own pottery sessions.">
+<title>The Little Shop of Gratitude&trade;</title>
+<meta name="description" content="Mindful gifts and heartfelt tokens. Gratitude keepsakes, forever love keepsakes, and paint your own pottery sessions.">
 <link rel="canonical" href="/">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Little Shop of Gratitude">
-<meta property="og:description" content="Mindful pottery and gifts, chosen with intention — to help you pause, appreciate, and share the quiet joy of being grateful.">
+<meta property="og:description" content="Mindful gifts &amp; heartfelt tokens — pottery chosen with intention, to help you pause, appreciate, and share the quiet joy of being grateful.">
 <meta property="og:image" content="/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#b5bc8a">
@@ -19,6 +19,7 @@
 
 <link rel="preload" href="/assets/fonts/cormorant-garamond-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jost-normal-200-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/img/wreath.png" as="image">
 <link rel="stylesheet" href="/assets/css/fonts.css">
 <link rel="stylesheet" href="/assets/css/styles.css">
 
@@ -28,7 +29,7 @@
   "@type": "Store",
   "name": "The Little Shop of Gratitude",
   "legalName": "The Little Shop of Gratitude Ltd",
-  "description": "Mindful pottery and gifts.",
+  "description": "Mindful gifts and heartfelt tokens.",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Made Simple Group, 20–22 Wenlock Road",
@@ -43,256 +44,242 @@
 <body>
 <a class="skip" href="#about">Skip to content</a>
 
-<!-- ============================================================== hero -->
-<header class="hero" id="top">
-  <div class="grain" aria-hidden="true"></div>
+<!-- ══════════════════════════════════════════════════════════ HERO ══ -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Welcome to</p>
 
-  <div class="hero__inner">
-    <div class="hero__mark">
-      <svg class="ring" viewBox="0 0 400 400" role="img" aria-label="The Little Shop of Gratitude">
+    <div class="hero-logo-wrap">
+      <svg class="circular-text" viewBox="0 0 400 400" role="img" aria-label="The Little Shop of Gratitude">
         <defs>
-          <!-- hand-tuned so the wreath never cuts through the wordmark -->
-          <path id="topArc" d="M35 200 A165 165 0 0 1 365 200" fill="none"/>
-          <path id="bottomArc" d="M48 200 A152 152 0 0 0 352 200" fill="none"/>
+          <!-- hand-tuned so the wreath does not cut through the wordmark -->
+          <path id="topArc" d="M 35,200 A 165,165 0 0,1 365,200" fill="none"/>
+          <path id="bottomArc" d="M 55,268 A 152,152 0 0,0 345,268" fill="none"/>
         </defs>
-        <text class="ring__small" text-anchor="middle">
+
+        <image href="/assets/img/wreath.png" x="112" y="78" width="176" height="222" preserveAspectRatio="xMidYMid meet"/>
+
+        <text class="arc-top" text-anchor="middle">
           <textPath href="#topArc" startOffset="50%">THE LITTLE SHOP OF</textPath>
         </text>
-        <text class="ring__big" text-anchor="middle">
-          <textPath href="#bottomArc" startOffset="50%"><tspan class="ring__tm" fill="none">™</tspan>GRATITUDE<tspan class="ring__tm" dy="-13">™</tspan></textPath>
+        <text class="arc-bottom" text-anchor="middle">
+          <textPath href="#bottomArc" startOffset="50%">GRATITUDE&trade;</textPath>
         </text>
       </svg>
-      <span class="wreath hero__wreath" aria-hidden="true"></span>
     </div>
 
-    <p class="hero__tagline reveal">Mindful pottery and gifts, chosen with intention.</p>
+    <p class="hero-tagline">Mindful gifts &amp; heartfelt tokens</p>
 
-    <nav class="logo-row reveal reveal-delay-1" aria-label="Main">
-      <button class="logo-btn" type="button" data-action="explore" aria-label="Explore the shop">
-        <span class="wreath" aria-hidden="true"></span>
-        <span class="logo-btn__label">Explore</span>
+    <div class="hero-actions">
+      <button class="logo-btn" type="button" data-action="explore" aria-label="Explore, jumps to our story">
+        <img src="/assets/img/wreath.png" alt="" width="58" height="72">
+        <span>Explore</span>
       </button>
-      <button class="logo-btn" type="button" data-action="menu" aria-label="See the pottery session menu">
-        <span class="wreath" aria-hidden="true"></span>
-        <span class="logo-btn__label">Menu</span>
+      <button class="logo-btn" type="button" data-action="menu" aria-label="Menu, jumps to the pottery sessions">
+        <img src="/assets/img/wreath.png" alt="" width="58" height="72">
+        <span>Menu</span>
       </button>
       <button class="logo-btn" type="button" data-action="hello" aria-label="Say hello, opens a message form">
-        <span class="wreath" aria-hidden="true"></span>
-        <span class="logo-btn__label">Say Hello</span>
+        <img src="/assets/img/wreath.png" alt="" width="58" height="72">
+        <span>Say Hello</span>
       </button>
-    </nav>
+    </div>
   </div>
 
-  <a class="scroll-hint" href="#about" aria-label="Scroll down">
-    <span class="scroll-hint__line" aria-hidden="true"></span>
+  <a class="scroll-hint" href="#about" aria-label="Scroll to our story">
+    <span class="scroll-arrow" aria-hidden="true"></span>
+    <span>Scroll</span>
   </a>
-</header>
+</section>
 
 <main>
 
-<!-- ============================================================= about -->
-<section class="section about" id="about">
-  <span class="watermark wreath" aria-hidden="true"></span>
-  <div class="wrap narrow">
-    <p class="label reveal">Our story</p>
-    <h2 class="reveal">A small shop rooted in <em>gratitude</em></h2>
-    <p class="lede reveal reveal-delay-1">The Little Shop of Gratitude was born of the belief that thoughtful, beautiful things can shift the way we see the world — clicking the motion and endeavour to a thankful heart. Every mindful pottery piece is chosen with intention, to help you pause, appreciate, and share the quiet joy of being grateful.</p>
+<!-- ═════════════════════════════════════════════════════════ ABOUT ══ -->
+<section class="about" id="about">
+  <div class="container">
+    <p class="section-label reveal">Our Story</p>
+    <h2 class="section-title reveal reveal-delay-1">A small shop rooted<br>in <em>gratitude</em></h2>
+    <div class="divider reveal reveal-delay-2"><span class="divider-icon" aria-hidden="true">&#10022;</span></div>
+    <p class="section-body reveal reveal-delay-2">The Little Shop of Gratitude was born of the belief that thoughtful, beautiful things can shift the way we see the world &mdash; clicking the motion and endeavour to a thankful heart. Every mindful pottery piece is chosen with intention, to help you pause, appreciate, and share the quiet joy of being grateful.</p>
   </div>
 </section>
 
-<!-- ========================================================= offerings -->
-<section class="section offerings" id="offerings">
-  <div class="wrap">
-    <p class="label reveal">What we make</p>
-    <h2 class="reveal">Pieces to keep, and to <em>give</em></h2>
+<!-- ═════════════════════════════════════════════════════ OFFERINGS ══ -->
+<section class="offerings">
+  <div class="container">
+    <p class="section-label reveal">What We Offer</p>
+    <h2 class="section-title reveal reveal-delay-1">Gifts that <em>speak</em><br>from the heart</h2>
 
-    <div class="cards">
-      <article class="card reveal">
-        <span class="card__mark wreath" aria-hidden="true"></span>
-        <h3>Gratitude Keepsakes</h3>
-        <p>Beautiful pottery to capture the moments of thankfulness, reflection and experience.</p>
-      </article>
-
-      <article class="card reveal reveal-delay-1">
-        <span class="card__mark wreath" aria-hidden="true"></span>
-        <h3>Forever Love Keepsakes</h3>
-        <p>Nature inspired tokens to remind you of life's gentle, everyday beauty.</p>
-      </article>
-
-      <article class="card card--soon reveal reveal-delay-2">
-        <span class="card__mark wreath" aria-hidden="true"></span>
-        <h3>Tea Cup Sets</h3>
-        <p>Arriving soon.</p>
-        <span class="card__badge">Arriving Soon</span>
-      </article>
+    <div class="offerings-grid">
+      <div class="card reveal reveal-delay-1">
+        <span class="card-icon" aria-hidden="true">&#127793;</span>
+        <h3 class="card-title">Gratitude Keepsakes</h3>
+        <p class="card-body">Beautiful pottery to capture the moments of thankfulness, reflection and experience.</p>
+      </div>
+      <div class="card reveal reveal-delay-2">
+        <span class="card-icon" aria-hidden="true">&#127800;</span>
+        <h3 class="card-title">Forever Love Keepsakes</h3>
+        <p class="card-body">Nature inspired tokens to remind you of life's gentle, everyday beauty.</p>
+      </div>
+      <div class="card reveal reveal-delay-3">
+        <span class="card-icon" aria-hidden="true">&#127861;</span>
+        <h3 class="card-title">Tea Cup Sets</h3>
+        <p class="card-body">Elegant sets to share slow, grateful moments over tea.</p>
+        <span class="soon">Arriving Soon</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================== menu -->
-<section class="section menu" id="menu">
-  <div class="wrap narrow center">
-    <p class="label reveal">Mindful Paint Your Own Pottery Sessions</p>
-    <h2 class="reveal">Sit a while, and <em>make something</em></h2>
+<!-- ══════════════════════════════════════════════════════════ MENU ══ -->
+<section class="menu-section" id="menu">
+  <div class="container">
+    <p class="section-label reveal">Experiences</p>
+    <h2 class="section-title reveal reveal-delay-1">Our <em>menu</em></h2>
 
-    <button class="logo-btn logo-btn--lg reveal reveal-delay-1" type="button" data-action="menu-toggle"
-            aria-expanded="false" aria-controls="menu-panel" aria-label="Open the session details">
-      <span class="wreath" aria-hidden="true"></span>
-      <span class="logo-btn__label" data-menu-label>See the session</span>
-    </button>
+    <div class="reveal reveal-delay-2">
+      <button class="logo-btn" type="button" data-action="menu-toggle"
+              aria-expanded="false" aria-controls="menuExpand" aria-label="Open the menu of experiences">
+        <img src="/assets/img/wreath.png" alt="" width="58" height="72">
+        <span data-menu-label>Open Menu</span>
+      </button>
+    </div>
 
-    <div class="expand" id="menu-panel" data-expand>
-      <div class="expand__inner">
-        <div class="menu-block">
-          <h3>The session</h3>
-          <p>Enjoy your drink, pastry or afternoon tea and relax with a paint your own pottery session. Make mindful gifts and heartfelt tokens.</p>
-          <p>The 2 hour paint your own pottery session involves choosing your bisqueware and using a range of glazes to paint your ceramic piece.</p>
-          <p>After, the piece will be left to dry, then coated in transparent glaze and fired in the kiln. Once ready for collection, your pottery piece can be either picked up or posted.</p>
-        </div>
+    <div class="menu-expand" id="menuExpand">
+      <div class="menu-expand__inner">
+        <div class="menu-blocks">
+          <div class="offer-block">
+            <h4>Mindful Paint Your Own Pottery Sessions</h4>
+            <p>Enjoy your drink, pastry or afternoon tea and relax with a paint your own pottery session. Make mindful gifts and heartfelt tokens.</p>
+            <p>The 2 hour paint your own pottery session involves choosing your bisqueware and using a range of glazes to paint your ceramic piece.</p>
+            <p>After, the piece will be left to dry, then coated in transparent glaze and fired in the kiln. Once ready for collection, your pottery piece can be either picked up or posted.</p>
+          </div>
 
-        <div class="menu-block">
-          <h3>How to Book</h3>
-          <p>A deposit is taken upon booking and this will be redeemed against your pottery purchased on the day. To book, please email <a href="#" data-email-link>greetings@thelittleshopofgratitude</a>.</p>
-          <p class="fine">Please note: any items bought at the establishment such as afternoon tea, drinks and pastries are separate and would need to be purchased directly with the vendors, and may have separate conditions which you would need to enquire about beforehand.</p>
-          <p class="menu-block__cta">
-            <button class="logo-btn logo-btn--inline" type="button" data-action="book" aria-label="Request a booking">
-              <span class="wreath" aria-hidden="true"></span>
-              <span class="logo-btn__label">Book a session</span>
-            </button>
-          </p>
-        </div>
+          <div class="offer-block">
+            <h4>How to Book</h4>
+            <p>A deposit is taken upon booking and this will be redeemed against your pottery purchased on the day. To book, please email <a href="#" data-email-link>greetings@thelittleshopofgratitude.com</a>.</p>
+            <p class="note">Please note: any items bought at the establishment such as afternoon tea, drinks and pastries are separate and would need to be purchased directly with the vendors, and may have separate conditions which you would need to enquire about beforehand.</p>
+            <p class="offer-block__cta">
+              <button class="logo-btn" type="button" data-action="book" aria-label="Request a booking, opens a form">
+                <img src="/assets/img/wreath.png" alt="" width="58" height="72">
+                <span>Book a Session</span>
+              </button>
+            </p>
+          </div>
 
-        <div class="menu-block">
-          <h3>Cancellation Notice</h3>
-          <p>48 hour policy for a full refund of the deposit.</p>
+          <div class="offer-block">
+            <h4>Cancellation Notice</h4>
+            <p>48 hour policy for a full refund of the deposit.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================= quote -->
-<section class="section quote">
-  <div class="wrap narrow center">
-    <blockquote class="reveal">
-      <p>Gratitude makes sense of our past, brings peace for today, and creates a vision for tomorrow.</p>
-      <cite>Melody Beattie</cite>
+<!-- ═════════════════════════════════════════════════════════ QUOTE ══ -->
+<section class="quote-section">
+  <div class="container">
+    <blockquote>
+      <p class="quote-text reveal">"Gratitude turns what we have into enough, and more. It turns denial into acceptance, chaos into order, confusion into clarity."</p>
+      <cite class="quote-attr reveal reveal-delay-1">&mdash; Melody Beattie</cite>
     </blockquote>
   </div>
 </section>
 
-<!-- =========================================================== contact -->
-<section class="section contact" id="contact">
-  <span class="watermark wreath" aria-hidden="true"></span>
-  <div class="wrap narrow center">
-    <p class="label reveal">Get in touch</p>
-    <h2 class="reveal">We'd love to <em>hear from you</em></h2>
-    <p class="lede reveal reveal-delay-1">A question, a commission, or a booking — it all comes through to us.</p>
-
-    <button class="logo-btn logo-btn--lg reveal reveal-delay-2" type="button" data-action="hello" aria-label="Say hello, opens a message form">
-      <span class="wreath" aria-hidden="true"></span>
-      <span class="logo-btn__label">Say Hello</span>
-    </button>
+<!-- ═══════════════════════════════════════════════════════ CONTACT ══ -->
+<section class="contact">
+  <div class="container">
+    <p class="section-label reveal">Get in Touch</p>
+    <h2 class="section-title reveal reveal-delay-1">We'd love to<br><em>hear from you</em></h2>
+    <p class="section-body reveal reveal-delay-2">Whether you're looking for a special gift, a personal keepsake, or just want to say hello &mdash; our door is always open.</p>
+    <div class="reveal reveal-delay-3" style="margin-top:2rem">
+      <button class="logo-btn" type="button" data-action="hello" aria-label="Say hello, opens a message form">
+        <img src="/assets/img/wreath.png" alt="" width="58" height="72">
+        <span>Say Hello</span>
+      </button>
+    </div>
   </div>
 </section>
 
 </main>
 
-<!-- ============================================================ footer -->
-<footer class="footer">
-  <div class="wrap center">
-    <p class="footer__insta">
-      Instagram:
-      <a href="https://instagram.com/thelittleshopofgratitude" rel="me noopener">@thelittleshopofgratitude</a>
-    </p>
-    <p>The Little Shop of Gratitude Ltd</p>
-    <p>Made Simple Group, 20–22 Wenlock Road, London N1 7GU, United Kingdom</p>
-    <p>Trade Mark No: UK00004195148</p>
-    <p class="footer__legal">&copy; <span data-year>2026</span> The Little Shop of Gratitude™</p>
-  </div>
+<!-- ════════════════════════════════════════════════════════ FOOTER ══ -->
+<footer>
+  <p>Instagram: <a href="https://instagram.com/thelittleshopofgratitude" target="_blank" rel="noopener">@thelittleshopofgratitude</a></p>
+  <p>The Little Shop of Gratitude Ltd</p>
+  <p>Made Simple Group, 20&ndash;22 Wenlock Road, London N1 7GU, United Kingdom</p>
+  <p class="tm">Trade Mark No: UK00004195148 &nbsp;&middot;&nbsp; &copy; <span data-year>2026</span> The Little Shop of Gratitude&trade;</p>
 </footer>
 
-<!-- ==================================================== say hello panel -->
+<!-- ═══════════════════════════════════════════════ SAY HELLO PANEL ══ -->
 <div class="overlay" id="hello" role="dialog" aria-modal="true" aria-labelledby="hello-title" hidden>
-  <div class="overlay__inner">
-    <button class="overlay__close" type="button" data-close aria-label="Close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-    </button>
+  <button class="overlay-close" type="button" data-close>&#8592; Back</button>
+  <div class="overlay-inner">
+    <h2 id="hello-title">Say <em>hello</em></h2>
+    <p class="sub">We'd love to hear from you</p>
 
-    <h2 id="hello-title">Say <em>Hello</em></h2>
-    <p class="overlay__lede">Tell us what you have in mind and we will write back.</p>
-
-    <form name="hello" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-form="hello">
+    <form class="form" name="hello" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-form="hello">
       <input type="hidden" name="form-name" value="hello">
       <p class="hp"><label>Leave this empty: <input name="bot-field"></label></p>
 
-      <div class="field">
-        <label for="h-name">Name</label>
-        <input id="h-name" name="name" type="text" autocomplete="name" required>
-      </div>
-      <div class="field">
-        <label for="h-email">Email</label>
-        <input id="h-email" name="email" type="email" autocomplete="email" required>
-      </div>
-      <div class="field">
-        <label for="h-message">Message</label>
-        <textarea id="h-message" name="message" required></textarea>
-      </div>
+      <label class="sr-only" for="h-name">Your name</label>
+      <input id="h-name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
 
-      <button class="logo-btn logo-btn--send" type="submit" aria-label="Send your message">
-        <span class="wreath" aria-hidden="true"></span>
-        <span class="logo-btn__label">Send</span>
+      <label class="sr-only" for="h-email">Your email</label>
+      <input id="h-email" name="email" type="email" placeholder="Your email" autocomplete="email" required>
+
+      <label class="sr-only" for="h-message">Your message</label>
+      <textarea id="h-message" name="message" placeholder="Your message..." required></textarea>
+
+      <button class="logo-btn" style="align-self:center" type="submit" aria-label="Send your message">
+        <img src="/assets/img/wreath.png" alt="" width="58" height="72">
+        <span data-send-label>Send</span>
       </button>
       <p class="form-status" role="status" aria-live="polite" data-status></p>
     </form>
 
-    <p class="overlay__email">Or email <a href="#" data-email-link>greetings@thelittleshopofgratitude</a></p>
+    <p class="email-line"><a href="#" data-email-link>greetings@thelittleshopofgratitude.com</a></p>
   </div>
 </div>
 
-<!-- ====================================================== booking panel -->
+<!-- ═════════════════════════════════════════════════ BOOKING PANEL ══ -->
 <div class="overlay" id="booking" role="dialog" aria-modal="true" aria-labelledby="booking-title" hidden>
-  <div class="overlay__inner">
-    <button class="overlay__close" type="button" data-close aria-label="Close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-    </button>
-
+  <button class="overlay-close" type="button" data-close>&#8592; Back</button>
+  <div class="overlay-inner">
     <h2 id="booking-title">Book a <em>session</em></h2>
-    <p class="overlay__lede">Two hours, at your own pace. Tell us when suits and we will confirm the date and the deposit.</p>
+    <p class="sub">Two hours, at your own pace</p>
 
-    <form name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-form="booking">
+    <form class="form" name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-form="booking">
       <input type="hidden" name="form-name" value="booking">
       <p class="hp"><label>Leave this empty: <input name="bot-field"></label></p>
 
-      <div class="field">
-        <label for="b-name">Name</label>
-        <input id="b-name" name="name" type="text" autocomplete="name" required>
-      </div>
-      <div class="field">
-        <label for="b-email">Email</label>
-        <input id="b-email" name="email" type="email" autocomplete="email" required>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label for="b-date">Preferred date</label>
-          <input id="b-date" name="preferred date" type="date">
+      <label class="sr-only" for="b-name">Your name</label>
+      <input id="b-name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
+
+      <label class="sr-only" for="b-email">Your email</label>
+      <input id="b-email" name="email" type="email" placeholder="Your email" autocomplete="email" required>
+
+      <div class="form-row">
+        <div>
+          <label class="sr-only" for="b-date">Preferred date</label>
+          <input id="b-date" name="preferred date" type="date" aria-label="Preferred date">
         </div>
-        <div class="field">
-          <label for="b-people">How many people</label>
-          <input id="b-people" name="how many people" type="number" min="1" max="20" value="2">
+        <div>
+          <label class="sr-only" for="b-people">How many people</label>
+          <input id="b-people" name="how many people" type="number" min="1" max="20" placeholder="How many people">
         </div>
-      </div>
-      <div class="field">
-        <label for="b-notes">Anything else</label>
-        <textarea id="b-notes" name="notes" placeholder="A birthday, a quiet afternoon, something you would like to make."></textarea>
       </div>
 
-      <button class="logo-btn logo-btn--send" type="submit" aria-label="Send your booking request">
-        <span class="wreath" aria-hidden="true"></span>
-        <span class="logo-btn__label">Request booking</span>
+      <label class="sr-only" for="b-notes">Anything else</label>
+      <textarea id="b-notes" name="notes" placeholder="A birthday, a quiet afternoon, something you would like to make..."></textarea>
+
+      <button class="logo-btn" style="align-self:center" type="submit" aria-label="Send your booking request">
+        <img src="/assets/img/wreath.png" alt="" width="58" height="72">
+        <span data-send-label>Request Booking</span>
       </button>
       <p class="form-status" role="status" aria-live="polite" data-status></p>
-      <p class="fine" data-deposit-note></p>
+      <p class="note" data-deposit-note></p>
     </form>
   </div>
 </div>
