@@ -510,3 +510,75 @@ envelope, not evidence of decay — and 12 trades cannot support a conclusion
 either way. No parameter changes are warranted, and none should be made in
 response to a drawdown this small. The funded-money decision remains the user's,
 after the demo forward-test.
+
+---
+
+## Cross-asset conditioning — the "new data" round (2026-08-23)
+
+User asked to pursue genuinely new data. Availability first, honestly:
+
+| Source | Status |
+|---|---|
+| CFTC Commitment of Traders | **blocked** — FMP Premium plan required |
+| Order flow | institutional feeds only, not obtainable |
+| FX options skew / risk reversals | Bloomberg/Refinitiv class, not obtainable |
+| Treasury yields, credit, equity ETFs (^TNX, TLT, HYG, UUP) | **blocked** on this plan |
+| **^VIX** | **available** |
+| Gold, 7-pair FX cross-section | already stored |
+
+So the round used VIX, gold, and cross-sectional USD breadth — all genuinely
+external to the pair's own price history, which is all the previous ~290
+hypotheses ever saw. Script: `backtest/edge_crossasset.py`. 10 pre-registered
+conditions, expanding-median thresholds (no tuning), VIX/gold lagged to the last
+close strictly before entry, TRAIN 2023-01→2025-03 / TEST 2025-04→2026-08.
+
+### What happened
+
+**The two conditions that passed training selection failed out of sample.**
+H2 "trade only in high-VIX" (train t=4.1, Sharpe 3.46) fell to test Sharpe 0.78;
+H4 "Wednesday needs stress" (train t=4.1, Sharpe 2.48) fell to 0.97 — both
+*below* the unfiltered baseline's test Sharpe of 1.05. Textbook overfitting,
+caught by the pre-registration.
+
+**H9 — "trade only when the dollar is trending broadly"** (≥5 of the 7 USD pairs
+agreeing on direction over the prior 5 days) was weak in train (t=1.3) and strong
+in test (t=4.1, both pairs). That ordering means it was NOT selectable, and
+finding it by looking at the test set burns the test set. It is a **hypothesis,
+not a finding.** Diagnostics:
+
+- positive in all four years; beats its complement in 3 of 4
+- not outlier-driven (dropping the 10 best test trades still leaves +6.8%)
+- **confound:** the condition's own firing rate jumped from 21% (train) to 57%
+  (test), so the two windows are not comparable — the same broad dollar trend
+  may be driving both the condition and the returns
+
+### The economically important part
+
+Over the full period, in-sample-contaminated (`backtest/h9_economics.py`):
+
+| | Return | Sharpe | maxDD | Trades |
+|---|---|---|---|---|
+| Baseline, all days | +4.3%/yr | 1.02 | −4.5% | 724 |
+| **H9 on** (USD trending) | **+4.4%/yr** | **1.64** | −4.1% | 257 |
+| H9 off | **+0.0%/yr** | 0.03 | −5.0% | 467 |
+
+**65% of the strategy's trades contribute nothing.** All the return comes from
+the 35% of days when the dollar is trending broadly. That is a real insight into
+what the edge *is* — a dollar-trend-conditional effect, not an unconditional
+day-of-week one — and it is consistent with every earlier result (the effect
+lives in risk-FX vs USD; absent in gold, indices, and crosses).
+
+**But it does not fix the returns problem.** Sharpe rises 1.02 → 1.64 while
+maxDD only falls 4.5% → 4.1%, so sizing up to a matched risk budget gains very
+little: at an 8% drawdown budget, baseline supports ~1.8x (≈7.6%/yr) and H9
+~1.9x (≈8.5%/yr). Filtering improves risk-adjusted return; it barely moves
+absolute return, because drawdown — the binding constraint on sizing — does not
+fall proportionally.
+
+### Verdict
+
+The reachable new-data avenue is now exhausted. The honest yield is one
+unvalidated but economically coherent hypothesis that would need forward data to
+confirm, and which even if fully real moves the strategy from ~4.3%/yr to
+~4.8%/yr at matched risk. The paywalled sources (COT especially) remain the only
+untested direction.
