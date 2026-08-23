@@ -1,9 +1,12 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PropertyRow } from "@/lib/access";
 import { ChecklistStepRow, DocumentRow } from "@/lib/types";
 import { fmtDate } from "@/lib/format";
 import ProgressBar from "@/components/ProgressBar";
 import ApiForm from "@/components/ApiForm";
-import ToggleBox from "@/components/ToggleBox";
 import DocSection from "@/components/DocSection";
 
 const inputCls =
@@ -12,7 +15,7 @@ const inputCls =
 export default function Legal({
   property,
   isManager,
-  steps,
+  steps: serverSteps,
   docs,
 }: {
   property: PropertyRow;
@@ -20,20 +23,74 @@ export default function Legal({
   steps: ChecklistStepRow[];
   docs: DocumentRow[];
 }) {
+  const router = useRouter();
+
+  /*
+   * Ticking a step updates the box, the completion date, the count and the
+   * progress bar immediately, then saves in the background. This is the action
+   * a manager repeats most, and waiting for a round trip to the database
+   * before the tick appears made it feel broken.
+   *
+   * The server stays the source of truth: its data replaces this as soon as it
+   * arrives, and a failed save puts the step back and says so.
+   */
+  const [steps, setSteps] = useState(serverSteps);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => setSteps(serverSteps), [serverSteps]);
+
   const done = steps.filter((s) => s.completed).length;
+
+  async function toggle(step: ChecklistStepRow, completed: boolean) {
+    const previous = steps;
+    setSteps((current) =>
+      current.map((s) =>
+        s.id === step.id
+          ? { ...s, completed, completed_at: completed ? new Date().toISOString() : null }
+          : s
+      )
+    );
+    setError(null);
+
+    const body = new FormData();
+    body.set("step_id", String(step.id));
+    body.set("completed", completed ? "1" : "0");
+
+    try {
+      const res = await fetch(`/api/properties/${property.id}/checklist`, {
+        method: "POST",
+        body,
+      });
+      if (!res.ok) throw new Error("save failed");
+      router.refresh();
+    } catch {
+      setSteps(previous);
+      setError("That change could not be saved. Check your connection and try again.");
+    }
+  }
 
   return (
     <div className="space-y-8">
       <section>
         <div className="flex items-baseline justify-between">
           <h2 className="text-lg font-semibold">Rent-ready legal process</h2>
-          <span className="text-xs text-slate-400">{done} of {steps.length} steps complete</span>
+          <span className="text-xs text-slate-400">
+            {done} of {steps.length} steps complete
+          </span>
         </div>
         <p className="mt-1 text-sm text-slate-500">
           The legal process to get this property rent ready, broken into steps and marked off one by
           one. Requirements vary by city and state — steps can be added per property.
         </p>
-        <div className="mt-3"><ProgressBar percent={steps.length ? (100 * done) / steps.length : 0} /></div>
+        <div className="mt-3">
+          <ProgressBar percent={steps.length ? (100 * done) / steps.length : 0} />
+        </div>
+
+        {error && (
+          <p className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </p>
+        )}
 
         <ol className="mt-4 space-y-2">
           {steps.map((s) => (
@@ -45,10 +102,12 @@ export default function Legal({
             >
               <div className="pt-0.5">
                 {isManager ? (
-                  <ToggleBox
-                    action={`/api/properties/${property.id}/checklist`}
-                    checked={!!s.completed}
-                    payload={{ step_id: String(s.id) }}
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 accent-emerald-600"
+                    checked={s.completed}
+                    onChange={(e) => toggle(s, e.target.checked)}
+                    aria-label={s.title}
                   />
                 ) : (
                   <span
@@ -77,7 +136,7 @@ export default function Legal({
 
         {isManager && (
           <details className="mt-3">
-            <summary className="cursor-pointer text-sm font-medium text-sky-700">+ Add a step</summary>
+            <summary className="cursor-pointer text-sm font-medium text-sky-700">Add a step</summary>
             <ApiForm
               action={`/api/properties/${property.id}/checklist`}
               submitLabel="Add step"
