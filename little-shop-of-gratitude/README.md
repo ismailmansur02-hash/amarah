@@ -100,6 +100,12 @@ Say Hello and Book a session both go to **Netlify Forms** — no server and no
 email account needed. Messages appear under **Forms** in the Netlify dashboard.
 For an email each time: Forms → Settings → Form notifications.
 
+**Form detection has to be switched on for the site**, under Project
+configuration → Forms. It is off by default on a site created through the API,
+and while it is off the forms look like they work but nothing is recorded.
+Detection only runs while a deploy is being processed, so after enabling it the
+site needs one more deploy before the two forms show up in the dashboard.
+
 ## What changed from the single-file version
 
 The handoff's suggested next steps, and where they landed:
