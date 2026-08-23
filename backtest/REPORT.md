@@ -439,3 +439,50 @@ the coin-flip zone again. Before buying: confirm profit target, daily-loss
 rule, and **that FundingPips offers MT5** (the bot is MT5-only; several prop
 firms moved to other platforms in 2024-25). Config for a challenge account:
 `RISK_PER_PAIR=0.0075`, raise `MAX_DD_HALT` to ~10% (inside the 12% floor).
+
+---
+
+## July + August 2026 backtest (run 2026-08-23)
+
+Script: `backtest/recent_months.py`. The 5-minute feed stops 2026-07-14 and the
+intraday API is now plan-gated, so Jul 15 → Aug 21 uses **daily** OHLC (FMP,
+fetched 2026-08-23 via the commodity price route, which passes FX symbols
+through). Entry = daily open (~01:00 London vs the bot's 00:15), exit = daily
+close, 1.5×ATR14 stop checked against the day's real high/low.
+
+**Proxy validated against the exact 5-min engine** over the Jun 1 – Jul 14
+overlap (14 matched trades): exact **+0.58%** vs proxy **+0.61%**, correlation
+**0.97**, 100% agreement on direction and on stop-outs. The daily proxy is
+faithful at this resolution.
+
+| Period | Result | Trades | W/L | Stopped |
+|---|---|---|---|---|
+| July 2026 (full) | **−2.29%** | 18 | 4/14 | 2 |
+| August 2026 (to 21st) | **−1.44%** | 12 | 5/7 | 2 |
+| **Both months** | **−3.70%** | 30 | 9/21 | 4 |
+
+Raw strategy, no news filter. Four stop-outs at −0.50% each account for −2.0pp
+of the −3.7%: GBPUSD Jul 15, EURUSD Jul 29, and **both pairs on Aug 19**.
+
+**News filter.** The stored calendar ends 2026-07-17, so later days are marked
+unknown rather than guessed. Where it exists (Jul 1–17): 8 of 10 trades fell on
+red days the bot would have skipped — raw −0.86% became **−0.31%** on the 2
+trades actually taken. Historically only **42%** of Mon/Wed carry a US
+high-impact event (2023–26; 52% in 2026), so early July was an unusually heavy
+news stretch, not the norm. Note this count is US-only and therefore a lower
+bound — the live bot also blocks EUR and GBP red events.
+
+**Estimate for August (clearly labelled as inference, not data):** the recurring
+release pattern puts ISM Services near the 5th (median day 5), CPI near the 12th
+(median 12) and the FOMC minutes/decision window near the 16th–18th — which maps
+onto all three August Wednesdays. If Aug 19 was red and skipped, August is about
+**−0.44%** rather than −1.44%, since that single day contributed −1.0pp.
+
+**Reading it.** Two consecutive negative months, −3.7% raw. That is not outside
+the strategy's historical envelope: monthly swings are roughly ±1% at 0.5%/pair
+and 4 of 19 months in the validated window were negative — but two in a row at
+this size sits at the weak end. It is 30 trades, which is far too few to
+conclude anything about edge decay; the honest read is "a soft patch, watch it",
+not "the edge is gone" and not "buy the dip". The demo forward-test remains the
+instrument for deciding that, and the standing rules do not change: no parameter
+tuning in response to a drawdown, and the funded-money decision stays the user's.
