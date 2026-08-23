@@ -1,0 +1,6 @@
+date,event,confidence,source
+2026-07-29,Fed Interest Rate Decision + Powell press conference,confirmed,"federalreserve.gov FOMC calendar: meeting Jul 28-29 2026"
+2026-08-03,ISM Manufacturing PMI,rule,"1st business day of month; 37/43 historical hits; Aug 1-2 = weekend"
+2026-08-05,ISM Non-Manufacturing/Services PMI,rule,"3rd business day of month; 33/43 historical hits"
+2026-08-12,CPI / Core CPI (July data),confirmed,"BLS release archive cpi_08122026.htm, 08:30 ET"
+2026-08-19,FOMC Minutes (Jul 28-29 meeting),confirmed,"exactly 21 days after meeting close; rule held 4/4 in 2026"

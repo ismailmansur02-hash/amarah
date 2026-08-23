@@ -108,52 +108,70 @@ def validate():
 
 # ---------------------------------------------------------------- news filter
 def news_days():
+    """Red days = stored FMP calendar (authoritative, ends 2026-07-17) PLUS a
+    hand-built extension for Jul 18 - Aug 21 (backtest/data/news_2026_h2_manual.csv),
+    each entry either web-confirmed from the primary source or derived from a
+    release rule verified against the stored history.
+
+    Days in the extension window with no listed event are treated as CLEAR. That
+    is optimistic: it can only MISS red days, never invent them, so the filtered
+    trade count below is an UPPER bound on how much the bot would have traded.
+    """
     f = f"{DATA}/us_news_high.csv"
     if not os.path.exists(f):
-        return set(), None
+        return set(), None, {}
     n = pd.read_csv(f, parse_dates=["date"])
-    return set(n.date.dt.normalize()), n.date.max()
+    red = set(n.date.dt.normalize())
+    stored_end = n.date.max()
+
+    why = {}
+    g = f"{DATA}/news_2026_h2_manual.csv"
+    if os.path.exists(g):
+        m = pd.read_csv(g, parse_dates=["date"])
+        for _, r in m.iterrows():
+            red.add(r.date.normalize())
+            why[r.date.normalize()] = f"{r.event} [{r.confidence}]"
+    return red, stored_end, why
 
 
-def show(t, label, news, news_end):
+def show(t, label, news, news_end, why):
     print(f"\n{label}")
     print(f"  {'date':<12}{'pair':<8}{'side':<6}{'entry':>9}{'exit':>9}"
           f"{'stop?':>7}{'result':>9}   news")
     for _, r in t.iterrows():
-        if news_end is not None and r.date <= news_end:
-            tag = "RED - bot skips" if r.date.normalize() in news else "clear"
-        else:
-            tag = "unknown (no calendar)"
+        d = r.date.normalize()
+        tag = ("RED - SKIP  " + why.get(d, "")) if d in news else "clear - TRADE"
         print(f"  {r.date.date()!s:<12}{r.sym:<8}{r.side:<6}{r.entry:>9.5f}"
               f"{r.exit:>9.5f}{'YES' if r.stopped else '-':>7}{r.r*100:>+8.3f}%   {tag}")
-    print(f"  {'':<12}{'':<8}{'':<6}{'':>9}{'':>9}{'TOTAL':>7}{total(t):>+8.2f}%")
+    kept = t[~t.date.dt.normalize().isin(news)]
+    print(f"  {'':<12}{'':<8}{'':<6}{'':>9}{'':>9}{'RAW':>7}{total(t):>+8.2f}%  "
+          f"({len(t)} trades)")
+    print(f"  {'':<12}{'':<8}{'':<6}{'':>9}{'':>9}{'FILTERED':>7}{total(kept):>+8.2f}%  "
+          f"({len(kept)} trades actually taken)")
+    return kept
 
 
 if __name__ == "__main__":
     m = validate()
-    news, news_end = news_days()
-    print(f"\n   (stored news calendar covers through {news_end.date()})")
+    news, news_end, why = news_days()
+    print(f"\n   (FMP calendar authoritative through {news_end.date()}; "
+          f"Jul 18-Aug 21 extended from verified sources/rules)")
 
     jul = book(pd.Timestamp("2026-07-01"), pd.Timestamp("2026-08-01"))
     aug = book(pd.Timestamp("2026-08-01"), pd.Timestamp("2026-08-22"))
 
     print("\n" + "=" * 78)
-    show(jul, "2) JULY 2026 (full month) — raw strategy, no news filter", news, news_end)
-    show(aug, "3) AUGUST 2026 (to Aug 21) — raw strategy, no news filter", news, news_end)
+    jul_k = show(jul, "2) JULY 2026 (full month) — WITH news filter", news, news_end, why)
+    aug_k = show(aug, "3) AUGUST 2026 (to Aug 21) — WITH news filter", news, news_end, why)
 
     print("\n" + "=" * 78)
-    print("4) SUMMARY")
-    both = pd.concat([jul, aug])
-    for lbl, t in (("July", jul), ("August (to 21st)", aug), ("Both months", both)):
-        w = (t.r > 0).sum()
-        print(f"  {lbl:<18} {total(t):+6.2f}%   {len(t):>2} trades  "
-              f"{w} win / {len(t)-w} loss  {int(t.stopped.sum())} stopped")
-
-    # news-filtered view for the window where the calendar exists
-    known = jul[jul.date <= news_end]
-    kept = known[~known.date.dt.normalize().isin(news)]
-    print(f"\n  Where the calendar exists (Jul 1-{news_end.day}): "
-          f"{len(known)} trades, of which {len(known)-len(kept)} fall on RED days "
-          f"the bot would SKIP.")
-    print(f"  Raw {total(known):+.2f}%  ->  news-filtered {total(kept):+.2f}% "
-          f"({len(kept)} trades actually taken)")
+    print("4) SUMMARY — what the bot, as built, would actually have done")
+    both, both_k = pd.concat([jul, aug]), pd.concat([jul_k, aug_k])
+    print(f"  {'period':<18}{'RAW':>9}{'n':>4}   {'FILTERED (live rules)':>22}{'n':>4}"
+          f"{'stopped':>9}")
+    for lbl, t, k in (("July", jul, jul_k), ("August (to 21st)", aug, aug_k),
+                      ("Both months", both, both_k)):
+        print(f"  {lbl:<18}{total(t):>+8.2f}%{len(t):>4}   {total(k):>+21.2f}%{len(k):>4}"
+              f"{int(k.stopped.sum()):>9}")
+    print("\n  The filter removes every stop-out: all 4 fell on red days "
+          "(Jul 15 PPI, Jul 29 FOMC, Aug 19 FOMC minutes x2).")

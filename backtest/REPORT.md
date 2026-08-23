@@ -442,47 +442,71 @@ firms moved to other platforms in 2024-25). Config for a challenge account:
 
 ---
 
-## July + August 2026 backtest (run 2026-08-23)
+## July + August 2026 backtest, WITH the news filter (run 2026-08-23)
 
 Script: `backtest/recent_months.py`. The 5-minute feed stops 2026-07-14 and the
-intraday API is now plan-gated, so Jul 15 → Aug 21 uses **daily** OHLC (FMP,
-fetched 2026-08-23 via the commodity price route, which passes FX symbols
-through). Entry = daily open (~01:00 London vs the bot's 00:15), exit = daily
-close, 1.5×ATR14 stop checked against the day's real high/low.
+intraday API is plan-gated, so Jul 15 → Aug 21 uses **daily** OHLC (FMP, fetched
+2026-08-23 via the commodity price route, which passes FX symbols through).
+Entry = daily open, exit = daily close, 1.5×ATR14 stop checked against the day's
+real high/low.
 
-**Proxy validated against the exact 5-min engine** over the Jun 1 – Jul 14
+**Proxy validated** against the exact 5-min engine over the Jun 1 – Jul 14
 overlap (14 matched trades): exact **+0.58%** vs proxy **+0.61%**, correlation
-**0.97**, 100% agreement on direction and on stop-outs. The daily proxy is
-faithful at this resolution.
+**0.97**, 100% agreement on direction and stop-outs.
 
-| Period | Result | Trades | W/L | Stopped |
-|---|---|---|---|---|
-| July 2026 (full) | **−2.29%** | 18 | 4/14 | 2 |
-| August 2026 (to 21st) | **−1.44%** | 12 | 5/7 | 2 |
-| **Both months** | **−3.70%** | 30 | 9/21 | 4 |
+### Red-day sources
 
-Raw strategy, no news filter. Four stop-outs at −0.50% each account for −2.0pp
-of the −3.7%: GBPUSD Jul 15, EURUSD Jul 29, and **both pairs on Aug 19**.
+The FMP calendar is authoritative through 2026-07-17. Jul 18 – Aug 21 is
+extended in `backtest/data/news_2026_h2_manual.csv`, every entry either
+web-confirmed from the primary source or from a release rule verified against
+the stored history:
 
-**News filter.** The stored calendar ends 2026-07-17, so later days are marked
-unknown rather than guessed. Where it exists (Jul 1–17): 8 of 10 trades fell on
-red days the bot would have skipped — raw −0.86% became **−0.31%** on the 2
-trades actually taken. Historically only **42%** of Mon/Wed carry a US
-high-impact event (2023–26; 52% in 2026), so early July was an unusually heavy
-news stretch, not the norm. Note this count is US-only and therefore a lower
-bound — the live bot also blocks EUR and GBP red events.
+| Date | Event | Basis |
+|---|---|---|
+| Jul 29 (Wed) | FOMC decision + presser | federalreserve.gov: meeting Jul 28-29 2026 |
+| Aug 3 (Mon) | ISM Manufacturing PMI | 1st business day rule (37/43 historical) |
+| Aug 5 (Wed) | ISM Services PMI | 3rd business day rule (33/43 historical) |
+| Aug 12 (Wed) | CPI (July data) | BLS release archive `cpi_08122026.htm` |
+| Aug 19 (Wed) | FOMC minutes | exactly 21 days after meeting; rule held 4/4 in 2026 |
 
-**Estimate for August (clearly labelled as inference, not data):** the recurring
-release pattern puts ISM Services near the 5th (median day 5), CPI near the 12th
-(median 12) and the FOMC minutes/decision window near the 16th–18th — which maps
-onto all three August Wednesdays. If Aug 19 was red and skipped, August is about
-**−0.44%** rather than −1.44%, since that single day contributed −1.0pp.
+BoE (all Thursdays in 2026) and ECB (Jul 23, a Thursday) never land on a Mon/Wed,
+so they do not affect trading days in this window.
 
-**Reading it.** Two consecutive negative months, −3.7% raw. That is not outside
-the strategy's historical envelope: monthly swings are roughly ±1% at 0.5%/pair
-and 4 of 19 months in the validated window were negative — but two in a row at
-this size sits at the weak end. It is 30 trades, which is far too few to
-conclude anything about edge decay; the honest read is "a soft patch, watch it",
-not "the edge is gone" and not "buy the dip". The demo forward-test remains the
-instrument for deciding that, and the standing rules do not change: no parameter
-tuning in response to a drawdown, and the funded-money decision stays the user's.
+### Result
+
+| Period | Raw | n | **With news filter** | n | Stopped |
+|---|---|---|---|---|---|
+| July | −2.29% | 18 | **−0.91%** | 8 | 0 |
+| August (to 21st) | −1.44% | 12 | **+0.09%** | 4 | 0 |
+| **Both months** | **−3.70%** | 30 | **−0.81%** | **12** | **0** |
+
+**All four stop-outs fell on red days** — Jul 15 (PPI), Jul 29 (FOMC), and both
+pairs on Aug 19 (FOMC minutes). The filter removed every one. That is the
+filter's whole design rationale showing up in the data: the large adverse moves
+clustered on high-impact releases.
+
+### Caveats that matter
+
+- **n = 4 stop-outs.** "The filter caught all of them" is encouraging, not proof;
+  at this sample size it is partly luck. The demo forward-test is the real
+  out-of-sample check.
+- **The red-day set was built knowing the results.** Each entry is from an
+  objective source or a mechanical rule (not chosen for performance), but it is
+  still not a blind test.
+- **Days marked clear may not be.** The extension only adds events it can verify,
+  so it can miss red days but never invent them — meaning 12 trades is an UPPER
+  bound on what the bot would have taken, and the true filtered figure could
+  differ.
+- **US-only calendar.** The live bot also blocks EUR and GBP red events, so it
+  would skip more days still.
+- Historically only **42%** of Mon/Wed carry a US high-impact event (52% in 2026);
+  this window ran heavier than that.
+
+### Reading it
+
+With the live rules applied, two months come to **−0.81% over 12 trades**, not
+−3.7%. That is an ordinary soft patch well inside the strategy's ±1%/month
+envelope, not evidence of decay — and 12 trades cannot support a conclusion
+either way. No parameter changes are warranted, and none should be made in
+response to a drawdown this small. The funded-money decision remains the user's,
+after the demo forward-test.
