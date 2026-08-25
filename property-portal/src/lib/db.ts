@@ -28,7 +28,7 @@ function getPool(): Pool {
       );
     }
     const isLocal = /@(localhost|127\.0\.0\.1)/.test(connectionString);
-    pool = new Pool({
+    const created = new Pool({
       connectionString,
       // A page issues up to nine queries together. With a smaller pool they
       // queue into several waves, and each wave is a full round trip to the
@@ -37,23 +37,64 @@ function getPool(): Pool {
       // connections, so this is cheap.
       max: 12,
       idleTimeoutMillis: 30_000,
-      connectionTimeoutMillis: 10_000,
+      // Netlify gives a function ten seconds. Fail a dead connection quickly
+      // enough that one retry still fits inside that budget, rather than
+      // hanging until the platform kills the request with no response.
+      connectionTimeoutMillis: 4_000,
+      query_timeout: 8_000,
       // Supabase terminates TLS at its pooler with a certificate that does not
       // chain to the public roots, so the chain is not verified. Traffic is
       // still encrypted. To verify it, download Supabase's CA and pass
       // { ca, rejectUnauthorized: true } here instead.
       ssl: isLocal ? false : { rejectUnauthorized: false },
     });
+
+    // An idle connection can die under us — the database pausing, the pooler
+    // restarting, a network blip. node-postgres reports that by emitting
+    // 'error' on the pool, and with no listener Node treats it as unhandled
+    // and can take the whole function down mid-request, which a browser sees
+    // as a request that never comes back. Handle it and drop the dead pool so
+    // the next call builds a fresh one.
+    created.on("error", () => {
+      if (pool === created) pool = null;
+      created.end().catch(() => {});
+    });
+
+    pool = created;
   }
   return pool;
+}
+
+/** True for failures that mean the connection died rather than the query being wrong. */
+function isConnectionFailure(err: unknown): boolean {
+  const e = err as { code?: string; message?: string };
+  const code = e?.code ?? "";
+  const message = e?.message ?? "";
+  return (
+    ["ECONNRESET", "ECONNREFUSED", "ETIMEDOUT", "EPIPE", "ENOTFOUND", "57P01", "57P02", "57P03", "08006", "08003", "08P01"].includes(code) ||
+    /connection terminated|connection timeout|server closed the connection|Client has encountered a connection error|timeout exceeded/i.test(message)
+  );
 }
 
 export async function query<T = Record<string, unknown>>(
   text: string,
   params: unknown[] = []
 ): Promise<T[]> {
-  const result = await getPool().query(text, params);
-  return result.rows as T[];
+  try {
+    return (await getPool().query(text, params)).rows as T[];
+  } catch (err) {
+    if (!isConnectionFailure(err)) throw err;
+
+    // The pooled connection was dead — most often the database had gone to
+    // sleep and the connections held from before it woke are stale. Throw the
+    // pool away and try once against a fresh one, so the first request after
+    // a sleep succeeds instead of failing for whoever happens to hit it.
+    const dead = pool;
+    pool = null;
+    dead?.end().catch(() => {});
+
+    return (await getPool().query(text, params)).rows as T[];
+  }
 }
 
 /** `await sql\`SELECT ...\`` resolves to an array of row objects. */

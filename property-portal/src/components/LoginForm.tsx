@@ -12,18 +12,36 @@ export default function LoginForm() {
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const res = await fetch("/api/login", {
-      method: "POST",
-      body: new FormData(e.currentTarget),
-    });
-    setBusy(false);
-    if (!res.ok) {
-      setError("Invalid username or password.");
-      return;
+
+    try {
+      // Never let the button sit on "Signing in…" indefinitely. If the server
+      // is slow to wake or never answers, say so rather than leaving someone
+      // staring at a form that looks like it is still working.
+      const res = await fetch("/api/login", {
+        method: "POST",
+        body: new FormData(e.currentTarget),
+        signal: AbortSignal.timeout(20_000),
+      });
+
+      if (res.status === 401) {
+        setError("That username or password is not right.");
+        return;
+      }
+      if (!res.ok) {
+        setError("The server could not be reached just now. Wait a moment and try again.");
+        return;
+      }
+
+      const data = await res.json();
+      router.push(data.role === "manager" ? "/dashboard" : "/my");
+      router.refresh();
+    } catch {
+      setError(
+        "Signing in took too long. The database may have been asleep — try once more and it should wake up."
+      );
+    } finally {
+      setBusy(false);
     }
-    const data = await res.json();
-    router.push(data.role === "manager" ? "/dashboard" : "/my");
-    router.refresh();
   }
 
   return (
@@ -34,6 +52,9 @@ export default function LoginForm() {
           name="username"
           required
           autoComplete="username"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
         />
       </div>

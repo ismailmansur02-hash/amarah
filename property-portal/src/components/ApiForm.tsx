@@ -31,15 +31,29 @@ export default function ApiForm({
     const form = e.currentTarget;
     setBusy(true);
     setError(null);
-    const res = await fetch(action, { method: "POST", body: new FormData(form) });
-    setBusy(false);
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error || "Something went wrong.");
-      return;
+
+    try {
+      // Bounded, so the button can never sit on "Saving…" forever if the
+      // server is slow to wake or never answers.
+      const res = await fetch(action, {
+        method: "POST",
+        body: new FormData(form),
+        signal: AbortSignal.timeout(20_000),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "That did not save. Try again.");
+        return;
+      }
+
+      if (resetOnSuccess) form.reset();
+      router.refresh();
+    } catch {
+      setError("That took too long and was not saved. Try again in a moment.");
+    } finally {
+      setBusy(false);
     }
-    if (resetOnSuccess) form.reset();
-    router.refresh();
   }
 
   return (
