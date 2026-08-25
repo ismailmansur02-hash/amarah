@@ -582,3 +582,60 @@ unvalidated but economically coherent hypothesis that would need forward data to
 confirm, and which even if fully real moves the strategy from ~4.3%/yr to
 ~4.8%/yr at matched risk. The paywalled sources (COT especially) remain the only
 untested direction.
+
+---
+
+## Answering the 2023 Notion backtesting questions (run 2026-08-24)
+
+The user's Notion "Backtesting" database held 15 empirical questions logged in
+April 2023, never run. Script: `backtest/ict_questions.py`, on 3.5 years of
+5-minute EURUSD/GBPUSD. ICT definitions are stated in the file header so the
+tests are fair to the method. Each question is answered twice — as the
+**frequency** actually asked, and as **tradeability** after real spread.
+
+| Question | Frequency (the claim) | Tradeable? |
+|---|---|---|
+| Q1/Q4 LOKZ runs the Asian range; Judas swing | **98%** of days sweep an Asian extreme — claim TRUE | Day closed the *opposite* way only **41–42%** — below a coin flip, so the sweep more often continues than reverses. Fading it: +0.05R (t=0.9) / +0.03R (t=0.4). **No edge.** |
+| Q2/Q6/Q10 LOKZ leaves an FVG for NYKZ (SIBI/BISI) | **90–99%** of days leave ≥1 real FVG (median 4–5); NYKZ returns into the last one **67–70%** — claim TRUE | Entry at the gap, stop far edge, 2R target: **−0.578R and −0.555R per trade, t = −10.8 and −10.2.** Decisively negative — the most statistically significant result in the whole project, and it is significantly *losing*. |
+| Q3 MSS at 08:30 NY | **73–74%** of days break the prior 2h range — claim TRUE | Direction is 39% up / 35% down — essentially symmetric. **No directional information.** |
+| Q7 1:1 with 10-pip SL/TP | long 51.7% / short 48.2% (sums to 100%, accounting checks) | Needs **53–54%** to clear the spread. **Both lose.** |
+| Q14 Time of highs & lows | Bullish days: high at NY 10:00/16:00, low at 00:00–03:00. Bearish days: mirrored. Session extreme forms in LOKZ on ~33–35% of days | Real and consistent across both pairs — see below |
+| Q11 FOMC Wed → Thu/Fri opposing | next day opposed 46–50%, second day 46–54% (n=28) | **Coin flip. No effect.** |
+| Q15 Wednesday range | High formed before low on 47–51% of Wednesdays; tagged prior-week high/low **62%** of the time | The 62% PWH/PWL tag rate is notable but non-directional |
+
+### The one actionable follow-up, and its result
+
+Q14 implies the bot's Monday long may enter too early: if the day's low forms
+around 00:00–03:00 NY (05:00–08:00 London), a later entry should get a better
+price. Tested directly (`backtest/entry_time_test.py`), shifting only the entry:
+
+| Entry (London) | TRAIN | TEST |
+|---|---|---|
+| **00:15 (current)** | **+3.8% (t 0.9)** | **+8.6% (t 2.5)** |
+| 05:00 | +0.3% | +5.9% |
+| 07:00 | −1.6% | +6.9% |
+| 09:00 | −0.2% | +4.9% |
+
+The existing 00:15 entry is best in **both** windows; every later entry is worse
+in both. The refinement fails, and the current spec is confirmed rather than
+changed.
+
+### Two bugs found and fixed mid-run
+
+Worth recording, because the first pass produced nonsense that looked publishable:
+a 2R-capped strategy reported **+2.44R average** (17% of detected "FVGs" were
+under 0.5 pip — narrower than the spread — and dividing by that tiny risk
+exploded the R multiple), and EURUSD vs GBPUSD fill rates came out **0% vs 67%**
+(an object-dtype `.mean()` error, not a real difference). Fixes: a ≥1-pip
+minimum gap, explicit dtype handling, and sequential bar-walking with ambiguous
+bars (target and stop in the same 5-min bar) resolved pessimistically and
+reported. The long/short win rates summing to 100% is the check that the
+corrected accounting is right.
+
+### Verdict
+
+Every frequency claim in the notes is **true** — these patterns really do occur
+at the stated rates. Not one of them is **tradeable** after the spread, and the
+FVG entry is significantly loss-making at t = −10. That gap between "the pattern
+is real" and "the pattern makes money" is the single most useful thing in this
+analysis, and it is why the questions needed answering rather than assuming.
