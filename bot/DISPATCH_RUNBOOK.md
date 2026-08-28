@@ -121,16 +121,16 @@ Run the acceptance backtest and confirm it is green:
 ```
 python backtest/dow_acceptance.py
 ```
-Reference output (build-time, 2026-07-16): 727 trades, win 54%, stop binds 5%,
-total +15.5% (all data), maxDD −6.2% (< the 8% halt), 2025 avg +0.52%/mo, 2026
-avg +1.27%/mo. **If a re-run deviates materially or any gate fails, do NOT
+Reference output (2026-08-24, after the noon-exit revision): 725 trades, win 54%,
+stop binds 1%, total +18.2% (all data) at 0.75%/pair, maxDD −3.6% (< the 8% halt),
+positive in every year. The 0.50% and 1.00% blocks also print for comparison. **If a re-run deviates materially or any gate fails, do NOT
 start the bot — report to the user and stop.**
 
 Also run the unit tests:
 ```
 python bot/test_dow_unit.py
 ```
-Expected: `ALL TESTS PASSED` (55 checks). All must pass.
+Expected: `ALL TESTS PASSED` (59 checks). All must pass.
 
 ---
 
@@ -146,7 +146,7 @@ Expected: `ALL TESTS PASSED` (55 checks). All must pass.
      Telegram (proves alerting works),
    - no error loop.
 3. Leave that terminal running. The bot now loops hands-off: it enters at 00:15
-   London on Mon/Wed, exits 21:45, skips red-news days, and self-halts on limits.
+   London on Mon/Wed, exits 12:00, skips red-news days, and self-halts on limits.
 
 **Emergency stop:** create an empty file `bot/KILL` → bot flattens and exits on
 its next 30 s poll. **After a risk halt:** review first, then
@@ -183,7 +183,7 @@ check health, verify:
    transient crash (not a risk halt).
 2. **MT5 connected** — recent "connected"/tick activity in the log; MT5 terminal
    still logged in.
-3. **Today's behaviour** — on a Mon/Wed: did it enter ~00:15 and exit ~21:45, or
+3. **Today's behaviour** — on a Mon/Wed: did it enter ~00:15 and exit ~12:00, or
    log a valid skip reason (news/holiday/spread/late)? On Tue/Thu/Fri: correctly
    idle.
 4. **No halt tripped** — if `MAX_DD_HALT`, `DAILY_HALT`, or `MAX_CONSEC_LOSSES`
@@ -204,7 +204,7 @@ check health, verify:
 | Calendar fetch failing | Bot skips trading (fail-safe) — fix internet/feed; do NOT disable the filter |
 | Risk halt tripped (DD / daily / consec) | **STOP. Alert user with figures. Do not override.** Likely regime decay (the known risk) |
 | PC rebooted | Task Scheduler should relaunch; verify it did (§6) |
-| Position stuck open past 21:45 after a crash | Bot's restart-safety closes it; verify flat; report |
+| Position stuck open past 12:00 after a crash | Bot's restart-safety closes it; verify flat; report |
 | Acceptance gate fails on a fresh pull | Do not run live; report to user |
 
 ---
@@ -226,7 +226,7 @@ check health, verify:
 - [x] Filenames / run command / requirements / test command filled in above.
 - [x] `dow_acceptance.py` green at build time (+15.5% all-data, maxDD −6.2%,
       2025 +0.52%/mo, 2026 +1.27%/mo — matches the validated numbers exactly).
-- [x] `bot/test_dow_unit.py`: ALL TESTS PASSED (55 checks).
+- [x] `bot/test_dow_unit.py`: ALL TESTS PASSED (59 checks).
 - [x] User guide: `bot/DOW_BOT_README.md`.
 - [ ] **On the PC (dispatch does this):** confirm `nfs.faireconomy.media` is
       reachable, then run §1–§6 in order.

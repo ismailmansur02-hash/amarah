@@ -112,17 +112,22 @@ check("UTC Monday 23:30 == London Tuesday -> no trade",
 s, l, x = bot.window_times(lon(2026, 3, 30, 0, 20))       # Monday after spring-forward
 check("BST Monday: 00:15 London == 23:15 UTC prev day",
       s.astimezone(timezone.utc) == datetime(2026, 3, 29, 23, 15, tzinfo=timezone.utc))
-check("BST Monday: 21:45 London == 20:45 UTC",
-      x.astimezone(timezone.utc) == datetime(2026, 3, 30, 20, 45, tzinfo=timezone.utc))
+check("BST Monday: 12:00 London exit == 11:00 UTC",
+      x.astimezone(timezone.utc) == datetime(2026, 3, 30, 11, 0, tzinfo=timezone.utc))
 s2, _, x2 = bot.window_times(lon(2026, 10, 26, 0, 20))    # Monday after fall-back
 check("GMT Monday: 00:15 London == 00:15 UTC",
       s2.astimezone(timezone.utc) == datetime(2026, 10, 26, 0, 15, tzinfo=timezone.utc))
-check("GMT Monday: 21:45 London == 21:45 UTC",
-      x2.astimezone(timezone.utc) == datetime(2026, 10, 26, 21, 45, tzinfo=timezone.utc))
+check("GMT Monday: 12:00 London exit == 12:00 UTC",
+      x2.astimezone(timezone.utc) == datetime(2026, 10, 26, 12, 0, tzinfo=timezone.utc))
 check("phase pre @00:10", bot.entry_phase(lon(2026, 7, 20, 0, 10)) == "pre")
 check("phase window @00:15", bot.entry_phase(lon(2026, 7, 20, 0, 15)) == "window")
 check("phase late @01:15", bot.entry_phase(lon(2026, 7, 20, 1, 15)) == "late")
-check("phase exit @21:45", bot.entry_phase(lon(2026, 7, 20, 21, 45)) == "exit")
+check("phase late @11:55 (still holding)",
+      bot.entry_phase(lon(2026, 7, 20, 11, 55)) == "late")
+check("phase exit @12:00 (noon exit)",
+      bot.entry_phase(lon(2026, 7, 20, 12, 0)) == "exit")
+check("phase exit @21:45 (any time after noon)",
+      bot.entry_phase(lon(2026, 7, 20, 21, 45)) == "exit")
 
 # ---------- helpers for state-machine tests ----------
 class CalStub:
@@ -181,6 +186,8 @@ def fresh():
 br.symbol_meta = lambda sym: (0.00001, 0.01, 0.01, 200.0, 0)
 check("lots floored (0.5555 -> 0.55)",
       br.lots_for(100_000, 0.005, 0.0090, "EURUSD") == 0.55)
+check("lots floored at live 0.75% risk (0.8333 -> 0.83, not 0.825)",
+      br.lots_for(100_000, cfg.RISK_PER_PAIR, 0.0090, "EURUSD") == 0.83)
 check("volume below broker min -> 0 (skip, never over-risk)",
       br.lots_for(300, 0.005, 0.0090, "EURUSD") == 0.0)
 check("stop widened to broker minimum",
@@ -189,9 +196,11 @@ check("normal ATR stop not widened",
       abs(bot.compute_stop_dist(0.006, 5, 0.00001) - 0.009) < 1e-12)
 
 st = fresh()
-st["pairs"]["EURUSD"].update(status="open", risk_pct=0.006)
+# breach the cap relative to whatever MAX_DAILY_RISK currently is, so this test
+# keeps testing the cap if the risk constants are retuned
 old_risk = cfg.RISK_PER_PAIR
-cfg.RISK_PER_PAIR = 0.006
+cfg.RISK_PER_PAIR = cfg.MAX_DAILY_RISK * 0.7
+st["pairs"]["EURUSD"].update(status="open", risk_pct=cfg.MAX_DAILY_RISK * 0.7)
 reset_broker()
 bot.maybe_enter(st, "GBPUSD", lon(2026, 7, 20, 0, 30), CalStub())
 check("daily risk cap refuses breaching entry",
@@ -200,13 +209,19 @@ check("daily risk cap refuses breaching entry",
       and not calls["orders"])
 cfg.RISK_PER_PAIR = old_risk
 
+# both pairs at full size must FIT inside the cap - guards the silent-refusal
+# bug where raising RISK_PER_PAIR without raising MAX_DAILY_RISK would quietly
+# leave the bot trading one pair instead of two
+check("both pairs fit within MAX_DAILY_RISK",
+      2 * cfg.RISK_PER_PAIR <= cfg.MAX_DAILY_RISK + 1e-12)
+
 # ---------- entry happy path ----------
 st = fresh()
 reset_broker()
 bot.maybe_enter(st, "EURUSD", lon(2026, 7, 20, 0, 30), CalStub())
 ps = st["pairs"]["EURUSD"]
-check("entry fires in window (Mon BUY 0.55 lots)",
-      ps["status"] == "open" and calls["orders"] == [("EURUSD", "BUY", 0.55,
+check("entry fires in window (Mon BUY 0.83 lots @0.75% risk)",
+      ps["status"] == "open" and calls["orders"] == [("EURUSD", "BUY", 0.83,
       calls["orders"][0][3])] and st["day_had_fill"])
 check("SL below entry for BUY at 1.5xATR",
       abs((1.10008 - calls["orders"][0][3]) - 0.009) < 1e-9)
@@ -423,7 +438,7 @@ check("no double entry while position open (GBP may enter, EUR must not)",
 calls["closes"] = []
 br.close_position = lambda sym: calls["closes"].append(sym) or True
 bot.manage_open(st, "EURUSD", lon(2026, 7, 20, 21, 50))
-check("time exit at 21:45 closes position",
+check("time exit at/after noon closes position",
       calls["closes"] == ["EURUSD"]
       and st["pairs"]["EURUSD"]["status"] == "closed"
       and st["pairs"]["EURUSD"]["reason"] == "time_exit")
