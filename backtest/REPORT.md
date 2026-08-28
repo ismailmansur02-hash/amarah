@@ -639,3 +639,75 @@ at the stated rates. Not one of them is **tradeable** after the spread, and the
 FVG entry is significantly loss-making at t = −10. That gap between "the pattern
 is real" and "the pattern makes money" is the single most useful thing in this
 analysis, and it is why the questions needed answering rather than assuming.
+
+---
+
+## Hold-time: the first real improvement found (2026-08-24)
+
+Every previous improvement attempt (news filter, VIX regime, dollar breadth)
+raised Sharpe by removing **trades**, but barely moved max drawdown — and
+drawdown, not Sharpe, caps position size, so none raised absolute return. Hold
+time acts differently: it removes variance from **inside** each trade.
+
+Script: `backtest/edge_holdtime.py` (+ `holdtime_stress.py`). Rules identical to
+the live bot; only the exit clock changes. 9 pre-registered exit times, both
+pairs, TRAIN 2023-01→2025-03 / TEST 2025-04→2026-07.
+
+### Where the money accrues inside the trade
+
+| Exit (London) | Cumulative | maxDD | Stops hit |
+|---|---|---|---|
+| 04:00 | +1.26%/yr | −1.1% | 0.0% |
+| **12:00** | **+3.40%/yr** | **−2.4%** | 0.8% |
+| 16:00 | +2.31%/yr | −5.7% | 2.1% |
+| 21:45 (current) | +4.20%/yr | −6.3% | 4.7% |
+
+**By noon the trade has captured 81% of the full day's return with 38% of the
+drawdown.** The remaining 9.75 hours add 19% of the return and 62% of the risk.
+
+### Two candidates, one killed
+
+**06:00 exit — rejected.** It looked best on paper (7.3× sizing → 12.3%/yr) and
+fails three ways: the 00:00–06:00 window is **2.3× thinner** than liquid hours,
+so the real spread is well above the 0.6 pip assumed; being the shortest hold it
+is the *most* cost-sensitive (+1.64%/yr at 0.6 pip → **+0.17%** at 2.0 pip); and
+its stop fires **0.0%** of the time, so 7.3× leverage would run with no
+protection at all.
+
+**12:00 exit — survives every test**, at a realistic 1.5-pip spread and sized to
+the same 8% drawdown budget:
+
+| | Exit 12:00 | Current 21:45 |
+|---|---|---|
+| Return @1.5-pip spread | +2.44%/yr | +3.22%/yr |
+| Max drawdown | −3.2% | −7.2% |
+| Safe sizing to 8% budget | **2.5×** | 1.1× |
+| **Return at matched risk** | **+6.0%/yr** | **+3.6%/yr** |
+| Worst day at that sizing | −2.5% | −1.1% |
+| 2023 / 2024 / 2025 / 2026 | +3.99 / **+0.40** / +5.86 / +1.75 | +1.40 / **−1.87** / +6.37 / +9.14 |
+| Train → Test Sharpe | **1.07 → 1.25** | **0.40 → 1.79** |
+| Per pair | EUR t 1.4, GBP t 2.5 | EUR t 1.0, GBP t 2.2 |
+
+**~67% more return at matched drawdown**, positive in all four years where the
+current spec has a losing 2024, and stable across train/test where the current
+spec is not.
+
+### What this also revealed about the current spec
+
+The 21:45 exit's train Sharpe is **0.40** against a test Sharpe of **1.79**. The
+strategy's headline quality is concentrated in 2025–26; 2024 was negative. That
+is consistent with the earlier dollar-breadth finding (the condition fired 21% of
+the time in the train window vs 57% in test) and means the +4.3%/yr full-period
+figure blends a weak regime and a strong one.
+
+### Caveats
+
+- Selected from 9 pre-registered alternatives; the Bonferroni bar for 9 tests is
+  ~|t| > 2.7 and GBPUSD reaches 2.5, EURUSD 1.4. The year-by-year consistency and
+  train/test stability are stronger evidence here than the t-stats.
+- The stop fires only 0.8% of the time, so risk control rests on the time exit,
+  not the stop.
+- 2.5× sizing is derived from historical drawdown, which always understates
+  future drawdown.
+- Not implemented. The spec stays frozen pending the user's decision and forward
+  validation.
