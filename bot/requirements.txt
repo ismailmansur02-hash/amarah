@@ -1,8 +1,0 @@
-# DOW bot runtime (Windows, next to the FTMO MT5 terminal)
-MetaTrader5
-numpy
-requests
-tzdata          # Windows needs this for zoneinfo("Europe/London")
-
-# extra packages used only by the backtests in backtest/ (optional on the PC):
-# pandas pyarrow matplotlib

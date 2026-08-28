@@ -1,7 +1,4 @@
-__pycache__/
-*.pyc
-bot/algay_state.json
-bot/dow_state.json
-bot/dow_calendar_cache.json
-bot/dow_bot.log
-bot/KILL
+node_modules/
+dist/
+.env
+.DS_Store
