@@ -10,7 +10,7 @@ const STORAGE_KEY = "pc:state:v4";
 const DEFAULT_STATE = () => ({
   schemaVersion: SCHEMA_VERSION,
   auth: null,        // { provider: "apple"|"google"|"email"|"guest", email, displayName, signedInAt } | null
-  profile: { firstName: "", surname: "", rank: "PC", examDate: null, nextExam: "AP1" },
+  profile: { firstName: "", surname: "", rank: "PC", examDate: null, nextExam: "AP1", trainingStart: null, trainingEnd: null },
   answered: {},      // { [questionId]: { correctCount, totalCount, lastCorrect, lastSeen, flagged, box, dueAt } }
   attempts: [],      // [{ id, level, score, total, dateISO, ... }]  newest first
   lessonsRead: {},   // { [lessonId]: true }

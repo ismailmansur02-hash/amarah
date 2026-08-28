@@ -7532,6 +7532,39 @@ const daysUntil = (d) => {
 
 const formatDateLong = (d) => d ? new Date(d).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : null;
 
+// ---- Training-school countdown ---------------------------------------------
+// Given the officer's own training start and end dates, work out where they are:
+// which week/day they're in, how much is left, and how far through they are.
+// Everything is derived from the two dates the user enters — no assumptions are
+// made about how long any particular training programme runs.
+const trainingProgress = (startISO, endISO, now = new Date()) => {
+  if (!startISO || !endISO) return null;
+  const DAY = 86400000;
+  const midnight = (d) => { const x = new Date(d); if (isNaN(x)) return null; x.setHours(0, 0, 0, 0); return x; };
+  const start = midnight(startISO), end = midnight(endISO), today = midnight(now);
+  if (!start || !end || !today) return null;
+  const totalDays = Math.round((end - start) / DAY);
+  if (totalDays <= 0) return null;                      // end must be after start
+  const elapsedRaw = Math.round((today - start) / DAY);
+  const elapsed = Math.max(0, Math.min(elapsedRaw, totalDays));
+  const daysLeft = Math.max(0, totalDays - elapsed);
+  return {
+    totalDays,
+    totalWeeks: Math.ceil(totalDays / 7),
+    elapsed,
+    daysLeft,
+    weeksLeft: Math.ceil(daysLeft / 7),
+    weekIndex: Math.floor(elapsed / 7) + 1,             // day 0 = week 1
+    dayInWeek: (elapsed % 7) + 1,                       // 1–7
+    weeksDone: Math.floor(elapsed / 7),
+    pct: Math.max(0, Math.min(1, elapsed / totalDays)),
+    notStarted: elapsedRaw < 0,
+    daysUntilStart: Math.max(0, -elapsedRaw),
+    finished: elapsedRaw >= totalDays,
+  };
+};
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
 const uuid = () => "id-" + Math.random().toString(36).slice(2, 11) + "-" + Date.now().toString(36);
 
 // ============================================================
@@ -7677,7 +7710,7 @@ const STORAGE_KEY = "pc:state:v4";
 const DEFAULT_STATE = () => ({
   schemaVersion: SCHEMA_VERSION,
   auth: null,        // { provider: "apple"|"google"|"email"|"guest", email, displayName, signedInAt } | null
-  profile: { firstName: "", surname: "", rank: "PC", examDate: null, nextExam: "AP1" },
+  profile: { firstName: "", surname: "", rank: "PC", examDate: null, nextExam: "AP1", trainingStart: null, trainingEnd: null },
   answered: {},      // { [questionId]: { correctCount, totalCount, lastCorrect, lastSeen, flagged, box, dueAt } }
   attempts: [],      // [{ id, level, score, total, dateISO, ... }]  newest first
   lessonsRead: {},   // { [lessonId]: true }
@@ -7943,6 +7976,7 @@ function reducer(state, action) {
     case "saveAttempt": return stamp({ ...state, attempts: [action.attempt, ...state.attempts].slice(0, 50) });
     case "setExamDate": return stamp({ ...state, profile: { ...state.profile, examDate: action.date } });
     case "setNextExam": return stamp({ ...state, profile: { ...state.profile, nextExam: action.level } });
+    case "setTrainingDates": return stamp({ ...state, profile: { ...state.profile, trainingStart: action.start, trainingEnd: action.end } });
     case "setFirstName": return stamp({ ...state, profile: { ...state.profile, firstName: action.firstName } });
     case "setSurname": return stamp({ ...state, profile: { ...state.profile, surname: action.surname } });
     case "setRank": return stamp({ ...state, profile: { ...state.profile, rank: action.rank } });
@@ -8383,10 +8417,125 @@ function StreakRing({ pct, current }) {
 // EXAM PREP DASHBOARD
 // ============================================================
 
+// ============================================================
+// TRAINING COUNTDOWN — where you are in training school
+// ============================================================
+
+function TrainingCountdown({ state, dispatch }) {
+  const p = state.profile || {};
+  const tp = trainingProgress(p.trainingStart, p.trainingEnd);
+  const [editing, setEditing] = useState(false);
+  const [draftStart, setDraftStart] = useState(p.trainingStart ? p.trainingStart.slice(0, 10) : "");
+  const [draftEnd, setDraftEnd] = useState(p.trainingEnd ? p.trainingEnd.slice(0, 10) : "");
+  const [error, setError] = useState("");
+
+  const save = () => {
+    if (!draftStart || !draftEnd) { setError("Enter both dates."); return; }
+    if (new Date(draftEnd) <= new Date(draftStart)) { setError("The finish date must be after the start date."); return; }
+    setError("");
+    dispatch({ type: "setTrainingDates", start: draftStart, end: draftEnd });
+    setEditing(false);
+  };
+  const clear = () => {
+    dispatch({ type: "setTrainingDates", start: null, end: null });
+    setDraftStart(""); setDraftEnd(""); setError(""); setEditing(false);
+  };
+
+  // ---- Editor / first-time setup ----
+  if (editing || !tp) {
+    return (
+      <Card style={{ marginBottom: 18, borderTop: `3px solid ${C.gold}` }}>
+        <SectionLabel style={{ margin: 0 }}>Training school</SectionLabel>
+        <p style={{ margin: "10px 0 14px", color: C.textMuted, fontSize: 13.5, lineHeight: 1.5 }}>
+          {tp ? "Update your training dates." : "Add your training dates and this screen will track how far through you are and how long is left."}
+        </p>
+        <label style={{ display: "block", fontSize: 12, textTransform: "uppercase", letterSpacing: 0.8, color: C.textMuted, fontWeight: 700, marginBottom: 6 }}>Started training</label>
+        <input type="date" value={draftStart} onChange={(e) => { setDraftStart(e.target.value); setError(""); }}
+          style={{ width: "100%", boxSizing: "border-box", padding: "10px 12px", fontSize: 15, border: `1.5px solid ${C.borderStrong}`, borderRadius: 8, fontFamily: fontBody, marginBottom: 12 }} />
+        <label style={{ display: "block", fontSize: 12, textTransform: "uppercase", letterSpacing: 0.8, color: C.textMuted, fontWeight: 700, marginBottom: 6 }}>Finishes training</label>
+        <input type="date" value={draftEnd} onChange={(e) => { setDraftEnd(e.target.value); setError(""); }}
+          style={{ width: "100%", boxSizing: "border-box", padding: "10px 12px", fontSize: 15, border: `1.5px solid ${error ? C.error : C.borderStrong}`, borderRadius: 8, fontFamily: fontBody, marginBottom: error ? 6 : 14 }} />
+        {error && <p style={{ color: C.error, fontSize: 13, margin: "0 0 12px" }}>{error}</p>}
+        <div style={{ display: "flex", gap: 8 }}>
+          {tp && <PrimaryButton secondary style={{ flex: 1 }} onClick={() => { setEditing(false); setError(""); }}>Cancel</PrimaryButton>}
+          <PrimaryButton style={{ flex: 1 }} onClick={save}>Save</PrimaryButton>
+        </div>
+        {tp && (
+          <button onClick={clear} style={{ background: "none", border: "none", color: C.textMuted, fontSize: 12.5, cursor: "pointer", fontFamily: fontBody, marginTop: 12, textDecoration: "underline", padding: 0 }}>
+            Remove training dates
+          </button>
+        )}
+      </Card>
+    );
+  }
+
+  // ---- Live countdown ----
+  const headline = tp.notStarted
+    ? `Training starts in ${plural(tp.daysUntilStart, "day")}`
+    : tp.finished
+    ? "Training complete"
+    : `${plural(tp.weeksLeft, "week")} left of training school`;
+
+  const subline = tp.notStarted
+    ? `${plural(tp.totalWeeks, "week")} of training ahead of you`
+    : tp.finished
+    ? `You completed ${plural(tp.totalWeeks, "week")} of training`
+    : `Week ${tp.weekIndex}, day ${tp.dayInWeek} — ${plural(tp.daysLeft, "day")} to go`;
+
+  const stat = (label, value, sub) => (
+    <div style={{ flex: 1, textAlign: "center" }}>
+      <div style={{ fontSize: 11.5, color: C.textMuted, marginBottom: 4 }}>{label}</div>
+      <div style={{ fontFamily: fontDisplay, fontSize: 19, fontWeight: 600, color: C.text, lineHeight: 1.1 }}>{value}</div>
+      {sub && <div style={{ fontSize: 11, color: C.textFaint, marginTop: 2 }}>{sub}</div>}
+    </div>
+  );
+
+  return (
+    <Card style={{ marginBottom: 18, borderTop: `3px solid ${C.gold}`, padding: 0, overflow: "hidden" }}>
+      <div style={{ padding: "18px 18px 14px", textAlign: "center" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <SectionLabel style={{ margin: 0 }}>Training school</SectionLabel>
+          <button onClick={() => setEditing(true)} style={{ background: "white", border: `1px solid ${C.navy}`, color: C.navy, borderRadius: 6, padding: "3px 10px", fontSize: 11.5, fontWeight: 600, cursor: "pointer", fontFamily: fontBody }}>Edit</button>
+        </div>
+        <div style={{ fontFamily: fontDisplay, fontSize: 26, fontWeight: 600, color: C.text, letterSpacing: -0.4, margin: "10px 0 4px", lineHeight: 1.15 }}>
+          {headline}
+        </div>
+        <div style={{ fontSize: 13.5, color: C.textMuted, lineHeight: 1.45 }}>{subline}</div>
+      </div>
+
+      <div style={{ display: "flex", padding: "0 12px 16px", gap: 4 }}>
+        {stat("Weeks done", tp.weeksDone, `of ${tp.totalWeeks}`)}
+        <div style={{ width: 1, background: C.border }} />
+        {stat("Weeks left", tp.weeksLeft, plural(tp.daysLeft, "day"))}
+        <div style={{ width: 1, background: C.border }} />
+        {stat("Complete", `${Math.round(tp.pct * 100)}%`, tp.finished ? "finished" : "of training")}
+      </div>
+
+      {/* Week strip — current week marker along the whole programme */}
+      <div style={{ background: "#FBF4E0", borderTop: `1px solid ${C.border}`, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ height: 8, background: "white", border: `1px solid ${C.border}`, borderRadius: 999, overflow: "hidden", position: "relative" }}>
+            <div style={{ width: `${tp.pct * 100}%`, height: "100%", background: C.green, borderRadius: 999, transition: "width 0.4s ease" }} />
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10.5, color: C.textMuted, marginTop: 5 }}>
+            <span>Week 1</span><span>Week {tp.totalWeeks}</span>
+          </div>
+        </div>
+        <div style={{ textAlign: "right", flexShrink: 0 }}>
+          <div style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: 0.8, color: C.goldDeep, textTransform: "uppercase" }}>Current week</div>
+          <div style={{ fontFamily: fontDisplay, fontSize: 30, fontWeight: 600, color: C.text, lineHeight: 1 }}>{tp.notStarted ? "—" : tp.weekIndex}</div>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 function ExamPrepScreen({ state, dispatch, go }) {
   const [editingDate, setEditingDate] = useState(false);
   const [editingExam, setEditingExam] = useState(false);
   const examIn = daysUntil(state.profile.examDate);
+  const tp = trainingProgress(state.profile.trainingStart, state.profile.trainingEnd);
+  const inTraining = tp && !tp.notStarted && !tp.finished;
 
   const totalQs = QUESTIONS.length;
   const masteredQs = QUESTIONS.filter((q) => state.answered[q.id]?.lastCorrect).length;
@@ -8403,7 +8552,17 @@ function ExamPrepScreen({ state, dispatch, go }) {
       <CheckBand />
       <div style={{ background: `linear-gradient(180deg, ${C.navy} 0%, ${C.navyDark} 100%)`, color: "white", padding: "16px 18px 26px", position: "relative", overflow: "hidden" }}>
         <button onClick={() => go({ name: "home" })} aria-label="Back" style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.22)", color: "white", borderRadius: 999, width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 18, padding: 0, marginBottom: 10 }}>←</button>
-        <h1 style={{ fontFamily: fontDisplay, fontSize: 34, margin: "8px 0 0", fontWeight: 500, letterSpacing: -0.7 }}>Exam Prep</h1>
+        {inTraining && (
+          <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: 1.4, textTransform: "uppercase", opacity: 0.8, marginTop: 6 }}>Exam Prep</div>
+        )}
+        <h1 style={{ fontFamily: fontDisplay, fontSize: inTraining ? 27 : 34, margin: inTraining ? "4px 0 0" : "8px 0 0", fontWeight: 500, letterSpacing: -0.7, lineHeight: 1.15 }}>
+          {inTraining ? `You're in week ${tp.weekIndex} of training` : "Exam Prep"}
+        </h1>
+        {inTraining && (
+          <div style={{ fontSize: 14, opacity: 0.9, marginTop: 6 }}>
+            {plural(tp.weeksLeft, "week")} left of training school
+          </div>
+        )}
         <div style={{ position: "absolute", right: -40, top: 0, width: 220, height: 200, transform: "rotate(20deg)", opacity: 0.18, pointerEvents: "none" }}>
           <div style={{ height: 8, background: "white", marginBottom: 6 }} />
           <div style={{ height: 4, background: "white", marginBottom: 6, opacity: 0.7 }} />
@@ -8415,6 +8574,9 @@ function ExamPrepScreen({ state, dispatch, go }) {
         <p style={{ margin: "0 0 16px", lineHeight: 1.55, fontSize: 15 }}>
           Welcome{state.profile.surname ? `, ${state.profile.rank} ${state.profile.surname}` : (state.profile.firstName ? `, ${state.profile.firstName}` : "")}. Track your progress to your next Assessment Point and drill the topics you're weakest in.
         </p>
+
+        {/* Training-school countdown */}
+        <TrainingCountdown state={state} dispatch={dispatch} />
 
         {/* Exam date card */}
         <div style={{ background: "#E8EFF8", border: `1.5px solid ${C.navy}`, borderRadius: 12, padding: 14, display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>

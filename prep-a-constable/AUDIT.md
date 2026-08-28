@@ -408,3 +408,35 @@ categories valid, unique ids, no dup questions), statute-abbreviation scan clean
 (A–Z finds "Outraging Public Decency", card shows Common Law · Either way), the
 new Terrorism category chip is present, the Situation finder and other CC tabs
 still work, no JS errors. About-page count updated to 151 offences.
+
+---
+
+# Round 7 — Training-school countdown (Exam Prep)
+
+Requested: a pregnancy-app-style progress header for the training side of the
+app ("you have 10 weeks left of training school").
+
+Added to the **Exam Prep** screen (the training dashboard):
+
+- **Header line**, mirroring "You're 33 weeks pregnant" → *"You're in week 10 of
+  training"* with *"10 weeks left of training school"* beneath it. Falls back to
+  the plain "Exam Prep" title when no training dates are set.
+- **Countdown card**: headline (weeks left / starts-in / complete), a
+  "Week 10, day 3 — 70 days to go" line, three stats (Weeks done · Weeks left ·
+  Complete %), and a **week strip** with a progress bar and a CURRENT WEEK number,
+  echoing the reference app's bottom bar.
+- **Setup / edit**: the officer enters their own training start and finish dates.
+  Nothing about programme length is assumed or hard-coded — every figure is
+  derived from those two dates, so the app can't state anything untrue about any
+  particular intake.
+
+State: `profile.trainingStart` / `profile.trainingEnd` (additive — old saves load
+unchanged), plus a `setTrainingDates` reducer action.
+
+**Verified:** esbuild parse, balance 0/0, state contract regenerated (the change
+touches DEFAULT_STATE) with **27/27** tests still passing; **23/23** unit tests on
+the date maths covering week boundaries, before-start, after-end, inverted and
+garbage date ranges (all return safely, never negative or >100%); and a
+headless-Chromium run driving the real UI — setup card → enter dates → header and
+card render "week 10 / 10 weeks left", survives reload, rejects a finish-date
+before the start date, and leaves the other screens working. No JS errors.
