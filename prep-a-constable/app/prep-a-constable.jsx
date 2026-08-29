@@ -9089,6 +9089,22 @@ function TopicScreen({ topicId, state, go }) {
 // LESSON SCREEN
 // ============================================================
 
+// Mnemonic items come in two shapes. Most are objects — { l: "S", m: "Stolen
+// articles" }. A few are written as single strings — "A – ALLEGATION: what is
+// it?" — and the renderer used to read .l/.m off those, getting undefined for
+// both and drawing a column of EMPTY boxes (this silently broke AFRAID, RARA
+// and one other). Normalising here means either shape renders, so adding a
+// string-form mnemonic in future cannot reintroduce the bug.
+function mnemonicRow(it) {
+  if (it && typeof it === "object") return { l: it.l || "", m: it.m || "" };
+  const s = typeof it === "string" ? it : "";
+  // "A – MEANING…" / "A - MEANING…" → letter + meaning. The leading token is
+  // capped at 3 characters so a dash later in the sentence can't be mistaken
+  // for the separator.
+  const m = s.match(/^\s*([^\s–—-]{1,3})\s*[–—-]\s*(.+)$/);
+  return m ? { l: m[1], m: m[2] } : { l: "", m: s };
+}
+
 function LessonBlock({ block, topicAccent }) {
   switch (block.type) {
     case "intro":
@@ -9186,16 +9202,18 @@ function LessonBlock({ block, topicAccent }) {
             {block.name}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {block.items.map((it, i) => (
+            {block.items.map(mnemonicRow).map(({ l, m }, i) => (
               <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <div style={{
-                  width: 26, height: 26, borderRadius: 6,
-                  background: C.tealBg, color: C.teal,
-                  fontFamily: fontDisplay, fontWeight: 700, fontSize: 14,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  flexShrink: 0,
-                }}>{it.l}</div>
-                <div style={{ flex: 1, fontSize: 13.5, color: C.text, lineHeight: 1.5, paddingTop: 3 }}>{it.m}</div>
+                {l && (
+                  <div style={{
+                    width: 26, height: 26, borderRadius: 6,
+                    background: C.tealBg, color: C.teal,
+                    fontFamily: fontDisplay, fontWeight: 700, fontSize: 14,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    flexShrink: 0,
+                  }}>{l}</div>
+                )}
+                <div style={{ flex: 1, fontSize: 13.5, color: C.text, lineHeight: 1.5, paddingTop: 3 }}>{m}</div>
               </div>
             ))}
           </div>
