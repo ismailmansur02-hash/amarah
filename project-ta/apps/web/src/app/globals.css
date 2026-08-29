@@ -427,7 +427,16 @@ tbody tr:last-child td { border-bottom: 0; }
   background: var(--bg-soft); border: 1px dashed var(--line);
   padding: 7px 14px; border-radius: 999px;
 }
-.msg-redacted { border-color: var(--warn-line); background: var(--warn-bg); color: var(--warn-ink); }
+.msg-redacted, .msg-mine .msg-bubble.msg-redacted {
+  border-color: var(--warn-line); background: var(--warn-bg); color: var(--warn-ink);
+}
+/* The sender needs to see their own message was stripped, not just the recipient. */
+.msg-redacted::after {
+  content: "Contact details were removed";
+  display: block; margin-top: 7px; padding-top: 6px;
+  border-top: 1px solid var(--warn-line);
+  font-size: 11.5px; font-weight: 650; letter-spacing: .02em; opacity: .8;
+}
 .composer { border-top: 1px solid var(--line); padding: 11px; display: flex; gap: 9px; flex: none; background: var(--bg-raised); }
 .composer textarea { min-height: 44px; max-height: 130px; padding: 10px 12px; border-radius: 11px; font-size: 15px; }
 
