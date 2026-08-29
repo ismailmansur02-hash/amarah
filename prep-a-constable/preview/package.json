@@ -3,6 +3,7 @@
     "build": "esbuild entry.jsx --bundle --loader:.jsx=jsx --minify --define:process.env.NODE_ENV='\"production\"' --alias:react=./node_modules/react --outfile=dist/bundle.js && cp index.html dist/"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
     "esbuild": "^0.28.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

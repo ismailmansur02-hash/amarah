@@ -22,6 +22,10 @@ if (!window.storage) {
   };
 }
 
+// Provides window.cloud (magic-link sign-in + cross-device state sync).
+// Imported before the app so the sign-in screen sees it on first render.
+import "./cloud.js";
+
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "../app/prep-a-constable.jsx";

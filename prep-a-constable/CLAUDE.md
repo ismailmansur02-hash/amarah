@@ -100,9 +100,37 @@ that file's `react` import upward from `app/` — where it never finds
 `preview/node_modules`. Without the alias a clean checkout fails with
 "Could not resolve react" (this broke the first Netlify build config).
 
-Continuous deploy: `netlify.toml` at the repo ROOT builds this preview
-(base `prep-a-constable/preview`, publish `dist`). It only applies to the branch
-the Netlify site is linked to.
+`netlify.toml` at the repo ROOT holds the build config (base
+`prep-a-constable/preview`, publish `dist`).
+
+**Deploys are NOT automatic — verified 29 Aug 2026.** The site's production
+branch IS `claude/full-app-audit-rraf3e` (correct), but pushes do not start a
+build: an empty commit pushed at 14:04Z produced no deploy after 5+ minutes,
+and the previously published deploy reports `deploy_source: "api"` with
+`has_source_zip: true` — an API source-zip upload, not a git build. The
+GitHub→Netlify webhook is not firing. Until that is repaired, a push alone
+changes NOTHING on the live site; someone must hit **Deploys → Trigger deploy**
+in the dashboard. Do not tell Mr Mansur a push has gone live without checking
+the site's current deploy id.
+
+## Web cloud sync (`preview/cloud.js`)
+
+`backend/src/lib/{supabaseClient,auth,persistence}.js` are Expo/React Native
+(AsyncStorage, expo-apple-authentication) and CANNOT run in a browser.
+`preview/cloud.js` is the web counterpart: magic-link sign-in plus state sync,
+exposed as `window.cloud`, mirroring how `entry.jsx` provides `window.storage`.
+
+The sync RULES are not duplicated — the app calls `window.cloud.configure()`
+with its OWN `mergeState`/`loadStateFromRaw`/`SCHEMA_VERSION`, so the cloud
+merge is byte-identical to the local one and cannot drift from the contract.
+The app treats `window.cloud` as OPTIONAL; with it absent it stays local-only,
+which is how the Expo build keeps working unchanged.
+
+The anon key in `cloud.js` is publishable by design (RLS gates every row) —
+that is not a leak. The SERVICE ROLE key must never appear there.
+
+Requires in the Supabase dashboard: Email provider enabled, and the site URL in
+Authentication → URL Configuration → Redirect URLs.
 
 `preview/entry.jsx` imports `../app/prep-a-constable.jsx` — never fork the app file.
 

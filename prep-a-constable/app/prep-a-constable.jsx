@@ -10634,7 +10634,16 @@ function SettingsScreen({ state, dispatch, go }) {
               </div>
             </div>
             <button
-              onClick={() => { dispatch({ type: "signOut" }); go({ name: "home" }); }}
+              onClick={async () => {
+                // Push anything still pending, then end the real session too —
+                // otherwise the next launch would silently sign back in.
+                try {
+                  if (window.cloud && state.auth && state.auth.provider !== "guest") await window.cloud.push(state);
+                  if (window.cloud) await window.cloud.signOut();
+                } catch (e) { /* never block sign-out on a network error */ }
+                dispatch({ type: "signOut" });
+                go({ name: "home" });
+              }}
               style={{ background: "white", border: `1px solid ${C.navy}`, color: C.navy, borderRadius: 6, padding: "7px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: fontBody }}
             >
               Sign out
@@ -11426,7 +11435,13 @@ function LoginScreen({ dispatch }) {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(null); // which provider is "loading"
   const [emailError, setEmailError] = useState("");
+  const [sent, setSent] = useState("");     // email a magic link was just sent to
   const [legal, setLegal] = useState(null); // "privacy" | "terms" | null
+
+  // Real cloud sign-in when the host provides it (see preview/cloud.js).
+  // With no window.cloud the screen falls back to the demo behaviour below.
+  const cloud = typeof window !== "undefined" ? window.cloud : null;
+  const cloudOn = !!(cloud && cloud.enabled);
 
   const fakeSignIn = (auth) => {
     setBusy(auth.provider);
@@ -11437,13 +11452,29 @@ function LoginScreen({ dispatch }) {
     }, 650);
   };
 
-  const onEmailContinue = () => {
+  const onEmailContinue = async () => {
     const e = email.trim();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) {
       setEmailError("Enter a valid email address.");
       return;
     }
     setEmailError("");
+
+    if (cloudOn) {
+      // Real magic link. The officer completes sign-in by tapping the emailed
+      // link, which returns here; App's auth listener then pulls their account.
+      setBusy("email");
+      try {
+        await cloud.sendMagicLink(e);
+        setSent(e);
+      } catch (err) {
+        setEmailError((err && err.message) || "Could not send the sign-in link.");
+      } finally {
+        setBusy(null);
+      }
+      return;
+    }
+
     fakeSignIn({ provider: "email", email: e, displayName: e.split("@")[0] });
   };
 
@@ -11533,9 +11564,13 @@ function LoginScreen({ dispatch }) {
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", paddingBottom: 24 }}>
           {mode === "choices" ? (
             <>
-              {providerBtn("Continue with Apple", <AppleMark />, "#000", "#fff", "none", () => fakeSignIn({ provider: "apple", displayName: "Apple User" }), "apple")}
-              {providerBtn("Continue with Google", <GoogleMark />, "#fff", C.text, `1.5px solid ${C.borderStrong}`, () => fakeSignIn({ provider: "google", displayName: "Google User" }), "google")}
-              {providerBtn("Continue with email", <MailMark />, "#fff", C.text, `1.5px solid ${C.borderStrong}`, () => setMode("email"), "email-open")}
+              {/* Apple and Google are shown only in demo mode. With real cloud
+                  sign-in active they would be fake buttons that silently fail
+                  to sync, so they stay hidden until those providers are
+                  actually configured. */}
+              {!cloudOn && providerBtn("Continue with Apple", <AppleMark />, "#000", "#fff", "none", () => fakeSignIn({ provider: "apple", displayName: "Apple User" }), "apple")}
+              {!cloudOn && providerBtn("Continue with Google", <GoogleMark />, "#fff", C.text, `1.5px solid ${C.borderStrong}`, () => fakeSignIn({ provider: "google", displayName: "Google User" }), "google")}
+              {providerBtn(cloudOn ? "Sign in with email" : "Continue with email", <MailMark />, "#fff", C.text, `1.5px solid ${C.borderStrong}`, () => setMode("email"), "email-open")}
 
               <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "18px 0" }}>
                 <div style={{ flex: 1, height: 1, background: C.border }} />
@@ -11574,6 +11609,23 @@ function LoginScreen({ dispatch }) {
                 style={{ background: "transparent", border: "none", color: C.navy, fontFamily: fontBody, fontSize: 14, fontWeight: 600, cursor: "pointer", padding: 0, marginBottom: 20, alignSelf: "flex-start" }}
               >← Back</button>
 
+              {sent ? (
+                <div style={{ textAlign: "center", padding: "8px 0 4px" }}>
+                  <div style={{ fontFamily: fontDisplay, fontSize: 24, fontWeight: 600, color: C.navy, marginBottom: 10, letterSpacing: -0.3 }}>
+                    Check your email
+                  </div>
+                  <p style={{ fontSize: 14, color: C.textMuted, lineHeight: 1.55, margin: "0 0 18px" }}>
+                    We've sent a sign-in link to <strong style={{ color: C.text }}>{sent}</strong>. Open it on any device and your progress will be there.
+                  </p>
+                  <p style={{ fontSize: 12.5, color: C.textFaint, lineHeight: 1.55, margin: "0 0 18px" }}>
+                    The link expires shortly. If it hasn't arrived in a minute, check your spam folder.
+                  </p>
+                  <PrimaryButton secondary full onClick={() => { setSent(""); setEmailError(""); }}>
+                    Use a different email
+                  </PrimaryButton>
+                </div>
+              ) : (
+              <>
               <label style={{ display: "block", fontSize: 12, color: C.textMuted, fontWeight: 600, marginBottom: 8, letterSpacing: 0.4, textTransform: "uppercase" }}>Email address</label>
               <input
                 type="email"
@@ -11597,18 +11649,22 @@ function LoginScreen({ dispatch }) {
               {emailError && <p style={{ color: C.error, fontSize: 13, margin: "0 0 14px" }}>{emailError}</p>}
 
               <PrimaryButton full onClick={onEmailContinue} disabled={busy !== null}>
-                {busy === "email" ? "Signing in…" : "Continue"}
+                {busy === "email" ? (cloudOn ? "Sending…" : "Signing in…") : cloudOn ? "Send sign-in link" : "Continue"}
               </PrimaryButton>
               <p style={{ fontSize: 12, color: C.textFaint, textAlign: "center", margin: "14px 0 0", lineHeight: 1.5 }}>
-                In the live app this sends a secure magic-link to your email. No password needed.
+                {cloudOn
+                  ? "We'll email you a secure sign-in link. No password to remember."
+                  : "In the live app this sends a secure magic-link to your email. No password needed."}
               </p>
+              </>
+              )}
             </>
           )}
         </div>
 
         {/* Demo notice + legal */}
         <div style={{ paddingBottom: 28, textAlign: "center" }}>
-          {DEMO_MODE && (
+          {DEMO_MODE && !cloudOn && (
             <div style={{
               background: C.goldBg,
               border: `1px solid ${C.gold}`,
@@ -11668,13 +11724,79 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, null);
   const [loading, setLoading] = useState(true);
 
+  // Optional cloud-sync host (preview/cloud.js). Absent → local-only, as before.
+  const cloud = typeof window !== "undefined" ? window.cloud : null;
+
+  // Latest state, readable from callbacks without re-subscribing them.
+  const stateRef = useRef(null);
+  useEffect(() => { stateRef.current = state; }, [state]);
+
+  // Build the auth record the app stores for a real Supabase session.
+  const authFromSession = (session) => ({
+    provider: "email",
+    email: session.user.email || "",
+    displayName: (session.user.email || "").split("@")[0],
+    signedInAt: new Date().toISOString(),
+  });
+
   useEffect(() => {
     let cancelled = false;
-    loadState().then((s) => { if (!cancelled) { dispatch({ type: "init", state: s }); setLoading(false); } });
+    (async () => {
+      // Share the app's OWN contract functions so the cloud merge rule is
+      // identical to the local one and cannot drift.
+      if (cloud && cloud.configure) {
+        cloud.configure({ mergeState, loadStateFromRaw, SCHEMA_VERSION });
+      }
+
+      let s = await loadState();
+
+      // Already signed in on this device? Merge the account's cloud copy in
+      // before first render, so returning users never see stale progress.
+      if (cloud) {
+        try {
+          const session = await cloud.getSession();
+          if (session) {
+            s = await cloud.pull(s);
+            if (!s.auth) s = { ...s, auth: authFromSession(session) };
+            await persistState(s);
+          }
+        } catch (e) { /* offline → carry on with local state */ }
+      }
+
+      if (!cancelled) { dispatch({ type: "init", state: s }); setLoading(false); }
+    })();
     return () => { cancelled = true; };
   }, []);
 
-  useEffect(() => { if (state) persistState(state); }, [state]);
+  // Returning from the emailed sign-in link lands here: supabase-js consumes
+  // the URL, fires this, and we merge the account's progress into the device.
+  useEffect(() => {
+    if (!cloud || !cloud.onAuthChange) return;
+    return cloud.onAuthChange(async (session) => {
+      if (!session) return;
+      const cur = stateRef.current;
+      if (cur && cur.auth && cur.auth.email === session.user.email) return; // already signed in
+
+      const local = await loadState();
+      const merged = await cloud.pull(local);
+      const next = { ...merged, auth: authFromSession(session) };
+      await persistState(next);
+      dispatch({ type: "init", state: next });
+      setLoading(false);
+      cloud.push(next);
+    });
+  }, []);
+
+  // Local save is immediate; the cloud push is debounced so answering ten
+  // questions quickly costs one upload rather than ten.
+  const pushTimer = useRef(null);
+  useEffect(() => {
+    if (!state) return;
+    persistState(state);
+    if (!cloud || !state.auth || state.auth.provider === "guest") return;
+    if (pushTimer.current) clearTimeout(pushTimer.current);
+    pushTimer.current = setTimeout(() => { cloud.push(state); }, 3000);
+  }, [state]);
 
   if (loading || !state) {
     return (
