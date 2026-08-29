@@ -1,456 +1,441 @@
-# Project TA — Competitor & Market Research
+# Project TA — Market and Competitor Analysis
 
-**Prepared for:** Ismail Mansur
+**Prepared for:** Project TA board and stakeholders
+**Author:** Ismail Mansur
 **Date:** 28 August 2026
-**Subject:** On-demand, chat-based tutoring marketplace for UK GCSE / A-level students
+**Classification:** Internal — commercial in confidence
+
+> **A note on currency.** This is a UK business serving UK students, so every
+> figure in this paper is stated in pounds sterling. Where a source reported in
+> another currency, the figure has been converted at £1 ≈ $1.27 and is marked as
+> approximate. Original figures are available on request.
 
 ---
 
-## 1. Executive summary
+## 1. Purpose
 
-Your idea — a student posts a question, pays for a fixed block of time (e.g. 15 minutes),
-every tutor on the platform gets a push notification showing **the fee, the topic and the
-duration**, and the first suitable tutor to accept starts a chat + whiteboard session — is
-a well-understood model. It has been tried, it has worked at scale, and several of the
-best-funded attempts are now dead.
-
-That is not a reason to abandon it. It is a reason to build it differently. Here is the
-short version of what the research says:
-
-1. **The model works when the unit is a question, not an hour.** Snapask reached ~3.2m
-   students and ~350,000 tutors across eight Asian markets on exactly this mechanic.
-2. **It dies when tutor pay is too low.** Yup raised $23.5m and shut down; the most cited
-   reason is that it paid tutors roughly $10/hour, so it could never hold onto graduates
-   with strong maths. Your model must survive its own tutor churn.
-3. **The "answers" market has been destroyed by AI.** Chegg went from a $14.7bn market cap
-   to roughly $115m and cut 45% of staff in October 2025. If Project TA competes on
-   *getting the answer*, free AI wins on day one.
-4. **Therefore the defensible product is not answers — it is a verified human, right now,
-   who will not just give the answer.** That is the one thing ChatGPT does not sell and
-   Chegg lost.
-5. **In the UK, under-18 safeguarding is the moat.** UK GDPR, the ICO Children's Code and
-   the Online Safety Act 2023 make an adult-to-child chat app genuinely hard to launch
-   legally. That is a cost — but it is also a barrier that stops a solo developer copying
-   you in a weekend, and it is the thing parents actually pay for.
-
-**The single biggest strategic risk in your current plan:** paying a flat fee for 15
-minutes of an undergraduate's time, in a market where the answer is free, to an audience
-of teenagers who mostly do not control a payment card. Sections 8–10 deal with this
-head-on.
+This paper sets out the market Project TA proposes to enter, assesses the
+competitive field, and makes five recommendations that materially change the
+product as originally conceived. It is intended to support a decision on whether
+to proceed to a funded pilot.
 
 ---
 
-## 2. Market context
+## 2. Executive summary
 
-| Metric | Figure | Source |
-|---|---|---|
-| UK K-12 online tutoring market growth, 2025–2030 | +USD ~15.96bn, 17.2% CAGR | Technavio / Research and Markets |
-| Global edtech venture funding, 2021 | $5.8bn | Pertama Ventures |
-| Global edtech venture funding, 2023 | $712m (−87%) | Pertama Ventures |
-| Chegg market cap, Feb 2021 | $14.7bn ($115/share) | Entrepreneur |
-| Chegg market cap, 2026 | ~$115m (~$1.02/share) | Entrepreneur |
-| Chegg subscribers, Q1 2025 | 3.2m, −31% YoY; revenue −30% to $121m | Entrepreneur |
+The proposition — a student submits a question and pays for a fixed block of
+tutoring time; every qualified tutor is notified with the fee, the topic and the
+duration; the first to accept delivers the session over chat and a shared
+whiteboard — is not novel. It has been executed at scale, and several
+well-capitalised attempts have since failed.
 
-**Read this as:** the demand side is growing fast and is real. The *funding* side is not
-what it was in 2021, so a venture-scale raise on "Uber for tutoring" alone is unlikely.
-Build something that is profitable small before it is big.
+That history is instructive rather than disqualifying. Five findings follow.
 
----
+**Finding 1 — The mechanic is proven.** Snapask reached approximately 3.2 million
+students and 350,000 tutors across eight Asian markets on precisely this model.
 
-## 3. The graveyard — read this before you build anything
+**Finding 2 — The economics, not the mechanic, are what fail.** Yup operated an
+almost identical product, raised approximately £18.5m, and ceased operations in
+February 2025. The most frequently cited cause is tutor remuneration of roughly
+£8 per hour, a rate that cannot retain numerate graduates.
 
-### Yup (formerly MathCrunch) — the closest thing to your exact idea, and it is dead
+**Finding 3 — The market for answers has been destroyed.** Chegg's market
+capitalisation fell from approximately £11.6bn in February 2021 to approximately
+£90m, with a 31% year-on-year subscriber decline and a 45% headcount reduction in
+October 2025. Any proposition whose value is the answer itself now competes with
+a free substitute.
 
-- On-demand, **chat-based**, 24/7 maths tutoring, grades 3–12. Whiteboard + chat, no video.
-- Raised **$23.5m** across 4 rounds from 12 investors.
-- **App and website shut down by February 2025.** Not acquired — ceased operations.
-- The most commonly cited cause: **tutor pay around $10/hour**. As one review put it, it is
-  hard to see why someone with a maths degree works for that.
+**Finding 4 — The defensible product is therefore a verified human who will not
+simply provide the answer.** This is the single capability a general-purpose AI
+assistant cannot offer, and the one Chegg lost.
 
-**What this means for you:** your notification says "you will earn £X". If £X is not
-competitive with a bar shift, your supply side evaporates at exactly the moment your demand
-side arrives. Tutor pay is not a cost line to minimise — it is the product.
+**Finding 5 — In the UK, safeguarding is the barrier to entry and the
+differentiator.** UK GDPR, the ICO Age Appropriate Design Code and the Online
+Safety Act 2023 impose substantial obligations on a service that puts adults and
+children in direct conversation. This is a genuine cost. It is also a barrier
+that a small competitor cannot trivially replicate, and it is what parents
+actually purchase.
 
-### Snapask — proved the mechanic, then went quiet
-
-- Hong Kong, "Uber for tutoring". Student photographs a question; the algorithm alerts
-  suitably qualified tutors; **the fastest to respond (often under 5 seconds) gets the job**
-  and opens a 1:1 chat.
-- Reached **3.2m students / 350,000 tutors** across HK, Taiwan, Japan, South Korea,
-  Thailand, Malaysia, Singapore, Indonesia. Raised **$56.8m**, including a $35m round in 2020.
-- Monetised by **subscription** (a bundle of questions per month), not pay-per-question.
-- Reported to have **gone dark around 2022** as pandemic growth reversed and edtech funding
-  collapsed.
-
-**What this means for you:** the fastest-finger-first mechanic works and is proven at scale.
-But Snapask sold a *subscription*, which smooths revenue and improves retention — a lesson
-your pay-per-15-minutes model should absorb (see §9).
-
-### Chegg — what happens when you sell answers
-
-- Near-monopoly on homework answers; now "a commodity player".
-- 636+ roles eliminated in 2025 (22% in May, a further 45% in October). Pivoted away from
-  academic homework help entirely.
-- CheggMate, its own AI, failed to stop the bleed.
-
-**What this means for you:** do not build an answer engine. Build a *teaching* engine.
+**Principal commercial risk.** The model as originally conceived charges a flat
+fee for fifteen minutes of an undergraduate's time, in a market where the answer
+is available at no cost, to an audience that largely does not control a payment
+instrument. Sections 8 to 10 address each element of that risk.
 
 ---
 
-## 4. Competitor deep dives
+## 3. Market context
 
-### 4A. On-demand chat / question-based (your direct category)
+| Metric | Figure |
+|---|---|
+| UK K-12 online tutoring market growth, 2025–2030 | approx. **+£12.6bn**, 17.2% CAGR |
+| Global edtech venture funding, 2021 | approx. £4.6bn |
+| Global edtech venture funding, 2023 | approx. £560m (−87%) |
+| Chegg market capitalisation, February 2021 | approx. £11.6bn |
+| Chegg market capitalisation, 2026 | approx. £90m |
+| Chegg subscribers, Q1 2025 | 3.2m, −31% YoY; revenue −30% to approx. £95m |
 
-**Snapask** — see above. Subscription credits, photo-a-question, sub-5-second tutor claim,
-in-app messaging. Multi-market Asia. Now largely inactive.
-
-**Yup** — see above. Chat + whiteboard, 24/7, maths-focused, subscription and school
-contracts. Dead as of Feb 2025.
-
-**UPchieve** — free, 24/7, **chat + whiteboard**, for eligible low-income US high schoolers.
-Tutors are **unpaid volunteers**; students pay nothing, no commission. Sustained by school
-partnership fees of roughly **$10,000 per school per year**.
-*Relevance to you:* proves the chat+whiteboard UX for exactly your age group, and proves the
-B2B2C funding route. Their product is your product with the money moved to the school.
-
-**Studypool / 24HourAnswers / Brainly / Numerade** — pay-per-question or freemium Q&A.
-Brainly is peer-answered and ad/subscription funded. All are being squeezed by free AI.
-
-### 4B. On-demand live-session platforms
-
-**Tutor.com** (The Princeton Review) — 24/7 on-demand across many subjects, real-time
-**interactive whiteboard**, aimed at last-minute homework and exam prep. **$29–$40/hour**
-depending on subscription vs one-off package and monthly volume. Huge institutional/library
-distribution.
-
-**TutorMe** (Pearson) — "Lesson Space" virtual classroom: whiteboard, text editor, screen
-share, video/audio chat. Plans from **$26/hour**. Now largely a Pearson institutional channel.
-
-**Skooli** — on-demand K-12 and college, virtual classroom with video, chat and interactive
-whiteboard; students connect **in minutes**. **Pay-per-minute at roughly $0.82/min (~$49/hr)**,
-with discounted prepaid packages.
-*Relevance to you:* Skooli is the clearest precedent for per-minute billing. Your 15-minute
-block at, say, £6 works out at £24/hour — materially cheaper than Skooli and Tutor.com.
-
-**Varsity Tutors (Nerdy)** — instant tutoring plus classes. Notable for its economics:
-students billed around **$65–95/hour** while tutors earn roughly **$11–20/hour** — a take
-rate approaching **70%**. Managed marketplace, tutors do not set rates.
-
-**Paper** — district-funded unlimited on-demand tutoring; sells to schools, not students.
-
-### 4C. Scheduled marketplaces (the mainstream UK model)
-
-**MyTutor** — 5,000+ tutors from 60 top universities; founded 2013. **Undergraduate tutors
-are its entire supply model** — exactly your plan. **Mandatory DBS checks.** Published
-safeguarding and online-safety policies (worth copying the structure of).
-
-**Tutorful** — UK marketplace, **mandatory DBS**.
-
-**Sherpa** — UK GCSE/A-level focus, **350,000+ 1:1 lessons delivered**, 4.8★ from 40,000+
-parents, lessons **from £20/hour**, iOS and Android apps shipped. Claims average improvement
-of 2.2 grades. **This is your most relevant live UK competitor**, though it is
-booking-based rather than instant.
-
-**GoStudent** — pan-European, subscription lesson packages, heavy paid acquisition,
-**mandatory DBS**.
-
-**Wyzant** — tutors set rates ($25–60 typical), **flat 25% platform commission** since Jan 2019.
-
-**Preply** — tutors set rates ($10–40 typical), **tiered commission: ~33% on first hours with
-a new student, falling to ~18–22%** for high-volume tutors.
-
-**Superprof / First Tutors / TutorExtra** — DBS **recommended but not required**. This is the
-low-trust end of the UK market and it is where your safeguarding story wins.
-
-**Tutorpeers** — peer-to-peer tutoring, **free to $25 per 30 minutes**. Closest to your
-"undergrads teaching school students" positioning on price.
-
-### 4D. School-funded
-
-**Third Space Learning** — UK's largest online maths tutoring company for schools. Flat
-school licence **$5,000–15,000/year** based on school size, free pilots, district rollouts.
-Raised $16.3m.
-*Relevance:* if consumer pay-per-question proves hard (it will be, see §8), this is the
-proven UK escape hatch.
-
-### 4E. AI-first (your real competition for a student's first instinct)
-
-**Photomath, Gauth, Question.AI, Numerade, Brainly, Khanmigo — and simply ChatGPT/Claude.**
-Free or near-free, instant, no waiting for a human to accept, available at 2am. In 2026 the
-homework space is described as crowded and commoditised.
-
-**The uncomfortable truth:** for "what's the answer to Q7", you cannot win. For "I have a
-mock on Thursday, I don't understand why we integrate by parts here, and I've been staring
-at this for 40 minutes" — a real person who has recently sat the same exam wins easily.
-Position Project TA at the second thing.
+**Interpretation.** UK demand is growing quickly and is well evidenced. The
+funding environment is not what it was in 2021, so a venture-scale raise on the
+strength of the concept alone should not be assumed. The business should be
+structured to reach profitability at small scale before it seeks growth capital.
 
 ---
 
-## 5. Feature matrix
+## 4. The UK competitive field
 
-| Feature | Snapask | Yup | UPchieve | Tutor.com | Skooli | MyTutor | Sherpa | Wyzant | **Project TA (proposed)** |
+### 4.1 Scheduled marketplaces — the incumbent UK model
+
+**Sherpa** is the most directly relevant UK competitor. GCSE and A-level focus,
+over 350,000 one-to-one lessons delivered, a 4.8-star rating from more than
+40,000 parents, lessons from **£20 per hour**, and native iOS and Android
+applications already shipped. It claims an average improvement of 2.2 grades. Its
+model is booking-based rather than on-demand, which is where Project TA differs.
+
+**MyTutor** operates the supply model Project TA proposes: over 5,000
+undergraduate tutors drawn from 60 leading universities, founded 2013. **DBS
+checks are mandatory.** Its published safeguarding and online-safety policies are
+a useful structural reference.
+
+**Tutorful** — UK marketplace, DBS mandatory.
+**GoStudent** — pan-European, subscription lesson packages, DBS mandatory.
+**Superprof, First Tutors, TutorExtra** — DBS *recommended but not required*.
+This is the low-trust segment of the UK market, and the segment against which
+Project TA's safeguarding position is most persuasive.
+
+**Third Space Learning** is the UK's largest schools-facing online maths tutoring
+provider, selling flat annual school licences of approximately **£3,900–11,800**
+depending on school size, with free pilots and multi-school rollouts. It has
+raised approximately £12.8m. This is the proven UK route should direct-to-consumer
+acquisition prove difficult.
+
+### 4.2 International precedents in the on-demand category
+
+These are included because they are the only operators to have run Project TA's
+exact model at scale. Their pricing is converted to sterling for comparison.
+
+**Snapask (Hong Kong)** — the closest proven precedent. A student photographs a
+question; the platform alerts suitably qualified tutors; the fastest to respond,
+frequently within five seconds, is assigned the session and opens a one-to-one
+chat. Reached approximately 3.2m students and 350,000 tutors across Hong Kong,
+Taiwan, Japan, South Korea, Thailand, Malaysia, Singapore and Indonesia, on
+approximately £44.7m raised, including a £27.5m round in 2020. Monetised by
+**subscription**, not by single session. Reported to have ceased active operation
+around 2022 as pandemic demand reversed.
+
+**Yup (United States)** — on-demand, chat-based, whiteboard-driven maths tutoring
+for school-age students, with no video. Raised approximately £18.5m across four
+rounds. **Ceased operations by February 2025.** Tutor pay of approximately £8 per
+hour is the most commonly cited cause.
+
+**UPchieve (United States)** — free, 24/7, chat and whiteboard, for eligible
+lower-income secondary students. Tutors are unpaid volunteers; the service is
+funded by school partnership fees of approximately **£7,900 per school per year**.
+It validates both the chat-and-whiteboard interface for this exact age group and
+the institutional funding route.
+
+**Tutor.com** — 24/7 on-demand across multiple subjects with an interactive
+whiteboard, at approximately **£23–31 per hour**, distributed heavily through
+institutions and libraries.
+
+**TutorMe (Pearson)** — virtual classroom with whiteboard, text editor, screen
+share and audio/video, from approximately **£20 per hour**.
+
+**Skooli** — on-demand sessions with video, chat and whiteboard, connecting
+students within minutes, billed **per minute at approximately £0.65 (about £39
+per hour)**, with discounted prepaid packages. The clearest precedent for
+per-minute billing.
+
+**Varsity Tutors (Nerdy)** — instant tutoring and classes. Commercially notable:
+students are billed approximately **£51–75 per hour** while tutors earn
+approximately **£9–16 per hour**, implying a platform take approaching **70%**.
+
+**Wyzant** — tutors set their own rates, typically **£20–47 per hour**, with a
+flat **25%** platform commission since January 2019.
+
+**Preply** — tutors set rates, typically **£8–31 per hour**, with a tiered
+commission of approximately **33%** on initial hours with a new student, falling
+to **18–22%** at volume.
+
+**Tutorpeers** — peer-to-peer tutoring, free to approximately **£20 per 30
+minutes**. The closest comparator on price to Project TA's undergraduate supply
+model.
+
+### 4.3 AI-first products
+
+Photomath, Gauth, Question.AI, Numerade, Brainly, Khanmigo and general-purpose
+assistants such as ChatGPT are free or near-free, instantaneous, and available
+without waiting for a human to accept.
+
+**Assessment.** For "what is the answer to question 7", Project TA cannot compete
+and should not try. For "I have a mock on Thursday, I do not understand why we
+integrate by parts here, and I have spent forty minutes on it", a person who sat
+the same specification recently holds a decisive advantage. The product should be
+positioned exclusively at the second case.
+
+---
+
+## 5. Feature comparison
+
+| Feature | Snapask | Yup | UPchieve | Tutor.com | Skooli | MyTutor | Sherpa | Wyzant | **Project TA** |
 |---|---|---|---|---|---|---|---|---|---|
-| Instant match (no booking) | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Instant match, no booking | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
 | Text chat session | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ | ➖ | ➖ | ✅ |
 | Shared whiteboard | ➖ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Video required | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ | ❌ (deliberate) |
-| Photo-a-question intake | ✅ | ✅ | ➖ | ➖ | ➖ | ❌ | ❌ | ❌ | ✅ |
-| Tutor sees fee before accepting | ✅ | ➖ | n/a | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ **headline** |
+| Video required | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ | ❌ (by design) |
+| Photograph-a-question intake | ✅ | ✅ | ➖ | ➖ | ➖ | ❌ | ❌ | ❌ | ✅ |
+| **Fee disclosed to tutor before acceptance** | ✅ | ➖ | n/a | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ **unique** |
 | Pay per short block | ➖ | ❌ | free | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ |
-| Subscription option | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ (recommended) |
-| Undergraduate tutor supply | ✅ | ➖ | ✅ | ❌ | ❌ | ✅ | ➖ | ➖ | ✅ |
+| Subscription or credit option | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Undergraduate supply model | ✅ | ➖ | ✅ | ❌ | ❌ | ✅ | ➖ | ➖ | ✅ |
 | Mandatory DBS | n/a | n/a | US | US | US | ✅ | ✅ | ❌ | ✅ |
-| Session transcript kept for safeguarding | ➖ | ➖ | ✅ | ✅ | ➖ | ✅ | ✅ | ❌ | ✅ **required** |
-| Parent visibility | ❌ | ➖ | ❌ | ➖ | ➖ | ✅ | ✅ | ➖ | ✅ |
-| School / B2B channel | ➖ | ✅ | ✅ | ✅ | ➖ | ✅ | ➖ | ❌ | Phase 3 |
+| Transcript retained for safeguarding | ➖ | ➖ | ✅ | ✅ | ➖ | ✅ | ✅ | ❌ | ✅ |
+| Exam-board-specific routing | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ **unique** |
+| Parent visibility of sessions | ❌ | ➖ | ❌ | ➖ | ➖ | ✅ | ✅ | ➖ | ✅ |
 
-✅ yes ➖ partial/unclear ❌ no
+✅ present ➖ partial or undisclosed ❌ absent
 
 ---
 
-## 6. Pricing and take-rate benchmarks
+## 6. Pricing and platform economics
 
 | Platform | Student pays | Tutor receives | Platform take |
 |---|---|---|---|
-| Varsity Tutors | $65–95/hr | $11–20/hr | **~70%** |
-| Preply | tutor-set $10–40/hr | 67–82% of rate | **18–33% tiered** |
-| Wyzant | tutor-set $25–60/hr | 75% of rate | **25% flat** |
-| Skooli | ~$0.82/min (~$49/hr) | undisclosed | — |
-| Tutor.com | $29–40/hr | ~$11–15/hr reported | high |
-| TutorMe | from $26/hr | undisclosed | — |
-| Sherpa (UK) | from **£20/hr** | undisclosed | — |
-| Tutorpeers | free–$25/30min | — | — |
-| Yup (dead) | subscription | **~$10/hr** | fatal |
-| **Project TA (recommended)** | **£6 / 15 min (£24/hr)** | **£4 / 15 min (£16/hr)** | **~33%** |
+| Varsity Tutors | £51–75/hr | £9–16/hr | **approx. 70%** |
+| Preply | tutor-set, £8–31/hr | 67–82% of rate | 18–33%, tiered |
+| Wyzant | tutor-set, £20–47/hr | 75% of rate | 25% flat |
+| Skooli | approx. £0.65/min (£39/hr) | undisclosed | — |
+| Tutor.com | £23–31/hr | approx. £9–12/hr reported | high |
+| TutorMe | from £20/hr | undisclosed | — |
+| Sherpa (UK) | from £20/hr | undisclosed | — |
+| MyTutor (UK) | £25–60/hr | undisclosed | — |
+| Tutorpeers | free–£20 per 30 min | — | — |
+| Yup (ceased trading) | subscription | **approx. £8/hr** | terminal |
+| **Project TA (proposed)** | **£6 per 15 min (£24/hr)** | **£4 per 15 min (£16/hr)** | **33%** |
 
-Notes on the recommendation:
-- **£16/hour effective to the tutor** beats a typical UK undergraduate's alternative
-  (retail/hospitality at roughly £11–12) without being so high that your margin dies.
-- **£6 for 15 minutes** is an impulse purchase — under the psychological threshold where a
-  teenager has to ask a parent, and cheaper per hour than every UK competitor listed.
-- **~33% take rate** sits between Wyzant's 25% and Preply's opening 33%. It is defensible.
-- After payment processing (~1.5% + 20p on UK cards) and the fact that a 15-minute session
-  carries the same fixed cost as an hour, **your gross margin on a single £6 session is
-  roughly £1.80.** This is why §9 argues for credit packs, not single sessions.
+**Rationale for the proposed position.**
 
----
-
-## 7. What will make Project TA stand out
-
-Ranked by how defensible each one is.
-
-### Tier 1 — genuinely differentiating
-
-**1. The tutor sees the money before they accept.**
-No competitor does this in the notification itself. Wyzant, Preply and Varsity all hide the
-economics behind a booking flow; Varsity hides them because they are bad. Your notification
-— *"£4.00 · A-level Maths · Integration by parts · 15 min"* — is a **transparency
-proposition to the supply side**, and supply is the harder side of this marketplace to win.
-Make it the marketing line for tutor recruitment. It is your Uber-driver-sees-the-fare moment.
-
-**2. "We will not just give you the answer."**
-Free AI gives answers instantly. Your wedge is the opposite promise: a tutor who works
-*with* the student. Enforce it as product, not a slogan — a tutor rating dimension for
-"did they help you understand it, or just tell you", and a visible pledge in the session
-UI. Parents pay for this; ChatGPT cannot sell it.
-
-**3. Safeguarding as a visible feature, not buried policy.**
-The UK press is actively campaigning on the tutoring safeguarding loophole — the NSPCC, the
-NEU, the Tutors' Association and the Children's Commissioner for England, Dame Rachel de
-Souza, have all called for mandatory DBS for private tutors ("an absolute basic minimum").
-Superprof, First Tutors and TutorExtra still only *recommend* DBS. If your landing page
-says **every tutor DBS-checked, every session transcript retained and reviewable by a
-parent, no private contact details ever exchanged**, you are on the right side of the story
-that is coming. This is also the single strongest thing you can put in front of a parent
-with a debit card.
-
-**4. Text-first, camera-off.**
-Every "premium" competitor pushes video. For a 15-year-old at 9pm who is embarrassed not to
-understand something, **not having to show their face or their bedroom is a feature**.
-Yup, Snapask and UPchieve all worked this way. It also cuts your infrastructure cost to
-near zero versus WebRTC, and it makes safeguarding review trivial because text is
-searchable and video is not.
-
-**5. Exam-board-native.**
-"A-level Maths" is not specific enough. AQA, Edexcel, OCR and WJEC differ, and a student
-revising Edexcel Further Maths wants a tutor who sat Edexcel Further Maths. No on-demand
-platform routes on exam board. This is cheap to build and immediately obvious in quality.
-
-### Tier 2 — worth doing, easier to copy
-
-6. **Photo-a-question intake** — Snapask's core loop; lowers the effort of asking to near zero.
-7. **Session replay** — the whiteboard and transcript saved to the student's account, so
-   £6 buys a permanent revision asset rather than 15 disappearing minutes.
-8. **Sub-60-second match guarantee, or the credit is refunded.** Turns your biggest
-   operational risk into a marketing promise.
-9. **Same tutor again** — let a student re-request a tutor who helped. Retention, and it
-   softens the marketplace's disintermediation risk.
-10. **Tutor "office hours"** — tutors declare when they are online, so you can predict
-    coverage instead of hoping.
-
-### Tier 3 — do NOT do these yet
-
-- Video. Doubles your build and your safeguarding burden for marginal gain.
-- Your own AI answer bot. You will lose to ChatGPT and dilute the human proposition.
-- Every subject at once. Launch on **Maths + the three sciences**, GCSE and A-level only.
-- Scheduled bookings. That is Sherpa's and MyTutor's game and they are years ahead.
+- **£16 per hour to the tutor** exceeds a UK undergraduate's realistic
+  alternative — retail or hospitality at approximately £11–12 per hour — without
+  eliminating platform margin. This directly addresses the failure mode that
+  ended Yup.
+- **£6 for fifteen minutes** is an impulse purchase, below the threshold at which
+  a student must seek parental approval, and materially cheaper per hour than
+  every UK comparator identified.
+- **A 33% take** sits between Wyzant's flat 25% and Preply's opening 33%. It is
+  defensible and can be published, which no comparator does.
+- **Contribution per single session is approximately £1.61** after card
+  processing. Section 9 sets out why this makes credit packs, not single
+  sessions, the commercial basis of the business.
 
 ---
 
-## 8. The UK regulatory reality (do not skip this)
+## 7. Recommended points of differentiation
 
-Your users are mostly under 18. That changes what you are legally building.
+### Tier 1 — defensible
 
-**DBS checks.** Private 1:1 tutoring is **not** "regulated activity" under the Safeguarding
-Vulnerable Groups Act 2006, so enhanced DBS is not automatically a legal requirement for a
-self-employed tutor. **However**, the Act does require platforms to carry out enhanced DBS
-and barred-list checks on tutors working **unsupervised with under-18s** — which is what
-your product is. MyTutor, Tutorful and GoStudent all treat it as mandatory. So should you.
-Budget roughly £40–60 and 2–8 weeks per tutor, and decide who pays. *This is the main
-reason you cannot onboard "anyone" as a tutor, which differs from your original sketch.*
+**1. The fee is disclosed to the tutor before acceptance.**
+No competitor surfaces this in the notification itself. Wyzant, Preply and
+Varsity Tutors all place the economics behind a booking flow; in Varsity's case
+because the numbers are unattractive. A notification reading *£4.00 · A-level
+Maths · Integration by parts · 15 min* is a transparency proposition aimed at the
+supply side, which is the harder side of this marketplace to secure. It should be
+the centrepiece of tutor recruitment.
 
-**ICO Children's Code (Age Appropriate Design Code).** If your service is likely to be
-accessed by children, you **must** complete a **DPIA** before launch, apply data
-minimisation, default to high privacy, and match your **age assurance** to the level of risk
-(low/medium/high — full ID verification is not required for every service). The ICO updated
-its children's data guidance on **15 May 2026**.
+**2. An explicit commitment not to simply provide the answer.**
+The substitute product provides answers instantly and free. The commitment should
+be enforced in the product rather than asserted in marketing: a distinct rating
+dimension for whether the student understood the material, weighted in the order
+in which tutors receive questions.
 
-**Online Safety Act 2023.** A platform where users message each other is a **user-to-user
-service**. Ofcom and the ICO published a **joint statement on age assurance on 25 March
-2026** setting common expectations for services likely to be accessed by children. You will
-need risk assessments, reporting and complaints mechanisms, and content moderation — which,
-conveniently, is what your complaints page and transcript retention already give you.
+**3. Safeguarding presented as a product feature.**
+The NSPCC, the National Education Union, the Tutors' Association and the
+Children's Commissioner for England have each called for mandatory DBS checks for
+private tutors, the latter describing it as "an absolute basic minimum". Several
+UK platforms still treat checks as optional. A public commitment to universal DBS
+checks, retained and parent-accessible transcripts, and a prohibition on the
+exchange of contact details places Project TA on the correct side of an emerging
+regulatory and reputational shift.
 
-**Practical implications for the build:**
-- A **complaints/report button inside every session**, not just a page in the footer.
-- **Transcripts retained** and reviewable — this is a safeguarding control, and you must say
-  so plainly in the privacy policy.
-- **Block contact-detail exchange** (phone numbers, socials, emails, meeting links) in chat,
-  automatically. Every serious UK platform does this.
-- **Parent/guardian account linkage** and a lawful basis for processing a child's data.
-- A named **Designated Safeguarding Lead** — at your stage, that is you or your cousin, with
-  training, and it needs to be a real person with a real inbox.
+**4. Text-first, camera-off delivery.**
+Competitors at the premium end require video. For a fifteen-year-old who is
+embarrassed not to understand something, not being required to appear on camera
+is a material benefit. It also removes WebRTC infrastructure cost and makes
+safeguarding review straightforward, because text is searchable and video is not.
 
-Treat this section as a build requirement, not paperwork. It is roughly 20% of your
-engineering effort and 100% of your credibility with parents and schools.
+**5. Exam-board-specific routing.**
+AQA, Edexcel, OCR and WJEC/Eduqas differ materially. No on-demand platform routes
+on examination board. The feature is inexpensive to build and immediately visible
+in delivered quality.
+
+### Tier 2 — valuable but replicable
+
+Photograph-a-question intake; session transcripts and whiteboards retained as
+revision assets; a sixty-second matching guarantee with automatic refund;
+repeat-tutor selection; declared tutor availability windows to make coverage
+predictable.
+
+### Tier 3 — recommended against at this stage
+
+Video, which doubles both build cost and safeguarding burden for marginal
+benefit; a proprietary AI answering capability, which competes directly with free
+substitutes and dilutes the human proposition; breadth of subject coverage beyond
+Maths and the three sciences; and scheduled bookings, where Sherpa and MyTutor
+hold a substantial lead.
 
 ---
 
-## 9. Unit economics — the honest maths
+## 8. Regulatory considerations
 
-At **£6 per 15-minute session, £4 to the tutor**:
+The majority of intended users are under 18. This materially changes the
+obligations on the business.
+
+**DBS checks.** Private one-to-one tutoring is not automatically classified as
+regulated activity under the Safeguarding Vulnerable Groups Act 2006, so enhanced
+checks are not universally mandated for self-employed tutors. However, the Act
+does require platforms to carry out enhanced DBS and barred-list checks on tutors
+working **unsupervised with under-18s**, which describes Project TA's service
+precisely. MyTutor, Tutorful and GoStudent all treat this as mandatory.
+Expect approximately **£40–60 and two to eight weeks per tutor**. *This is the
+principal reason the original proposal to admit "anyone" as a tutor cannot
+proceed.*
+
+**ICO Age Appropriate Design Code.** A Data Protection Impact Assessment is
+**required** before launch, alongside data minimisation, high-privacy defaults,
+and age assurance proportionate to the assessed risk. The ICO updated its
+children's data guidance on **15 May 2026**.
+
+**Online Safety Act 2023.** A service on which users message one another is a
+user-to-user service. Ofcom and the ICO issued a **joint statement on age
+assurance on 25 March 2026** setting common expectations for services likely to be
+accessed by children. Risk assessments, reporting and complaints mechanisms and
+content moderation are all required.
+
+**Implications for the build.** An in-session reporting mechanism; retained and
+reviewable transcripts; automated blocking of contact-detail exchange;
+parent-account linkage with a lawful basis for processing a child's data; and a
+named, trained Designated Safeguarding Lead with a monitored inbox.
+
+This should be treated as a build requirement rather than a compliance overhead.
+It represents roughly 20% of engineering effort and effectively all of the
+business's credibility with parents and schools.
+
+---
+
+## 9. Unit economics
+
+At £6 per fifteen-minute session, of which £4 is paid to the tutor:
 
 | Line | Per session |
 |---|---|
 | Student pays | £6.00 |
-| Tutor payout | −£4.00 |
-| Card processing (~1.5% + 20p) | −£0.29 |
-| Payout fee (Stripe Connect, amortised) | −£0.10 |
-| **Contribution** | **~£1.61** |
+| Tutor payment | (£4.00) |
+| Card processing (approx. 1.5% + 20p) | (£0.29) |
+| Payout fee, amortised | (£0.10) |
+| **Contribution** | **approx. £1.61** |
 
-To cover a £2,000/month cost base you need roughly **1,250 sessions a month** — about
-**42 a day**. That is achievable, but only with retention: a student who asks one question
-and leaves has a customer acquisition cost you will never recover (UK edtech paid
-acquisition typically runs £15–40 per paying user).
+A £2,000 monthly cost base therefore requires approximately **1,250 sessions per
+month**, or **42 per day**. This is attainable, but only with retention: a
+customer who purchases once will not repay an acquisition cost that, in UK
+edtech, typically runs to £15–40 per paying user.
 
-**Three fixes, in order of impact:**
+**Three recommended mitigations, in order of impact.**
 
-1. **Sell credit packs, not single sessions.** £25 for 5 sessions, £45 for 10. Cash up
-   front, higher lifetime value, and it is what Snapask, Tutor.com and Skooli all
-   converged on. Keep the single £6 session as the trial.
-2. **Charge the parent, not the student.** Under-18s rarely hold a card. Build the parent
-   account as a first-class object — parent tops up, student spends, parent sees the
-   transcripts. This solves payment *and* safeguarding in one move.
-3. **Have a B2B plan.** UPchieve at ~$10k/school/year and Third Space Learning at
-   $5,000–15,000/school/year both show UK/US schools will fund exactly this. One school
-   contract equals hundreds of consumer sessions with a fraction of the support burden.
-
----
-
-## 10. Cold-start plan
-
-The marketplace chicken-and-egg is your hardest problem, not the code.
-
-- **Weeks 1–4 — supply first, one university, one subject.** Recruit 20–30 undergraduate
-  maths/science tutors from your own university. Pay them a **guaranteed hourly rate to sit
-  online** during a fixed evening window (7–10pm, Sun–Thu) regardless of session volume.
-  This is expensive and correct: it buys you a match-time guarantee.
-- **Weeks 3–8 — demand, narrow.** Target one or two local secondary schools' parent groups
-  and sixth forms. Launch during a revision crunch — **the run-up to mocks in November and
-  to summer exams in April/May** is when demand for instant help peaks.
-- **Measure two numbers only:** median time-to-match, and repeat-purchase rate within 14
-  days. If time-to-match goes over 3 minutes, buy more supply. If repeat purchase is under
-  25%, the product is not working and no amount of marketing fixes it.
-- **Do not expand subjects or cities until both numbers are healthy.**
+1. **Sell credit packs rather than single sessions.** £25 for five sessions, £45
+   for ten. This takes cash in advance and raises lifetime value. Snapask,
+   Tutor.com and Skooli each converged on this structure. The single £6 session
+   should be retained as a trial only.
+2. **Make the parent the paying customer.** Under-18s rarely hold a payment card.
+   A first-class parent account — parent funds the balance, student spends it,
+   parent has transcript access — resolves the payment problem and a substantial
+   part of the safeguarding problem simultaneously.
+3. **Develop an institutional channel.** UPchieve at approximately £7,900 per
+   school per year and Third Space Learning at £3,900–11,800 per school per year
+   both demonstrate that schools will fund this service. A single school contract
+   is equivalent to several hundred consumer sessions at a fraction of the support
+   burden.
 
 ---
 
-## 11. Key risks
+## 10. Proposed launch plan
+
+The marketplace cold-start problem, rather than the technology, is the principal
+execution risk.
+
+**Weeks 1–4 — secure supply first, in one university and one subject.** Recruit
+20–30 undergraduate maths and science tutors. **Pay a guaranteed hourly retainer
+for online availability** during a fixed evening window, 7pm to 10pm Sunday to
+Thursday, irrespective of session volume. This is a deliberate cost, incurred to
+purchase a matching-time guarantee.
+
+**Weeks 3–8 — generate demand, narrowly.** Target one or two local secondary
+schools' parent groups and sixth forms. Time the launch to a revision peak:
+**the run-up to November mocks, and to summer examinations in April and May.**
+
+**Measure two indicators only:** median time to match, and repeat purchase rate
+within fourteen days. If time to match exceeds three minutes, purchase additional
+supply. If repeat purchase falls below 25%, the product requires revision, and no
+marketing spend will compensate.
+
+**Do not extend subject or geographic coverage until both indicators are healthy.**
+
+---
+
+## 11. Risk register
 
 | Risk | Severity | Mitigation |
 |---|---|---|
-| Free AI absorbs the "quick question" use case | **High** | Position on understanding, not answers; exam-board specificity; human accountability |
-| Tutor supply churns at £16/hr | **High** | Guaranteed-online payments early; transparent fee in notification; fast payouts |
-| Empty-marketplace death spiral at 2am | **High** | Fixed evening coverage windows; refund the credit if unmatched in 60s |
-| DBS cost and 2–8 week lag throttles onboarding | Medium | Start tutor recruitment before the app is finished; consider paying for the check |
-| Safeguarding incident | **Critical** | Transcript retention, contact-detail blocking, in-session reporting, named DSL, DPIA |
-| Disintermediation (tutor and student go direct) | Medium | Contact-blocking, "same tutor again" feature, keep the take rate fair |
-| Chargebacks / disputes on a 15-min session | Medium | Credits not cash refunds; clear complaints SLA; transcript as evidence |
+| Free AI absorbs the quick-question use case | **High** | Position on comprehension rather than answers; exam-board specificity; human accountability |
+| Tutor attrition at £16 per hour | **High** | Guaranteed availability payments at launch; fee transparency; prompt payment |
+| Insufficient coverage outside peak hours | **High** | Fixed evening coverage windows; automatic refund if unmatched within 60 seconds |
+| DBS cost and two-to-eight-week lead time constrain onboarding | Medium | Begin tutor recruitment before the product is complete; fund checks centrally |
+| Safeguarding incident | **Critical** | Transcript retention, contact-detail blocking, in-session reporting, named DSL, completed DPIA |
+| Disintermediation of the platform | Medium | Contact-detail blocking; repeat-tutor feature; a fair and published take rate |
+| Chargebacks and disputes on low-value sessions | Medium | Credit rather than cash refunds; published complaints SLA; transcript as evidence |
 
 ---
 
 ## 12. Recommendation
 
-Build the product you described, with **five changes**:
+It is recommended that the business proceed to a funded pilot on the model
+described, subject to **five changes** to the original proposal:
 
-1. Tutors are **vetted undergraduates with DBS checks**, not "anyone".
-2. **Parents pay and can see transcripts**; students spend credits.
-3. Sell **credit packs**; the £6 single session is the trial, not the business.
-4. Launch **Maths + Physics/Chemistry/Biology, GCSE and A-level, routed by exam board**, in
-   one city, on one evening window.
-5. Make **safeguarding and fee transparency the marketing**, because they are the two
-   things every incumbent is either bad at or hiding.
+1. Tutors are to be **vetted undergraduates holding enhanced DBS checks**, not
+   open registration.
+2. **Parents are to be the paying customer** and are to have transcript access;
+   students spend a balance.
+3. **Credit packs are the commercial model**; the single £6 session is a trial
+   mechanism, not the business.
+4. Launch is to be confined to **Maths, Physics, Chemistry and Biology, at GCSE
+   and A-level, routed by examination board**, in one city, within one evening
+   coverage window.
+5. **Safeguarding and fee transparency are to be the principal marketing
+   positions**, being the two areas in which every identified incumbent is either
+   weak or deliberately opaque.
 
-The mechanic is proven. The graveyard is full of companies that got the mechanic right and
-the economics wrong. Get the economics right first and the app is the easy part.
+The mechanic is proven. The failures in this category have overwhelmingly been
+failures of unit economics rather than of product. Securing the economics is the
+precondition; the technology is comparatively straightforward.
 
 ---
 
 ## Sources
 
-- ProProfs — Best Tutoring Software Platforms 2026 — https://www.proprofstraining.com/blog/best-tutoring-software/
-- Research.com — Best Online Tutoring Platforms 2026 — https://research.com/software/best-online-tutoring-platforms
-- Wiingy — Best Online Tutoring Services 2026 — https://wiingy.com/blog/best-online-tutoring-services/
-- Wiingy — Wyzant vs Varsity Tutors 2026 — https://wiingy.com/blog/wyzant-vs-varsity-tutors/
-- Tutorpeers — https://tutorpeers.com/
-- Dealroom — Snapask — https://app.dealroom.co/companies/snapask_hk
-- CNBC — Snapask "Uber for tutoring" — https://www.cnbc.com/2019/07/29/snapasks-timothy-yu-on-creating-the-uber-for-tutoring-in-asia.html
-- TechCrunch — Snapask $35m round — https://techcrunch.com/2020/02/25/on-demand-tutoring-app-snapask-gets-35-million-to-expand-in-southeast-asia
-- Hive Life — Snapask — https://hivelife.com/snapask/
-- Pertama Ventures — Why Most EdTech Tutoring Startups Fail — https://pertamaventures.com/insights/edtech-tutoring-startups-sea
-- Wikipedia — Yup Technologies — https://en.wikipedia.org/wiki/Yup_Technologies
-- SideHusl — Yup: Alternatives to This Defunct Tutoring Platform — https://sidehusl.com/yup/
-- Tracxn — Yup — https://tracxn.com/d/companies/yup/__eo3dF-x42gs2gBTZpBUiUWrwSB1xtsnluHxQvZtcOqk
-- MyEngineeringBuddy — UPchieve Review 2026 — https://www.myengineeringbuddy.com/blog/upchieve-reviews-alternatives-pricing-offerings/
-- Steal What Works — We Compared the Features of 103 Tutoring Apps — https://stealwhatworks.com/blogs/news/tutoring-app-features
-- Entrepreneur — Chegg wiped out by AI — https://www.entrepreneur.com/business-news/this-14-billion-business-is-wiped-out-by-ai
-- Technavio — UK K-12 Online Tutoring Market 2026-2030 — https://www.technavio.com/report/k-12-online-tutoring-market-in-uk-industry-analysis
-- Research and Markets — UK K-12 Online Tutoring Market — https://www.researchandmarkets.com/report/united-kingdom-k-12-online-tutoring-market
-- StudyGuru — Best Online Tutoring Platforms UK 2026 — https://www.studyguru.co.uk/best-online-tutoring-platforms
-- TutorChase — Top 10 Tutoring Websites in the UK 2026 — https://www.tutorchase.com/blog/top-tutoring-websites-in-uk
-- Sherpa Online — https://sherpa-online.com/ and https://sherpa-online.com/becomeatutor
-- Lilach Bullock — What Preply, Cambly and Wyzant Pay in 2026 — https://www.lilachbullock.com/are-online-tutoring-jobs-legitimate-pay/
-- Supatutor — Wyzant Review for Tutors 2026 — https://supatutor.in/wyzant-review-for-tutors/
-- Wealthvieu — How Much Do Online Tutors Make in 2026 — https://wealthvieu.com/personal-finance/side-hustles/online-tutoring-income-guide/
-- PrepMaven — Wyzant vs Varsity Tutors — https://prepmaven.com/blog/test-prep/wyzant-vs-varsity-tutors/
-- MyTutor — Safeguarding Policy — https://www.mytutor.co.uk/safeguarding-policy/
-- MyTutor — Online Safety Policies — https://www.mytutor.co.uk/online-safety/
-- Tutes4u — Safeguarding & Regulations for Online Tutoring UK: DBS, GDPR & Legal Guide 2026 — https://www.tutes4u.co.uk/blog/online-tutoring-uk-complete-guide/safeguarding-regulations
-- TutorExtra — UK Tutoring Platforms: DBS, Safeguarding & Fees Report 2025 — https://tutorextra.co.uk/articles/uk-tutoring-platforms-dbs-safeguarding-fees-report-2025/392
-- Personnel Checks — Tutoring Safeguarding Loophole — https://www.personnelchecks.co.uk/latest-news/tutoring-safeguarding-loophole-why-regulation-is-urgently-needed
-- ICO — Children's Code strategy — https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/childrens-information/childrens-code-guidance-and-resources/protecting-childrens-privacy-online-our-childrens-code-strategy/
-- Covington Inside Privacy — Ofcom and ICO Joint Statement on Age Assurance — https://www.insideprivacy.com/online-safety/ofcom-and-ico-issue-joint-statement-on-age-assurance/
-- Lewis Silkin — Age Assurance in 2026 — https://www.lewissilkin.com/en/insights/2026/04/17/age-assurance-in-2026-what-do-digital-businesses-operating-in-the-uk-and-eu-need-to-know
-- A&O Shearman — ICO updates guidance on using children's information — https://www.aoshearman.com/en/insights/ao-shearman-on-data/ico-updates-guidance-on-using-childrens-information
-- Third Space Learning — Pricing — https://thirdspacelearning.com/us/pricing/
-- Tracxn — Third Space Learning — https://tracxn.com/d/companies/thirdspacelearning/__TlJ4fcDX1gnVrNVTu_7ADVMEtGmaJLt0NEfGil2PKSg
+UK market and competitors: Technavio and Research and Markets (UK K-12 online
+tutoring market 2026–2030); StudyGuru; TutorChase; Sherpa Online; MyTutor
+safeguarding and online-safety policies; TutorExtra UK platform DBS and fees
+report 2025; Third Space Learning pricing; Tracxn.
+
+International comparators: Dealroom, CNBC, TechCrunch and Hive Life (Snapask);
+Wikipedia, SideHusl and Tracxn (Yup); MyEngineeringBuddy (UPchieve); ProProfs,
+Research.com and Wiingy (platform features and pricing); PrepMaven and Wiingy
+(Wyzant and Varsity Tutors); Lilach Bullock, Supatutor and Wealthvieu (tutor pay);
+Pertama Ventures (edtech funding and failure analysis); Entrepreneur (Chegg).
+
+Regulatory: ICO Children's Code guidance and strategy; Covington Inside Privacy
+(Ofcom and ICO joint statement on age assurance, March 2026); Lewis Silkin (age
+assurance 2026); A&O Shearman (ICO children's information guidance update, May
+2026); Tutes4u (UK online tutoring safeguarding and DBS guide 2026); Personnel
+Checks (tutoring safeguarding loophole).
+
+Full URLs are retained in the project repository at
+`project-ta/docs/COMPETITOR-RESEARCH-SOURCES.md`.

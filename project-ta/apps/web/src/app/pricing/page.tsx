@@ -81,17 +81,18 @@ export default function PricingPage() {
             </tr>
             <tr><td>Sherpa (UK)</td><td>from £20</td><td>No — booked</td><td>Not published</td></tr>
             <tr><td>MyTutor (UK)</td><td>£25–£60</td><td>No — booked</td><td>Not published</td></tr>
-            <tr><td>Tutor.com</td><td>£22–£31</td><td>Yes</td><td>Low</td></tr>
+            <tr><td>Tutor.com</td><td>£23–£31</td><td>Yes</td><td>Low</td></tr>
             <tr><td>Skooli</td><td>~£38 (per-minute)</td><td>Yes</td><td>Not published</td></tr>
-            <tr><td>Wyzant</td><td>£19–£46</td><td>No — booked</td><td>75%</td></tr>
+            <tr><td>Wyzant</td><td>£20–£47</td><td>No — booked</td><td>75%</td></tr>
             <tr><td>Preply</td><td>£8–£31</td><td>No — booked</td><td>67–82%</td></tr>
-            <tr><td>Varsity Tutors</td><td>£50–£73</td><td>Yes</td><td>~30%</td></tr>
+            <tr><td>Varsity Tutors</td><td>£51–£75</td><td>Yes</td><td>~30%</td></tr>
           </tbody>
         </table>
       </div>
       <p className="hint">
         Figures gathered August 2026 from each platform&rsquo;s public pricing and from
-        published tutor-pay reporting. Full workings are in our{" "}
+        published tutor-pay reporting. Amounts reported in other currencies are converted
+        at &pound;1 &asymp; $1.27. Full workings are in our{" "}
         <Link href="/research">competitor research</Link>.
       </p>
 

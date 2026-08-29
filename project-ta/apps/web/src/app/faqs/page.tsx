@@ -111,7 +111,7 @@ const SECTIONS: { title: string; items: QA[] }[] = [
       },
       {
         q: "Why do you show the fee up front?",
-        a: <>Because you should know what a job pays before you commit to it, and because platforms that hide it are usually hiding something bad. One well-funded on-demand tutoring service paid around £8 an hour and went out of business; another bills students roughly £50 an hour and pays tutors around £15. We would rather publish our number.</>,
+        a: <>Because you should know what a job pays before you commit to it, and because platforms that hide it are usually hiding something bad. One well-funded on-demand tutoring service paid around £8 an hour and went out of business; another bills students £51–75 an hour and pays tutors £9–16. We would rather publish our number.</>,
       },
       {
         q: "Do I need a DBS check?",

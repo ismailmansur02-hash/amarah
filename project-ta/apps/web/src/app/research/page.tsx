@@ -9,15 +9,15 @@ export const metadata: Metadata = {
 const FINDINGS = [
   {
     heading: "Our exact model has been built before — and it died",
-    body: "Yup was on-demand, chat-based, whiteboard-driven maths tutoring for school students. It raised $23.5m and shut down by February 2025. The most cited reason was tutor pay of around $10 an hour, which no graduate with strong maths will accept for long. It is why we publish our tutor rate and why it is two thirds of the fee.",
+    body: "Yup was on-demand, chat-based, whiteboard-driven maths tutoring for school students. It raised approximately £18.5m and ceased operations in February 2025. The most frequently cited cause is tutor pay of roughly £8 an hour, a rate that cannot retain numerate graduates. It is why we publish our tutor rate, and why it is two thirds of the fee.",
   },
   {
     heading: "The mechanic itself works at scale",
-    body: "Snapask reached about 3.2m students and 350,000 tutors across eight Asian markets on precisely this loop — photograph a question, every qualified tutor is alerted, the fastest to respond (often under five seconds) takes it. It raised $56.8m. It sold subscriptions rather than single sessions, which is why our credit packs exist.",
+    body: "Snapask reached about 3.2m students and 350,000 tutors across eight Asian markets on precisely this loop — photograph a question, every qualified tutor is alerted, the fastest to respond (often under five seconds) takes it. It raised approximately £44.7m. It sold subscriptions rather than single sessions, which is why our credit packs exist.",
   },
   {
     heading: "Selling answers is a dead business",
-    body: "Chegg went from a $14.7bn market cap in February 2021 to roughly $115m, losing 31% of subscribers year on year and cutting 45% of staff in October 2025, because free AI chatbots do the same job instantly. Any product whose value is 'here is the answer' now competes with something free.",
+    body: "Chegg's market capitalisation fell from approximately £11.6bn in February 2021 to approximately £90m, with a 31% year-on-year subscriber decline and a 45% headcount reduction in October 2025, because free AI assistants do the same job instantly. Any product whose value is 'here is the answer' now competes with a free substitute.",
   },
   {
     heading: "So the product has to be the opposite of an answer engine",
@@ -25,7 +25,7 @@ const FINDINGS = [
   },
   {
     heading: "Take rates in this market are wide and mostly hidden",
-    body: "Wyzant takes a flat 25%. Preply takes 33% falling to 18–22%. Varsity Tutors bills students roughly $65–95 an hour and pays tutors $11–20 — a take rate near 70%. None of them show a tutor the fee before they commit. Ours is a flat 33%, published, on every session.",
+    body: "Wyzant takes a flat 25%. Preply takes 33% falling to 18–22%. Varsity Tutors bills students roughly £51–75 an hour and pays tutors £9–16 — a take rate approaching 70%. None of them show a tutor the fee before they commit. Ours is a flat 33%, published, on every session.",
   },
   {
     heading: "In the UK, safeguarding is the real barrier to entry",
@@ -42,6 +42,12 @@ export default function ResearchPage() {
         Before writing any code we looked at every on-demand and marketplace tutoring
         service we could find — what they do, what they charge, what they pay tutors, and
         in several cases why they no longer exist. Six findings shaped this product.
+      </p>
+
+      <p className="hint" style={{ marginTop: 18 }}>
+        Every figure is in pounds sterling. Where a source reported in another
+        currency it has been converted at &pound;1 &asymp; $1.27 and is marked as
+        approximate.
       </p>
 
       <div className="row" style={{ margin: "24px 0 40px" }}>
