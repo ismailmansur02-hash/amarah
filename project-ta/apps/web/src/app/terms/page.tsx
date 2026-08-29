@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MATCH_WINDOW_SECONDS, TAKE_RATE, formatMoney, pricePence } from "@project-ta/shared";
+import { MATCH_WINDOW_SECONDS, formatMoney, pricePence } from "@project-ta/shared";
 
 export const metadata: Metadata = { title: "Terms of use" };
 
@@ -39,7 +39,7 @@ export default function TermsPage() {
         <li>You can cancel a question for a full refund at any time before a tutor accepts.</li>
         <li>If a session goes wrong, tell us within 7 days via the <Link href="/complaints">complaints page</Link>. We refund the credit while we investigate.</li>
         <li>Unused credit can be refunded to your original payment method within 14 days of purchase. After that it stays as credit.</li>
-        <li>Tutors receive {Math.round((1 - TAKE_RATE) * 100)}% of what the student pays, paid weekly.</li>
+        <li>Tutors are paid weekly, per session, at the rate shown to them before they accept it.</li>
       </ul>
 
       <h2>4. Academic honesty</h2>

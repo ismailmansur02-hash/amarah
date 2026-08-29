@@ -93,6 +93,61 @@ export default function BecomeATutorPage() {
           </p>
         </div>
 
+        <h2 style={{ marginTop: 44 }}>Tutor FAQs</h2>
+        <div className="stack" style={{ marginTop: 12 }}>
+          <details className="faq">
+            <summary>Why do you show the fee up front?</summary>
+            <div className="faq-body">
+              <p>
+                Because you should know what a job pays before you commit to it, and
+                because platforms that hide it are usually hiding something bad. One
+                well-funded on-demand tutoring service paid around £8 an hour and went
+                out of business; another bills students £51&ndash;75 an hour and pays
+                tutors £9&ndash;16. We would rather publish our number.
+              </p>
+            </div>
+          </details>
+          <details className="faq">
+            <summary>Do I need a DBS check?</summary>
+            <div className="faq-body">
+              <p>
+                Yes, an enhanced one with a barred-list check, and we pay for it. It
+                takes two to eight weeks. You cannot see any questions until it clears
+                — no exceptions.
+              </p>
+            </div>
+          </details>
+          <details className="faq">
+            <summary>Is there a minimum commitment?</summary>
+            <div className="faq-body">
+              <p>
+                None. Go online when you are free, accept what you fancy, ignore the
+                rest. No shifts, no scheduled lessons, no penalty for being unavailable.
+              </p>
+            </div>
+          </details>
+          <details className="faq">
+            <summary>What is the understanding score?</summary>
+            <div className="faq-body">
+              <p>
+                After every session the student is asked whether their tutor helped
+                them understand the topic, separately from an overall star rating.
+                That score is weighted heavily in who gets sent questions first. It is
+                the metric the whole platform is built around.
+              </p>
+            </div>
+          </details>
+          <details className="faq">
+            <summary>When do I get paid?</summary>
+            <div className="faq-body">
+              <p>
+                Weekly, to your bank account. In this prototype the earnings are
+                calculated but no money moves.
+              </p>
+            </div>
+          </details>
+        </div>
+
         <h2 style={{ marginTop: 44 }}>Apply</h2>
         <TutorApplyForm />
       </div>

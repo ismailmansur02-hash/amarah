@@ -3,12 +3,9 @@ import Link from "next/link";
 import {
   MATCH_WINDOW_SECONDS,
   REFUND_PROMISE_SECONDS,
-  TAKE_RATE,
   TRANSCRIPT_RETENTION_MONTHS,
   formatMoney,
   pricePence,
-  tutorHourlyPence,
-  tutorPayoutPence,
 } from "@project-ta/shared";
 
 export const metadata: Metadata = {
@@ -103,35 +100,6 @@ const SECTIONS: { title: string; items: QA[] }[] = [
     ],
   },
   {
-    title: "For tutors",
-    items: [
-      {
-        q: "What do I earn?",
-        a: <>{formatMoney(tutorPayoutPence(15))} for a 15-minute session — {formatMoney(tutorHourlyPence(15))} an hour. You keep {Math.round((1 - TAKE_RATE) * 100)}% of what the student pays, on every session, and the exact figure is on the notification before you accept.</>,
-      },
-      {
-        q: "Why do you show the fee up front?",
-        a: <>Because you should know what a job pays before you commit to it, and because platforms that hide it are usually hiding something bad. One well-funded on-demand tutoring service paid around £8 an hour and went out of business; another bills students £51–75 an hour and pays tutors £9–16. We would rather publish our number.</>,
-      },
-      {
-        q: "Do I need a DBS check?",
-        a: <>Yes, an enhanced one with a barred-list check, and we pay for it. It takes two to eight weeks. You cannot see any questions until it clears — no exceptions.</>,
-      },
-      {
-        q: "Is there a minimum commitment?",
-        a: <>None. Go online when you are free, accept what you fancy, ignore the rest. No shifts, no scheduled lessons, no penalty for being unavailable.</>,
-      },
-      {
-        q: "What is the understanding score?",
-        a: <>After every session the student is asked whether their tutor helped them <em>understand</em> the topic, separately from an overall star rating. That score is weighted heavily in who gets sent questions first. It is the metric the whole platform is built around.</>,
-      },
-      {
-        q: "When do I get paid?",
-        a: <>Weekly, to your bank account. In this prototype the earnings are calculated but no money moves.</>,
-      },
-    ],
-  },
-  {
     title: "About this prototype",
     items: [
       {
@@ -156,7 +124,9 @@ export default function FaqsPage() {
       <h1>Frequently asked questions</h1>
       <p className="muted" style={{ fontSize: 18 }}>
         If your question is not here, the <Link href="/complaints">complaints and
-        contact page</Link> reaches a real person.
+        contact page</Link> reaches a real person. Thinking about tutoring with us? See
+        the <Link href="/become-a-tutor">tutor page</Link> for pay, requirements and
+        how it works.
       </p>
 
       {SECTIONS.map((section) => (

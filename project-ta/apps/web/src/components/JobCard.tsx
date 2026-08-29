@@ -23,6 +23,8 @@ interface Props {
   busy?: boolean;
   demo?: boolean;
   subjectName?: string;
+  /** Hides the tutor's fee — used when this card is shown to students/parents. */
+  hideFee?: boolean;
 }
 
 /**
@@ -32,18 +34,25 @@ interface Props {
  * purpose. Uber shows drivers the fare; no tutoring platform shows tutors theirs.
  */
 export default function JobCard({
-  job, secondsLeft, onAccept, busy, demo, subjectName,
+  job, secondsLeft, onAccept, busy, demo, subjectName, hideFee,
 }: Props) {
   const urgent = secondsLeft !== undefined && secondsLeft <= 30;
 
   return (
     <article className="job">
-      <div className="job-fee">
-        <span className="job-fee-amount">{formatMoney(job.tutorPayoutPence)}</span>
-        <span className="job-fee-label">
-          for {job.durationMins} min · {formatMoney(Math.round((job.tutorPayoutPence / job.durationMins) * 60))}/hr
-        </span>
-      </div>
+      {hideFee ? (
+        <div className="job-fee">
+          <span className="job-fee-amount">New question</span>
+          <span className="job-fee-label">for {job.durationMins} min</span>
+        </div>
+      ) : (
+        <div className="job-fee">
+          <span className="job-fee-amount">{formatMoney(job.tutorPayoutPence)}</span>
+          <span className="job-fee-label">
+            for {job.durationMins} min · {formatMoney(Math.round((job.tutorPayoutPence / job.durationMins) * 60))}/hr
+          </span>
+        </div>
+      )}
 
       <div className="job-body">
         <div className="job-meta">

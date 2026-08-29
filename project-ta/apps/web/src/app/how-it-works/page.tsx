@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MATCH_WINDOW_SECONDS, REFUND_PROMISE_SECONDS, TAKE_RATE, formatMoney, pricePence, tutorHourlyPence, tutorPayoutPence } from "@project-ta/shared";
+import { MATCH_WINDOW_SECONDS, REFUND_PROMISE_SECONDS, formatMoney, pricePence } from "@project-ta/shared";
 
 export const metadata: Metadata = { title: "How it works" };
 
@@ -61,29 +61,13 @@ export default function HowItWorksPage() {
           topic and the length are on the notification. Accept the ones you want.
         </li>
         <li>
-          <strong>Get paid weekly.</strong> {formatMoney(tutorPayoutPence(15))} for a
-          15-minute session — {formatMoney(tutorHourlyPence(15))} an hour.
+          <strong>Get paid weekly.</strong> Straight to your bank account, no
+          invoicing.
         </li>
       </ol>
-
-      <h2>Where the money goes</h2>
-      <div className="table-scroll">
-        <table>
-          <thead>
-            <tr><th>On a {formatMoney(pricePence(15))} 15-minute session</th><th style={{ textAlign: "right" }}>Amount</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Student pays</td><td style={{ textAlign: "right" }}>{formatMoney(pricePence(15))}</td></tr>
-            <tr><td>Tutor receives</td><td style={{ textAlign: "right" }}><strong>{formatMoney(tutorPayoutPence(15))}</strong></td></tr>
-            <tr><td>Project TA keeps ({Math.round(TAKE_RATE * 100)}%)</td><td style={{ textAlign: "right" }}>{formatMoney(pricePence(15) - tutorPayoutPence(15))}</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>
-        Our share covers card processing, DBS checks, safeguarding review, support and
-        running the platform. It is the same {Math.round(TAKE_RATE * 100)}% on every
-        session — it does not go up when you get busy, and we publish it because most
-        platforms will not.
+      <p className="muted tight">
+        Full detail on pay and requirements is on the{" "}
+        <Link href="/become-a-tutor">tutor page</Link>.
       </p>
 
       <h2>What we deliberately do not do</h2>

@@ -81,6 +81,7 @@ export default function SessionScreen({ sessionId, onEnded }: Props) {
 
   const ended = session.status !== "active";
   const remaining = session.endsAt - now;
+  const isTutor = myId === session.tutorId;
 
   return (
     <KeyboardAvoidingView
@@ -92,7 +93,8 @@ export default function SessionScreen({ sessionId, onEnded }: Props) {
         <View style={{ flex: 1 }}>
           <Text style={styles.topic}>{session.topic}</Text>
           <Text style={styles.sub}>
-            {formatMoney(session.tutorPayoutPence)} to the tutor · recorded for safeguarding
+            {isTutor ? `${formatMoney(session.tutorPayoutPence)} to you · ` : ""}
+            recorded for safeguarding
           </Text>
         </View>
         <Text style={[styles.timer, remaining < 120_000 && styles.timerWarn]}>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CREDIT_PACKS, DURATION_OPTIONS, TAKE_RATE, formatMoney, pricePence, tutorHourlyPence, tutorPayoutPence } from "@project-ta/shared";
+import { CREDIT_PACKS, DURATION_OPTIONS, formatMoney, pricePence } from "@project-ta/shared";
 
 export const metadata: Metadata = { title: "Pricing" };
 
@@ -21,7 +21,6 @@ export default function PricingPage() {
               <th>Length</th>
               <th>You pay</th>
               <th>Per hour</th>
-              <th>Tutor receives</th>
             </tr>
           </thead>
           <tbody>
@@ -30,7 +29,6 @@ export default function PricingPage() {
                 <td><strong>{d} minutes</strong></td>
                 <td>{formatMoney(pricePence(d))}</td>
                 <td className="muted">{formatMoney(Math.round((pricePence(d) / d) * 60))}</td>
-                <td>{formatMoney(tutorPayoutPence(d))}</td>
               </tr>
             ))}
           </tbody>
@@ -69,7 +67,6 @@ export default function PricingPage() {
               <th>Platform</th>
               <th>Roughly per hour</th>
               <th>Instant?</th>
-              <th>Tutor&rsquo;s share</th>
             </tr>
           </thead>
           <tbody>
@@ -77,35 +74,22 @@ export default function PricingPage() {
               <td><strong>Project TA</strong></td>
               <td><strong>{formatMoney(Math.round((pricePence(15) / 15) * 60))}</strong></td>
               <td>Yes</td>
-              <td><strong>{Math.round((1 - TAKE_RATE) * 100)}%</strong></td>
             </tr>
-            <tr><td>Sherpa (UK)</td><td>from £20</td><td>No — booked</td><td>Not published</td></tr>
-            <tr><td>MyTutor (UK)</td><td>£25–£60</td><td>No — booked</td><td>Not published</td></tr>
-            <tr><td>Tutor.com</td><td>£23–£31</td><td>Yes</td><td>Low</td></tr>
-            <tr><td>Skooli</td><td>~£38 (per-minute)</td><td>Yes</td><td>Not published</td></tr>
-            <tr><td>Wyzant</td><td>£20–£47</td><td>No — booked</td><td>75%</td></tr>
-            <tr><td>Preply</td><td>£8–£31</td><td>No — booked</td><td>67–82%</td></tr>
-            <tr><td>Varsity Tutors</td><td>£51–£75</td><td>Yes</td><td>~30%</td></tr>
+            <tr><td>Sherpa (UK)</td><td>from £20</td><td>No — booked</td></tr>
+            <tr><td>MyTutor (UK)</td><td>£25–£60</td><td>No — booked</td></tr>
+            <tr><td>Tutor.com</td><td>£23–£31</td><td>Yes</td></tr>
+            <tr><td>Skooli</td><td>~£38 (per-minute)</td><td>Yes</td></tr>
+            <tr><td>Wyzant</td><td>£20–£47</td><td>No — booked</td></tr>
+            <tr><td>Preply</td><td>£8–£31</td><td>No — booked</td></tr>
+            <tr><td>Varsity Tutors</td><td>£51–£75</td><td>Yes</td></tr>
           </tbody>
         </table>
       </div>
       <p className="hint">
-        Figures gathered August 2026 from each platform&rsquo;s public pricing and from
-        published tutor-pay reporting. Amounts reported in other currencies are converted
-        at &pound;1 &asymp; $1.27. Full workings are in our{" "}
-        <Link href="/research">competitor research</Link>.
+        Figures gathered August 2026 from each platform&rsquo;s public pricing. Amounts
+        reported in other currencies are converted at &pound;1 &asymp; $1.27. Full
+        workings are in our <Link href="/research">competitor research</Link>.
       </p>
-
-      <div className="card card-pad-lg" style={{ marginTop: 36 }}>
-        <h3>Why we publish what tutors earn</h3>
-        <p className="muted tight">
-          The best-funded platform in this space bills students around £50 an hour and
-          pays tutors around £15. We think that is why so many of their tutors are
-          mediocre and why the model keeps collapsing. Our tutors keep{" "}
-          {Math.round((1 - TAKE_RATE) * 100)}% — {formatMoney(tutorHourlyPence(15))} an
-          hour — and every one of them can see that number before they accept a job.
-        </p>
-      </div>
 
       <div className="row" style={{ marginTop: 28 }}>
         <Link href="/pay" className="btn btn-lg">Buy credit</Link>

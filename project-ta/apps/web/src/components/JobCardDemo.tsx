@@ -53,5 +53,5 @@ export default function JobCardDemo() {
   }, []);
 
   const job = EXAMPLES[i];
-  return <JobCard key={job.id} job={job} subjectName={job.subject} demo />;
+  return <JobCard key={job.id} job={job} subjectName={job.subject} demo hideFee />;
 }

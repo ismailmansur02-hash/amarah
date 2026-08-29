@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CREDIT_PACKS, formatMoney, pricePence, tutorHourlyPence, tutorPayoutPence } from "@project-ta/shared";
+import { CREDIT_PACKS, formatMoney, pricePence } from "@project-ta/shared";
 import JobCardDemo from "@/components/JobCardDemo";
 
 export default function HomePage() {
@@ -30,15 +30,14 @@ export default function HomePage() {
             </p>
             <JobCardDemo />
             <p className="hint">
-              The fee, the topic and the time — up front, before they accept. No other
-              platform shows tutors what they earn before they commit.
+              The topic, level and exam board — up front, before they accept.
             </p>
           </div>
         </div>
       </section>
 
       <section className="section-tight" style={{ borderBottom: "1px solid var(--line)" }}>
-        <div className="wrap grid grid-4">
+        <div className="wrap grid grid-3">
           <div className="stat">
             <div className="stat-value">~60s</div>
             <div className="stat-label">Typical time to match</div>
@@ -50,10 +49,6 @@ export default function HomePage() {
           <div className="stat">
             <div className="stat-value">100%</div>
             <div className="stat-label">Tutors DBS-checked</div>
-          </div>
-          <div className="stat">
-            <div className="stat-value">{formatMoney(tutorHourlyPence(15))}/hr</div>
-            <div className="stat-label">What tutors earn</div>
           </div>
         </div>
       </section>
@@ -129,7 +124,6 @@ export default function HomePage() {
                 <tbody>
                   <tr><td>15 minutes</td><td><strong>{formatMoney(pricePence(15))}</strong></td></tr>
                   <tr><td>30 minutes</td><td><strong>{formatMoney(pricePence(30))}</strong></td></tr>
-                  <tr><td>Tutor receives (15 min)</td><td>{formatMoney(tutorPayoutPence(15))}</td></tr>
                 </tbody>
               </table>
             </div>
@@ -216,11 +210,10 @@ export default function HomePage() {
       <section className="section">
         <div className="wrap wrap-mid center">
           <span className="eyebrow">For undergraduates</span>
-          <h2>Tutor between lectures. Know what you earn before you say yes.</h2>
+          <h2>Tutor between lectures, on your own schedule.</h2>
           <p className="muted" style={{ maxWidth: "58ch", margin: "0 auto 24px" }}>
-            {formatMoney(tutorHourlyPence(15))} an hour, paid per session, no minimum
-            commitment and no scheduled lessons to keep. Go online when you have a free
-            half hour; take the questions you fancy.
+            Paid per session, no minimum commitment and no scheduled lessons to keep. Go
+            online when you have a free half hour; take the questions you fancy.
           </p>
           <div className="row" style={{ justifyContent: "center" }}>
             <Link href="/become-a-tutor" className="btn btn-lg">Apply to tutor</Link>

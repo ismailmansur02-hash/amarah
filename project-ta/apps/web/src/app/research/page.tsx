@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const FINDINGS = [
   {
     heading: "Our exact model has been built before — and it died",
-    body: "Yup was on-demand, chat-based, whiteboard-driven maths tutoring for school students. It raised approximately £18.5m and ceased operations in February 2025. The most frequently cited cause is tutor pay of roughly £8 an hour, a rate that cannot retain numerate graduates. It is why we publish our tutor rate, and why it is two thirds of the fee.",
+    body: "Yup was on-demand, chat-based, whiteboard-driven maths tutoring for school students. It raised approximately £18.5m and ceased operations in February 2025. The most frequently cited cause is tutor pay of roughly £8 an hour, a rate that cannot retain numerate graduates. It is why tutor pay is one of the first things we publish to our own tutors.",
   },
   {
     heading: "The mechanic itself works at scale",
@@ -25,7 +25,7 @@ const FINDINGS = [
   },
   {
     heading: "Take rates in this market are wide and mostly hidden",
-    body: "Wyzant takes a flat 25%. Preply takes 33% falling to 18–22%. Varsity Tutors bills students roughly £51–75 an hour and pays tutors £9–16 — a take rate approaching 70%. None of them show a tutor the fee before they commit. Ours is a flat 33%, published, on every session.",
+    body: "Wyzant takes a flat 25%. Preply takes 33% falling to 18–22%. Varsity Tutors bills students roughly £51–75 an hour and pays tutors £9–16 — a take rate approaching 70%. None of them show a tutor the fee before they commit. We publish ours to every tutor before they accept a session.",
   },
   {
     heading: "In the UK, safeguarding is the real barrier to entry",
@@ -76,7 +76,7 @@ export default function ResearchPage() {
         <ul className="stack" style={{ paddingLeft: 20, marginTop: 12 }}>
           <li>Deep dives on Snapask, Yup, UPchieve, Tutor.com, TutorMe, Skooli, Paper, Varsity Tutors, Wyzant, Preply, MyTutor, Tutorful, Sherpa, GoStudent, Third Space Learning and the AI homework apps.</li>
           <li>A feature matrix across thirteen platforms.</li>
-          <li>Published pricing and tutor take rates side by side.</li>
+          <li>Published pricing across platforms, side by side.</li>
           <li>The UK regulatory position — DBS, the ICO Children&rsquo;s Code, the Online Safety Act 2023.</li>
           <li>Unit economics on a £6 session, and why credit packs matter.</li>
           <li>A cold-start plan, and the risks that would kill this business.</li>
