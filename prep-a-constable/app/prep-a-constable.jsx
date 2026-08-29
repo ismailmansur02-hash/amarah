@@ -5,41 +5,41 @@ import React, { useState, useEffect, useReducer, useRef } from "react";
 // ============================================================
 
 const TOPICS = [
-  { id: "pace-1984", title: "Police and Criminal Evidence Act 1984", shortTitle: "Police and Criminal Evidence Act 1984", description: "Stop & search, entry, arrest, search after arrest, seizure, detention.", accent: "#1A3A6C" },
-  { id: "theft-act-1968", title: "Theft Act 1968", shortTitle: "Theft Act 1968", description: "Theft, robbery, burglary, aggravated burglary, TWOC, going equipped.", accent: "#7C2D2D" },
-  { id: "moda-1971", title: "Misuse of Drugs Act 1971", shortTitle: "Misuse of Drugs Act 1971", description: "Drug classes, Section 4 production & supply, Section 5 possession & PWITS, Section 23 search.", accent: "#5C2E7C" },
-  { id: "poca-1953", title: "Prevention of Crime Act 1953", shortTitle: "Prevention of Crime Act 1953", description: "Offensive weapons in public — Section 1 possession, Section 1A threatening, M-A-I test.", accent: "#1F5F4D" },
-  { id: "cja-1988", title: "Criminal Justice Act 1988", shortTitle: "Criminal Justice Act 1988", description: "Bladed articles — Section 139 in public, Section 139A education, Section 139AA threatening, Section 139B entry.", accent: "#9A4B14" },
-  { id: "owa-2019", title: "Offensive Weapons Act 2019", shortTitle: "Offensive Weapons Act 2019", description: "Corrosives (Section 6), flick/gravity knives (Section 44), prohibited weapons in private (Section 46, Section 52).", accent: "#3C5A8C" },
-  { id: "suspect-interviews", title: "Suspect Interviews & PEACE", shortTitle: "Suspect Interviews & PEACE", description: "PEACE model, TEDSPIE, active listening, caution, no ELBOWS for spontaneous comments.", accent: "#2F6E5C" },
-  { id: "mg11", title: "MG11 Witness Statements", shortTitle: "MG11 Witness Statements", description: "Writing rules, ELBOWS, 24-hour clock, the 5 parts of a statement.", accent: "#8C4F1F" },
-  { id: "intelligence-mopi", title: "Intelligence & Management of Police Information", shortTitle: "Intelligence & Management of Police Information", description: "3×5×2 grading, POLE, Golden Hour, National Intelligence Model, Management of Police Information principles.", accent: "#4A3A8C" },
-  { id: "cpia-1996", title: "Criminal Procedure & Investigations Act 1996", shortTitle: "Criminal Procedure & Investigations Act 1996", description: "Disclosure, the 4 Rs (Record, Retain, Review, Reveal), MG6 series, sensitive material.", accent: "#7A2D5C" },
-  { id: "crim-damage-1971", title: "Criminal Damage Act 1971", shortTitle: "Criminal Damage Act 1971", description: "Basic criminal damage (Section 1(1)), aggravated criminal damage (Section 1(2)), arson, threats, possession with intent.", accent: "#B5391B" },
-  { id: "crim-attempts-1981", title: "Criminal Attempts Act 1981", shortTitle: "Criminal Attempts Act 1981", description: "Section 9 vehicle interference - interfering with a vehicle, trailer, or its contents with intent.", accent: "#3F6E3F" },
-  { id: "asbcp-2014", title: "Anti-social Behaviour, Crime and Policing Act 2014", shortTitle: "Anti-social Behaviour, Crime and Policing Act 2014", description: "Section 34 dispersal power, exemptions, CPN, CBO, PSPO, closure powers.", accent: "#B8721E" },
-  { id: "poa-1986", title: "Public Order Act 1986", shortTitle: "Public Order Act 1986", description: "Section 4 (fear/provocation of violence), Section 4A (intentional harassment), Section 5 (harassment/alarm/distress).", accent: "#7B1F5C" },
-  { id: "fraud-act-2006", title: "Fraud Act 2006", shortTitle: "Fraud Act 2006", description: "Section 1 fraud, Section 2 false representation, Section 3 failing to disclose, Section 4 abuse of position, Section 6 articles.", accent: "#1E5F8C" },
-  { id: "pra-2002", title: "Police Reform Act 2002", shortTitle: "Police Reform Act 2002", description: "Section 59 - stop, warn and seize vehicles used in anti-social manner.", accent: "#5C5C1F" },
-  { id: "prsra-2011", title: "Police Reform & Social Responsibility Act 2011", shortTitle: "Police Reform & Social Responsibility Act 2011", description: "Section 34 - duty of PCCs and chief constables to engage with the public.", accent: "#1F5C5C" },
-  { id: "rta-1988", title: "Road Traffic Act 1988", shortTitle: "Road Traffic Act 1988", description: "Stop powers (Section 163/164/165), drink/drug testing (Section 6), dangerous & careless driving, document offences.", accent: "#8C3F1E" },
-  { id: "oap-1861", title: "Offences Against the Person", shortTitle: "Offences Against the Person", description: "Assault ladder: common assault (Section 39 Criminal Justice Act 1988), ABH (Section 47), GBH/wounding (Section 20), GBH with intent (Section 18), emergency workers, Section 89 Police Act 1996, defences.", accent: "#7C1F1F" },
-  { id: "soa-2003", title: "Sexual Offences Act 2003 — Consent", shortTitle: "Sexual Offences Act 2003 — Consent", description: "Age of consent (16 / under 13), Section 5 rape of child under 13, Section 74 conditional consent (choice & freedom), Section 75 evidential presumptions (rebuttable), Section 76 conclusive presumptions (unrebuttable).", accent: "#5C1F5C" },
-  { id: "vulnerability", title: "Vulnerability & Risk", shortTitle: "Vulnerability & Risk", description: "College of Policing definition, Care Act 2014 Section 42, three vulnerability factors, six safeguarding principles, ABCDE assessment, AFRAID, 123 reporting, types of abuse, Section 76 Serious Crime Act 2015.", accent: "#1F5C3F" },
-  { id: "da-protective", title: "Domestic Abuse — Protective Measures", shortTitle: "Domestic Abuse — Protective Measures", description: "DVPN, DVPO, Non-Molestation Order, Restraining Order, DAPN/DAPO, Domestic Violence Disclosure Scheme, DA Act 2021 definition, Section 70 non-fatal strangulation, DARA, RARA, evidence-led prosecution.", accent: "#7C1F4F" },
-  { id: "rr-aggravated", title: "Racially & Religiously Aggravated Offences", shortTitle: "Racially & Religiously Aggravated Offences", description: "Section 28 Crime and Disorder Act 1998 (definition), Sections 29–32 aggravated offences, Section 66 Sentencing Act 2020 (all offences), hate crime vs hate incident, timing of hostility, stirring up hatred.", accent: "#4F1F7C" },
-  { id: "missing-persons", title: "Missing Persons — Initial Powers", shortTitle: "Missing Persons — Initial Powers", description: "Risk levels, Section 17 and Section 117 Police and Criminal Evidence Act 1984, Section 46 Children Act 1989 (police protection, no force), Section 135/136 Mental Health Act 1983, Mental Capacity Act 2005, bespoke investigation.", accent: "#1F4F7C" },
-  { id: "disputes-noncrime", title: "Dealing with Disputes & Non-Crime Incidents", shortTitle: "Disputes & Non-Crime Incidents", description: "Breach of the peace, five building blocks of investigation, civil trespass, landlord/tenant, bailiffs, main responsibilities (preserve, investigate, impartial, record).", accent: "#3F5C2E" },
-  { id: "case-files-mg", title: "Case Files & MG Forms", shortTitle: "Case Files & MG Forms", description: "DG6, National File Standard, Full Code Test vs Threshold Test, MG0–MG22, MG3 contents, MG5, MG6 series (disclosure), used vs unused material, three unused material assessment answers.", accent: "#5C3F1F" },
-  { id: "pha-1997", title: "Protection from Harassment Act 1997", shortTitle: "Protection from Harassment Act 1997", description: "Course of conduct, Section 2 harassment, Section 2A stalking, Section 4 fear of violence, Section 4A stalking with fear or serious alarm, defences, restraining orders on conviction and acquittal.", accent: "#6B2D5C" },
-  { id: "special-measures", title: "Special Measures — Youth Justice and Criminal Evidence Act 1999", shortTitle: "Special Measures", description: "Section 16 vulnerable and Section 17 intimidated witnesses, the measures in Sections 23–30 (screens, live link, video evidence, intermediaries), who applies and how, the MG2.", accent: "#2D5C6B" },
-  { id: "vps", title: "Victim Personal Statements", shortTitle: "Victim Personal Statements", description: "Right 7 of the Victims' Code — the victim's account of impact: who takes it, what it can and cannot contain, the victim's choices, disclosure, and how the court uses it at sentencing.", accent: "#5C6B2D" },
-  { id: "ap1-ethics", title: "Ethics & Professional Standards", shortTitle: "Ethics & Professional Standards", description: "Code of Ethics 2024 (Courage, Respect and empathy, Public service), the statutory Code of Practice for Ethical Policing 2023, the ten Standards of Professional Behaviour, misconduct vs gross misconduct.", accent: "#1F3A5C" },
-  { id: "ap1-met-london", title: "New Met for London & Peelian Principles", shortTitle: "New Met for London & Peel", description: "The Casey Review and Turnaround Plan, the mission (More Trust, Less Crime, High Standards), the three pillars, Phase 2, and the nine Peelian principles of policing by consent.", accent: "#8C2B2B" },
-  { id: "ap1-models", title: "Decision Models — NDM, Procedural Justice & Quality Encounter", shortTitle: "Decision & Encounter Models", description: "The National Decision Model (CIAPOAR) with the Code of Ethics at its centre, the four principles of procedural justice, and the Met's Quality of Encounter model for stop and search.", accent: "#2B8C6B" },
-  { id: "ap1-force", title: "Use of Force & Manual Handling", shortTitle: "Use of Force & Manual Handling", description: "Section 3 Criminal Law Act 1967, Section 117 Police and Criminal Evidence Act 1984, common law, Articles 2 and 3, the PLAN justification test, and TILE manual handling assessment.", accent: "#8C5A2B" },
-  { id: "ap1-equality-hr", title: "Equality Act 2010 & Human Rights", shortTitle: "Equality & Human Rights", description: "The nine protected characteristics, prohibited conduct, the Public Sector Equality Duty, and the key Convention Articles for policing — absolute, limited and qualified rights.", accent: "#5C2B8C" },
-  { id: "ap1-victims-pnb", title: "Victims' Code 2021 & Pocketbook Rules", shortTitle: "Victims' Code & Pocketbook", description: "The 12 rights of the Victims' Code, enhanced rights and timescales, who counts as a victim, and the evidential rules for the pocket notebook.", accent: "#2B6B8C" },
+  { id: "pace-1984", studyWeek: 5, title: "Police and Criminal Evidence Act 1984", shortTitle: "Police and Criminal Evidence Act 1984", description: "Stop & search, entry, arrest, search after arrest, seizure, detention.", accent: "#1A3A6C" },
+  { id: "theft-act-1968", studyWeek: 4, title: "Theft Act 1968", shortTitle: "Theft Act 1968", description: "Theft, robbery, burglary, aggravated burglary, TWOC, going equipped.", accent: "#7C2D2D" },
+  { id: "moda-1971", studyWeek: 5, title: "Misuse of Drugs Act 1971", shortTitle: "Misuse of Drugs Act 1971", description: "Drug classes, Section 4 production & supply, Section 5 possession & PWITS, Section 23 search.", accent: "#5C2E7C" },
+  { id: "poca-1953", studyWeek: 5, title: "Prevention of Crime Act 1953", shortTitle: "Prevention of Crime Act 1953", description: "Offensive weapons in public — Section 1 possession, Section 1A threatening, M-A-I test.", accent: "#1F5F4D" },
+  { id: "cja-1988", studyWeek: 5, title: "Criminal Justice Act 1988", shortTitle: "Criminal Justice Act 1988", description: "Bladed articles — Section 139 in public, Section 139A education, Section 139AA threatening, Section 139B entry.", accent: "#9A4B14" },
+  { id: "owa-2019", studyWeek: 5, title: "Offensive Weapons Act 2019", shortTitle: "Offensive Weapons Act 2019", description: "Corrosives (Section 6), flick/gravity knives (Section 44), prohibited weapons in private (Section 46, Section 52).", accent: "#3C5A8C" },
+  { id: "suspect-interviews", studyWeek: 9, title: "Suspect Interviews & PEACE", shortTitle: "Suspect Interviews & PEACE", description: "PEACE model, TEDSPIE, active listening, caution, no ELBOWS for spontaneous comments.", accent: "#2F6E5C" },
+  { id: "mg11", studyWeek: 5, title: "MG11 Witness Statements", shortTitle: "MG11 Witness Statements", description: "Writing rules, ELBOWS, 24-hour clock, the 5 parts of a statement.", accent: "#8C4F1F" },
+  { id: "intelligence-mopi", studyWeek: 5, title: "Intelligence & Management of Police Information", shortTitle: "Intelligence & Management of Police Information", description: "3×5×2 grading, POLE, Golden Hour, National Intelligence Model, Management of Police Information principles.", accent: "#4A3A8C" },
+  { id: "cpia-1996", studyWeek: 11, title: "Criminal Procedure & Investigations Act 1996", shortTitle: "Criminal Procedure & Investigations Act 1996", description: "Disclosure, the 4 Rs (Record, Retain, Review, Reveal), MG6 series, sensitive material.", accent: "#7A2D5C" },
+  { id: "crim-damage-1971", studyWeek: 10, title: "Criminal Damage Act 1971", shortTitle: "Criminal Damage Act 1971", description: "Basic criminal damage (Section 1(1)), aggravated criminal damage (Section 1(2)), arson, threats, possession with intent.", accent: "#B5391B" },
+  { id: "crim-attempts-1981", studyWeek: 10, title: "Criminal Attempts Act 1981", shortTitle: "Criminal Attempts Act 1981", description: "Section 9 vehicle interference - interfering with a vehicle, trailer, or its contents with intent.", accent: "#3F6E3F" },
+  { id: "asbcp-2014", studyWeek: 11, title: "Anti-social Behaviour, Crime and Policing Act 2014", shortTitle: "Anti-social Behaviour, Crime and Policing Act 2014", description: "Section 34 dispersal power, exemptions, CPN, CBO, PSPO, closure powers.", accent: "#B8721E" },
+  { id: "poa-1986", studyWeek: 12, title: "Public Order Act 1986", shortTitle: "Public Order Act 1986", description: "Section 4 (fear/provocation of violence), Section 4A (intentional harassment), Section 5 (harassment/alarm/distress).", accent: "#7B1F5C" },
+  { id: "fraud-act-2006", studyWeek: 12, title: "Fraud Act 2006", shortTitle: "Fraud Act 2006", description: "Section 1 fraud, Section 2 false representation, Section 3 failing to disclose, Section 4 abuse of position, Section 6 articles.", accent: "#1E5F8C" },
+  { id: "pra-2002", studyWeek: 11, title: "Police Reform Act 2002", shortTitle: "Police Reform Act 2002", description: "Section 59 - stop, warn and seize vehicles used in anti-social manner.", accent: "#5C5C1F" },
+  { id: "prsra-2011", studyWeek: 12, title: "Police Reform & Social Responsibility Act 2011", shortTitle: "Police Reform & Social Responsibility Act 2011", description: "Section 34 - duty of PCCs and chief constables to engage with the public.", accent: "#1F5C5C" },
+  { id: "rta-1988", studyWeek: 11, title: "Road Traffic Act 1988", shortTitle: "Road Traffic Act 1988", description: "Stop powers (Section 163/164/165), drink/drug testing (Section 6), dangerous & careless driving, document offences.", accent: "#8C3F1E" },
+  { id: "oap-1861", studyWeek: 14, title: "Offences Against the Person", shortTitle: "Offences Against the Person", description: "Assault ladder: common assault (Section 39 Criminal Justice Act 1988), ABH (Section 47), GBH/wounding (Section 20), GBH with intent (Section 18), emergency workers, Section 89 Police Act 1996, defences.", accent: "#7C1F1F" },
+  { id: "soa-2003", studyWeek: 15, title: "Sexual Offences Act 2003 — Consent", shortTitle: "Sexual Offences Act 2003 — Consent", description: "Age of consent (16 / under 13), Section 5 rape of child under 13, Section 74 conditional consent (choice & freedom), Section 75 evidential presumptions (rebuttable), Section 76 conclusive presumptions (unrebuttable).", accent: "#5C1F5C" },
+  { id: "vulnerability", studyWeek: 14, title: "Vulnerability & Risk", shortTitle: "Vulnerability & Risk", description: "College of Policing definition, Care Act 2014 Section 42, three vulnerability factors, six safeguarding principles, ABCDE assessment, AFRAID, 123 reporting, types of abuse, Section 76 Serious Crime Act 2015.", accent: "#1F5C3F" },
+  { id: "da-protective", studyWeek: 14, title: "Domestic Abuse — Protective Measures", shortTitle: "Domestic Abuse — Protective Measures", description: "DVPN, DVPO, Non-Molestation Order, Restraining Order, DAPN/DAPO, Domestic Violence Disclosure Scheme, DA Act 2021 definition, Section 70 non-fatal strangulation, DARA, RARA, evidence-led prosecution.", accent: "#7C1F4F" },
+  { id: "rr-aggravated", studyWeek: 16, title: "Racially & Religiously Aggravated Offences", shortTitle: "Racially & Religiously Aggravated Offences", description: "Section 28 Crime and Disorder Act 1998 (definition), Sections 29–32 aggravated offences, Section 66 Sentencing Act 2020 (all offences), hate crime vs hate incident, timing of hostility, stirring up hatred.", accent: "#4F1F7C" },
+  { id: "missing-persons", studyWeek: 15, title: "Missing Persons — Initial Powers", shortTitle: "Missing Persons — Initial Powers", description: "Risk levels, Section 17 and Section 117 Police and Criminal Evidence Act 1984, Section 46 Children Act 1989 (police protection, no force), Section 135/136 Mental Health Act 1983, Mental Capacity Act 2005, bespoke investigation.", accent: "#1F4F7C" },
+  { id: "disputes-noncrime", studyWeek: 14, title: "Dealing with Disputes & Non-Crime Incidents", shortTitle: "Disputes & Non-Crime Incidents", description: "Breach of the peace, five building blocks of investigation, civil trespass, landlord/tenant, bailiffs, main responsibilities (preserve, investigate, impartial, record).", accent: "#3F5C2E" },
+  { id: "case-files-mg", studyWeek: 14, title: "Case Files & MG Forms", shortTitle: "Case Files & MG Forms", description: "DG6, National File Standard, Full Code Test vs Threshold Test, MG0–MG22, MG3 contents, MG5, MG6 series (disclosure), used vs unused material, three unused material assessment answers.", accent: "#5C3F1F" },
+  { id: "pha-1997", studyWeek: 15, title: "Protection from Harassment Act 1997", shortTitle: "Protection from Harassment Act 1997", description: "Course of conduct, Section 2 harassment, Section 2A stalking, Section 4 fear of violence, Section 4A stalking with fear or serious alarm, defences, restraining orders on conviction and acquittal.", accent: "#6B2D5C" },
+  { id: "special-measures", studyWeek: 15, title: "Special Measures — Youth Justice and Criminal Evidence Act 1999", shortTitle: "Special Measures", description: "Section 16 vulnerable and Section 17 intimidated witnesses, the measures in Sections 23–30 (screens, live link, video evidence, intermediaries), who applies and how, the MG2.", accent: "#2D5C6B" },
+  { id: "vps", studyWeek: 15, title: "Victim Personal Statements", shortTitle: "Victim Personal Statements", description: "Right 7 of the Victims' Code — the victim's account of impact: who takes it, what it can and cannot contain, the victim's choices, disclosure, and how the court uses it at sentencing.", accent: "#5C6B2D" },
+  { id: "ap1-ethics", studyWeek: 2, title: "Ethics & Professional Standards", shortTitle: "Ethics & Professional Standards", description: "Code of Ethics 2024 (Courage, Respect and empathy, Public service), the statutory Code of Practice for Ethical Policing 2023, the ten Standards of Professional Behaviour, misconduct vs gross misconduct.", accent: "#1F3A5C" },
+  { id: "ap1-met-london", studyWeek: 2, title: "New Met for London & Peelian Principles", shortTitle: "New Met for London & Peel", description: "The Casey Review and Turnaround Plan, the mission (More Trust, Less Crime, High Standards), the three pillars, Phase 2, and the nine Peelian principles of policing by consent.", accent: "#8C2B2B" },
+  { id: "ap1-models", studyWeek: 2, title: "Decision Models — NDM, Procedural Justice & Quality Encounter", shortTitle: "Decision & Encounter Models", description: "The National Decision Model (CIAPOAR) with the Code of Ethics at its centre, the four principles of procedural justice, and the Met's Quality of Encounter model for stop and search.", accent: "#2B8C6B" },
+  { id: "ap1-force", studyWeek: 2, title: "Use of Force & Manual Handling", shortTitle: "Use of Force & Manual Handling", description: "Section 3 Criminal Law Act 1967, Section 117 Police and Criminal Evidence Act 1984, common law, Articles 2 and 3, the PLAN justification test, and TILE manual handling assessment.", accent: "#8C5A2B" },
+  { id: "ap1-equality-hr", studyWeek: 3, title: "Equality Act 2010 & Human Rights", shortTitle: "Equality & Human Rights", description: "The nine protected characteristics, prohibited conduct, the Public Sector Equality Duty, and the key Convention Articles for policing — absolute, limited and qualified rights.", accent: "#5C2B8C" },
+  { id: "ap1-victims-pnb", studyWeek: 1, title: "Victims' Code 2021 & Pocketbook Rules", shortTitle: "Victims' Code & Pocketbook", description: "The 12 rights of the Victims' Code, enhanced rights and timescales, who counts as a victim, and the evidential rules for the pocket notebook.", accent: "#2B6B8C" },
 ];
 
 // Each AP mock draws ONLY from the topics listed for that assessment point in the
@@ -8820,11 +8820,15 @@ function ExamPrepScreen({ state, dispatch, go }) {
   const masteredQs = QUESTIONS.filter((q) => state.answered[q.id]?.lastCorrect).length;
   const recent = state.attempts[0];
 
-  const topicMastery = TOPICS.map((t) => {
+  // Mastery is listed in TEACHING order — the sequence topics are actually
+  // taught at Hendon (studyWeek) — so the top of the list is what the officer
+  // is studying now rather than an arbitrary order. Ties keep their original
+  // TOPICS position, which groups same-week topics sensibly.
+  const topicMastery = TOPICS.map((t, i) => {
     const qs = QUESTIONS.filter((q) => q.topicId === t.id);
     const mastered = qs.filter((q) => state.answered[q.id]?.lastCorrect).length;
-    return { ...t, total: qs.length, mastered, pct: mastered / qs.length };
-  });
+    return { ...t, total: qs.length, mastered, pct: mastered / qs.length, _i: i };
+  }).sort((a, b) => (a.studyWeek || 99) - (b.studyWeek || 99) || a._i - b._i);
 
   return (
     <ScreenShell>
@@ -8934,9 +8938,21 @@ function ExamPrepScreen({ state, dispatch, go }) {
         </div>
 
         <SectionLabel>Mastery by topic</SectionLabel>
+        <p style={{ margin: "-4px 0 12px", fontSize: 12.5, color: C.textMuted, lineHeight: 1.5 }}>
+          In the order you'll be taught them at Hendon.
+        </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
-          {topicMastery.map((t) => (
-            <button key={t.id} onClick={() => go({ name: "topic", topicId: t.id })} style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 14px", cursor: "pointer", fontFamily: fontBody, textAlign: "left", display: "flex", alignItems: "center", gap: 14 }}>
+          {topicMastery.map((t, idx) => (
+            <React.Fragment key={t.id}>
+              {t.studyWeek && (idx === 0 || topicMastery[idx - 1].studyWeek !== t.studyWeek) && (
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: idx === 0 ? 0 : 6 }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: 1, color: C.textFaint, textTransform: "uppercase" }}>
+                    Week {t.studyWeek}
+                  </span>
+                  <div style={{ flex: 1, height: 1, background: C.border }} />
+                </div>
+              )}
+            <button onClick={() => go({ name: "topic", topicId: t.id })} style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 14px", cursor: "pointer", fontFamily: fontBody, textAlign: "left", display: "flex", alignItems: "center", gap: 14, width: "100%" }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
                   <span style={{ fontWeight: 600, fontSize: 14.5 }}>{t.title}</span>
@@ -8946,6 +8962,7 @@ function ExamPrepScreen({ state, dispatch, go }) {
               </div>
               <span style={{ color: C.textFaint, fontSize: 20 }}>›</span>
             </button>
+            </React.Fragment>
           ))}
         </div>
 
