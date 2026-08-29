@@ -1,0 +1,21 @@
+{
+  "name": "project-ta",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Project TA \u2014 on-demand chat + whiteboard tutoring for UK GCSE and A-level students",
+  "workspaces": [
+    "packages/*",
+    "apps/web",
+    "apps/mobile"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @project-ta/web",
+    "build": "npm run build --workspace @project-ta/web",
+    "start": "npm run start --workspace @project-ta/web",
+    "lint": "npm run lint --workspace @project-ta/web",
+    "typecheck": "npm run typecheck --workspace @project-ta/web",
+    "mobile": "npm run start --workspace @project-ta/mobile",
+    "test": "npm run test --workspace @project-ta/shared",
+    "check": "npm run typecheck && npm run test"
+  }
+}

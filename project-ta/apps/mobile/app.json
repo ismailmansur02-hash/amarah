@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "Project TA",
+    "slug": "project-ta",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "projectta",
+    "splash": { "backgroundColor": "#0f5132", "resizeMode": "contain" },
+    "ios": { "supportsTablet": true, "bundleIdentifier": "uk.projectta.app" },
+    "android": {
+      "package": "uk.projectta.app",
+      "adaptiveIcon": { "backgroundColor": "#0f5132" }
+    },
+    "plugins": ["expo-notifications"],
+    "extra": {
+      "apiBaseUrl": "https://project-ta.netlify.app"
+    }
+  }
+}

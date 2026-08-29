@@ -1,0 +1,29 @@
+# Netlify build config for Project TA.
+# The repository holds more than one project, so `base` points Netlify at the
+# Project TA monorepo and everything below is relative to that directory.
+
+[build]
+  base = "project-ta"
+  command = "npm run build"
+  publish = "apps/web/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--no-audit --no-fund"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# The API is stateful and personalised — never let a CDN cache it.
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"

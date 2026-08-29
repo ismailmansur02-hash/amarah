@@ -1,0 +1,21 @@
+/** The same green palette as the web app, so the two never drift apart. */
+export const theme = {
+  green900: "#08301f",
+  green800: "#0b4029",
+  green700: "#0f5132",
+  green600: "#157347",
+  green500: "#1f9d5b",
+  green400: "#34c77b",
+  green100: "#d9f5e6",
+  green50: "#f0fbf5",
+  ink: "#10201a",
+  inkSoft: "#52655b",
+  inkFaint: "#7d8f85",
+  line: "#dbe9e0",
+  bg: "#ffffff",
+  bgSoft: "#f0fbf5",
+  danger: "#b3261e",
+  warnBg: "#fff4e0",
+  warnInk: "#7a4a05",
+  radius: 14,
+} as const;
