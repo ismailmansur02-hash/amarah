@@ -7149,6 +7149,7 @@ const POWER_CATEGORIES = [
   { id: "seizure", label: "Seizure" },
   { id: "detention", label: "Detention" },
   { id: "mental-health", label: "Mental Health" },
+  { id: "traffic", label: "Traffic & Roadside" },
 ];
 
 const POWERS = [
@@ -7427,7 +7428,285 @@ const POWERS = [
     mnemonic: "AWOL detained patient → retake & return",
     notes: "Applies to patients already liable to detention under the Act, not voluntary patients. Time limits on retaking depend on the detention section. Often actioned by police on a 'failed to return from leave' report. Distinct from Section 136 (which is for undetained persons in public).",
   },
+  {
+    id: "s64a-photograph",
+    title: "Power to Take a Roadside Photograph",
+    section: "Section 64A",
+    act: "Police and Criminal Evidence Act 1984",
+    category: "traffic",
+    grounds: "A constable may take a photograph at the roadside for a number of reasons, including that the person is being reported for a traffic offence.",
+    where: "At the roadside.",
+    mnemonic: "—",
+    notes: "Section 64A(1B) — the photograph power itself. Section 64A(2) — a constable may lawfully require the removal of any item or substance obstructing the taking of the photograph. Section 117 — reasonable force may be used to exercise this power.",
+  },
 ];
+
+// ============================================================
+// TOR CODES — Met Traffic Offence Report codes (Form 4740 endorsable,
+// Form 4741 non-endorsable). What an officer writes ON THE TICKET.
+// Distinct from the DVLA endorsement codes (SP30, CU80, etc.) used in the
+// OFFENCES entries above, which is what appears on the DRIVER'S LICENCE.
+// Source: physical MPS 4740 (Oct 2018) / 4741 (June 2018) TOR code cards
+// supplied by Mr Mansur. Two codes on 4741 (marked "300?"/"301?") were
+// physically torn on the source card — the statute and wording are legible
+// but the exact code number is not confirmed. "430b"/"433b"/"299b" are the
+// SAME code repeated a second time on the source card in a different
+// section; kept distinct here so both printed wordings are preserved.
+
+const TOR_STATUTE_KEY = [
+  { letter: "A", act: "Road Traffic Act 1988" },
+  { letter: "C", act: "Road Vehicles (Construction and Use) Regulations 1986" },
+  { letter: "D", act: "Highways Act 1835 (use local by-law where applicable)" },
+  { letter: "E", act: "Road Vehicles Lighting Regulations 1989" },
+  { letter: "F", act: "Vehicle Excise and Registration Act 1994" },
+  { letter: "G", act: "Road Traffic Regulation Act 1984" },
+  { letter: "H", act: "Motor Vehicles (Driving Licences) Regulations 1987" },
+  { letter: "J", act: "Motorways Traffic (England and Wales) Regulations 1982" },
+  { letter: "K", act: "Road Traffic Offenders Act 1988" },
+  { letter: "L", act: "Royal and Other Parks and Gardens Regulations" },
+  { letter: "M", act: "Transport Act 1968" },
+];
+
+// VW = normally subject only to a verbal warning. VDR = Vehicle Defect Rectification
+// Scheme (Book 114; not applicable to LGVs, PCVs or taxis).
+const TOR_CODES = [
+  { code: "104", statute: "(A) 87 + R9 (H)", wording: "Driving not in accordance with a licence", penalty: "\u00a3100 - 3 pts", section: "PROVISIONAL LICENCE", form: "4740" },
+  { code: "105", statute: "(C) R104 + sec41D (A) + sched 2 (k)", wording: "Driver of motor vehicle not in position to have full view", penalty: "\u00a3100 - 3 pts", section: "PROVISIONAL LICENCE", form: "4740" },
+  { code: "109", statute: "(A) S40A sec2(K)", wording: "Use motor vehicle/trailer number of passengers / manner carried likely to cause danger", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "110", statute: "(C) R18", wording: "Defective brakes (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "111", statute: "(C) R29", wording: "Defective steering (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "112", statute: "(C) R27", wording: "Tyre \u2013 unsuitable type (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "113", statute: "(C) R27", wording: "Tyre \u2013 over / under inflated", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "114", statute: "(C) R27", wording: "Tyre \u2013 cut in fabric (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "115", statute: "(C) R27", wording: "Tyre \u2013 lump, bulge or tear (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "116", statute: "(C) R27", wording: "Tyre \u2013 ply or cord exposed (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "117", statute: "(C) R27", wording: "Tyre \u2013 tread less than (1.6mm cars, vans & light trailers)(1mm M/cycles) \u00a3100 (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "118", statute: "(C) R27", wording: "Tyre \u2013 tread not visible \u2013 Moped (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "119", statute: "(C) R27", wording: "Tyre \u2013 different structure on same axle (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "120", statute: "(C) R26", wording: "Tyre \u2013 different types on different axles (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "121", statute: "(C) R25", wording: "Tyres insufficient to support axle weight (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "122", statute: "(C) R25", wording: "Tyre tread less than 1mm \u2014 Motorcycle", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "123", statute: "(A) S40A", wording: "Dangerous *parts/load/*condition (*VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "124", statute: "(C) R104.S42 + (K) Sched. 2", wording: "Driver not in position to have proper control (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "125", statute: "(C) R110.S42 + (K) Sched. 2", wording: "Using a hand held mobile telephone whilst driving (VDR)", penalty: "\u00a3200 - 6 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "126", statute: "(C) R110.S42 + (K) Sched. 2", wording: "Using a hand held mobile telephone whilst supervising the holder of a provisional driving licence (VDR)", penalty: "\u00a3100 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "129", statute: "(C) R27", wording: "Tyre \u2013 tread less than 1mm (larger goods & passenger vehicles) \u00a3200 (VDR)", penalty: "\u00a3200 - 3 pts", section: "CONSTRUCTION AND USE", form: "4740" },
+  { code: "130", statute: "(G) S89(1)", wording: "Excess speed (30 mph)", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "131", statute: "(G) S89(1)", wording: "Excess speed (40 mph) RTRA", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "132", statute: "(G) S16", wording: "Excess temp 30 mph speed restriction \u2014 roadworks", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "133", statute: "(G) S89(1)", wording: "Excess speed (class of vehicle)", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "134", statute: "(G) S17 + R.3 (J)", wording: "Motorway \u2014 excess speed (70 mph)", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "135", statute: "(G) S89(1)", wording: "Excess speed (50 mph)", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "136", statute: "(G) 16", wording: "Exceed temp 40 mph speed restriction \u2014 roadworks", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "137", statute: "(G) S84", wording: "Excess speed 60 mph", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "138", statute: "(G) S16", wording: "Exceed temp limit of 40 mph \u2014 motorway", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "139", statute: "(G) S84 + 89(1)", wording: "Excess speed (20 mph) local order", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "200", statute: "(G) S16", wording: "Exceed temp limit of 50 mph \u2014 motorway", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "201", statute: "(G) S16", wording: "Exceed temp limit of 60 mph \u2014 motorway", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "202", statute: "(G) S16", wording: "Exceed temp 50 mph speed restriction \u2014 roadworks", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "203", statute: "(G) S89(1)", wording: "Dual carriageway excess speed (70 mph)", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "204", statute: "(G) S89(1)", wording: "Excess speed (class of vehicle) \u2014 goods vehicle", penalty: "\u00a3100 - 3 pts", section: "SPEED", form: "4740" },
+  { code: "140", statute: "(G) S17 + (J)", wording: "Motorway \u2014 excluded traffic using", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "141", statute: "(G) S17 + (J)", wording: "Motorway \u2014 stopping on carriageway", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "142", statute: "(G) S17 + (J)", wording: "Motorway \u2014 reversing", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "143", statute: "(G) S17 + (J)", wording: "Motorway \u2014 using central reservation or verge", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "144", statute: "(G) S17 + (J)", wording: "Motorway \u2014 driving on hard shoulder", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "145", statute: "(G) S17 + (J)", wording: "Motorway \u2014 prohibited traffic in offside lane", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "146", statute: "(G) S17 + (J)", wording: "Motorway \u2014 provisional licence holder", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "147", statute: "(G) S17 + (J)", wording: "Motorway \u2014 contravening no entry sign", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "148", statute: "(G) S17 + (J)", wording: "Motorway \u2014 travelling in wrong direction", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "149", statute: "(G) S17 + (J)", wording: "Motorway \u2014 making a 'U' turn", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "150", statute: "(A) S36", wording: "Motorway \u2014 contravening a red traffic light", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "151", statute: "(G) S17", wording: "Motorway \u2014 contravening bus lane (M4 spur only)", penalty: "\u00a3100 - 3 pts", section: "MOTORWAY", form: "4740" },
+  { code: "156", statute: "(A) S35(2)(b)(ii) & (K) Sched. 2", wording: "Fail to keep in line for traffic survey directed by PC / T Warden / T Officer", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "157", statute: "(A) S35(2)(b)(ii) (K) Sched. 2", wording: "Fail to proceed to traffic survey point directed by PC / T Warden / T Officer", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "158", statute: "(A) S35(2)(b)(ii) & (K) Sched. 2", wording: "Fail to stop vehicle for traffic survey directed by PC / T Warden / T Officer", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "160", statute: "(A) S36", wording: "Contravening red traffic light \u2014 junction", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "161", statute: "(A) S36", wording: "Contravening red traffic light \u2014 level crossing", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "162", statute: "(A) S36", wording: "Contravening red traffic light \u2014 roadworks", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "163", statute: "(A) S36", wording: "Contravening stop sign (major road)", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "164", statute: "(A) S36", wording: "Contravening automatic level crossing", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "165", statute: "(A) S36", wording: "Contravening double white lines", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "166", statute: "(A) S36", wording: "Contravening constable / warden on traffic duty", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "167", statute: "(A) S36", wording: "Contravening height restriction", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "168", statute: "", wording: "Contravening no entry sign", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "169", statute: "", wording: "Fail to comply with direction indicated by a green arrow traffic light signal", penalty: "\u00a3100 - 3 pts", section: "TRAFFIC SIGNS AND PROHIBITIONS", form: "4740" },
+  { code: "170", statute: "(G) S29", wording: "Using vehicle in designated play street", penalty: "\u00a3100 - 2 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "171", statute: "(G) S30", wording: "Using vehicle in designated London play street", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "172", statute: "(G) S25(5)", wording: "Stop a vehicle within pelican pedestrian crossing limits", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "173A", statute: "(G) S25(5)", wording: "Stopping in a controlled crossing area \u2014 Pelican", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "173B", statute: "(G) S25(5)", wording: "Stopping in the controlled area crossing \u2014 Zebra / Puffin / Toucan", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "174", statute: "(G) S25(5)", wording: "Overtake on the approach (controlled area) of a crossing", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "176", statute: "(G) S25(5)", wording: "Fail to accord precedence \u2014 crossing", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "177", statute: "(G) S25(5)", wording: "Contravene red traffic light \u2014 crossing", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "178", statute: "(A) S36", wording: "Stopping in controlled area of a Toucan crossing", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "179", statute: "(A) S36", wording: "Overtaking on approach to a Toucan crossing", penalty: "\u00a3100 - 3 pts", section: "PEDESTRIAN RIGHTS", form: "4740" },
+  { code: "180", statute: "(A) S22 (K) s22", wording: "Leaving vehicle in dangerous position", penalty: "\u00a3100 - 3 pts", section: "DANGEROUS POSITION", form: "4740" },
+  { code: "190", statute: "(A) S23", wording: "Carrying more than one passenger on motorcycle", penalty: "\u00a3100 - 3 pts", section: "MOTORCYCLES", form: "4740" },
+  { code: "191", statute: "(A) S23", wording: "Motorcycle passenger not sitting astride", penalty: "\u00a3100 - 3 pts", section: "MOTORCYCLES", form: "4740" },
+  { code: "192", statute: "(A)", wording: "Driving without due care", penalty: "\u00a3100 - 3 pts", section: "DRIVING WITHOUT DUE CARE", form: "4740" },
+  { code: "193", statute: "(A)", wording: "Drive without reasonable consideration to others", penalty: "\u00a3100 - 3 pts", section: "DRIVING WITHOUT DUE CARE", form: "4740" },
+  { code: "A601", statute: "(A)", wording: "No insurance policy (ANPR only)", penalty: "\u00a3300 - 6 pts", section: "MISCELLANEOUS \u2014 \u00a3200 FIXED PENALTY NOTICE (previously prefix J)", form: "4740" },
+  { code: "801", statute: "(A)", wording: "No insurance", penalty: "\u00a3300 - 6 pts", section: "MISCELLANEOUS \u2014 \u00a3200 FIXED PENALTY NOTICE (previously prefix J)", form: "4740" },
+  { code: "300?", statute: "(A) S16", wording: "Motorcycle eye protectors failing to conform", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "301?", statute: "(A) S16(4) + (K) Sched. 2", wording: "Motorcycle \u2014 no protective headgear", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "304", statute: "(A) S34 + (K) Sched. 2", wording: "Driving elsewhere than on roads", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "305", statute: "(D) S72", wording: "Drive on footway (mechanically propelled vehicle)", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "309", statute: "(C) R106.S42 + (K) Sched. 2", wording: "Reversing unreasonable distance (VW)", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "311", statute: "(C) R101.S42 + (K) Sched. 2", wording: "Parking on offside at night", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "312", statute: "(C) R107.S42 + (K) Sched. 2", wording: "Unattended \u2014 engine running or brake not set", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "313", statute: "(C) R105.S42 + (K) Sched. 2", wording: "Opening door so as to cause injury / danger", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "314", statute: "(C) R86.S42 + (K) Sched. 2", wording: "Towing \u2014 tow rope too long (VW)", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "315", statute: "(A) R90.S42 + (K) Sched. 2", wording: "Trailer / living van, carriage of passengers", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "318", statute: "(G) S47(3) + (K) Sched. 2", wording: "Interference with meter", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "319", statute: "(G) S47(3) + (K) Sched. 2", wording: "Insertion of inappropriate coins / tokens", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "299", statute: "", wording: "Drive a motor vehicle not in accordance with a licence \u2014 non-endorsable (revoked / expired substantive)", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "322", statute: "", wording: "Fail to produce CPC card", penalty: "\u00a350 (non-endorsable)", section: "DRIVING AND STOPPING \u2014 \u00a350 fixed penalty, non-endorsable", form: "4741" },
+  { code: "330", statute: "(A) S163", wording: "Failing to stop for police constable", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "331", statute: "(A) S36", wording: "Contravening give way sign and / or give way markings", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "332", statute: "(A) S36", wording: "Contravening manually operated stop sign (VW)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "334", statute: "(A) S36", wording: "Contravening mandatory direction arrows (see note 5)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "335", statute: "(A) S36", wording: "Contravening portable police stop sign", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "336", statute: "(A) S35(1)", wording: "Contravening direction by constable / traffic survey", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "337", statute: "(A) S36", wording: "Contravening mini roundabout sign (fail to give way and / or proceed in direction indicated)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "338", statute: "(A) S36", wording: "Contravening route for buses / pedal cycles only sign", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "340", statute: "(G) S8(1)", wording: "Contravening bus lane", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "341", statute: "(G) S8(1)", wording: "Failing to turn left / right where required (VW)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "342", statute: "(G) S8(1)", wording: "Overtaking where prohibited", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "343", statute: "(A) S36", wording: "Contravening no U-turn sign", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "344", statute: "(G) S8(1)", wording: "Left / right hand turn where prohibited (VW) (see note 5)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "345", statute: "(G) S8(1)", wording: "Driving wrong way down one-way street (VW)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "346", statute: "(G) S8(1)", wording: "Contravening cycle lane (VW)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "347", statute: "(A) S36", wording: "Contravening box junction", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "349", statute: "(G) S8(1)", wording: "Contravening prohibition of driving", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "350", statute: "(G) S8(1)", wording: "Contravening prohibition of driving \u2014 coach", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "351", statute: "(G) S8(1)", wording: "Contravening prohibition of driving \u2014 LGV", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "352", statute: "(G) S8(1)", wording: "Contravening prohibition of driving \u2014 track laying vehicle", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "353", statute: "(G) S8(1)", wording: "Contravening prohibition of driving \u2014 horse drawn vehicle", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "355", statute: "(G) S8(1)", wording: "Contravening prohibition of driving \u2014 caravan/trailer", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "356", statute: "(G) S8(1)", wording: "Contravening weight restriction", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "357", statute: "(G) S8(1)", wording: "Contravening weight restriction \u2014 axle weight restriction", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "358", statute: "(G) S8(1)", wording: "Contravening weight restriction \u2014 width restriction", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "359", statute: "(G) S8(1)", wording: "Contravening weight restriction \u2014 length restriction", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "361", statute: "(G) S11", wording: "Contravening experimental traffic order (VW)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "362", statute: "(G) S13", wording: "Contravening experimental traffic regs \u2014 London (VW)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "363", statute: "(G) S18(3)", wording: "Contravening one way traffic on trunk road", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "364", statute: "(G) S20", wording: "Using prohibited vehicle on restricted road", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "368", statute: "(A) S36", wording: "Contravening temporary restriction (VW)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "369", statute: "(G) S88(7)", wording: "Failing to comply with minimum speed limit (VW)", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "370", statute: "", wording: "Unauthorised trade vehicle in a Royal Park", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "371", statute: "(A) S36", wording: "Tram contravening automatic traffic signal", penalty: "\u00a350 (non-endorsable)", section: "SIGNS AND PROHIBITIONS", form: "4741" },
+  { code: "380", statute: "(C) R63", wording: "No wing / mudguard fitted (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "382", statute: "(C) R35", wording: "No speedometer (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "383", statute: "(C) R36", wording: "Defective speedometer (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "384", statute: "(C) R33", wording: "No mirrors (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "385", statute: "(C) R33", wording: "Internal mirror unframed / dangerous (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "386", statute: "(C) R34", wording: "No windscreen wipers (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "387", statute: "(C) R34", wording: "Defective windscreen wipers (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "388", statute: "(C) R34", wording: "No windscreen washers (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "389", statute: "(C) R37", wording: "No horn (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "390", statute: "(C) R37", wording: "Two tone horn (VW)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "391", statute: "(C) R30 sec42(a)", wording: "Driver's vision obscured (glass not maintained / cracked windscreen)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "392", statute: "(C) R47", wording: "No seat belts (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "393", statute: "(C) R46", wording: "No anchorage points (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "394", statute: "(C) R48", wording: "Seat belts not properly maintained (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "395", statute: "(C) R39", wording: "Fuel tank not secure or leakproof (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "396", statute: "(C) R31 & 32", wording: "Glass not as prescribed (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "397", statute: "(C) R37", wording: "Reversing alarms on unauthorised vehicle (VW)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "398", statute: "(C) R22", wording: "Not equipped with suitable / sufficient springs (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "399", statute: "(C) R61", wording: "Diesel engine \u2014 excess fuel device not maintained (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "400", statute: "(C) R102", wording: "Motorcycle \u2014 no footrest (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "401", statute: "(C) R63", wording: "Motorcycle \u2014 no mudguard (VDR)", penalty: "\u00a350 (non-endorsable)", section: "VEHICLE DEFECTS", form: "4741" },
+  { code: "410", statute: "(C) R54", wording: "No silencer (VDR)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "411", statute: "(C) R54", wording: "Failing to maintain silencer (VDR)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "412", statute: "(C) R61", wording: "Emitting smoke, vapour, etc (VDR)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "413", statute: "(C) R61", wording: "Diesel engine \u2014 tampering with excess fuel device (VDR)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "414", statute: "(C) R54", wording: "Exhaust gases escaping (VDR)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "415", statute: "(C) R98", wording: "Not stopping engine when stationary (VW)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "416", statute: "(C) R99", wording: "Sounding of horn at night (VW)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "417", statute: "(C) R99", wording: "Sounding of horn when stationary (VW)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "418", statute: "(C) R97", wording: "Causing unnecessary noise (VW)", penalty: "\u00a350 (non-endorsable)", section: "EXHAUST AND NOISE", form: "4741" },
+  { code: "431", statute: "(C) R75-80", wording: "Exceeding permitted weight (closely spaced axles)", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "432", statute: "(C) R75-80", wording: "Manufacturer's / DTp plate, exceed gross weight (C)", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "434", statute: "(C) R75-80", wording: "Manufacturer's / DTp plate, exceed train weight (C)", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "435", statute: "(C) R70 + (A) S42", wording: "Plated goods vehicle \u2014 plate not displayed", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "436", statute: "(C) R75-80", wording: "Exceeding permitted weight (single wheels / axles)", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "437", statute: "(C) R66 + (A) S42", wording: "No manufacturer's weight plate", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "438", statute: "(C) R66 + (A) S42", wording: "Trailer \u2014 no weight plate", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "430b", statute: "(C) R66, 75-80", wording: "Laden vehicle exceeding permitted weight (10% or less)", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "433b", statute: "(C) R75-80", wording: "Manufacturer's / DTp plate exceed axle weight (10% or less)", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "446", statute: "(C) R53", wording: "Mascot likely to cause injury in collision (VW)", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "447", statute: "(C) R109", wording: "Television within sight of driver (VDR)", penalty: "\u00a350 (non-endorsable)", section: "WEIGHT, ETC", form: "4741" },
+  { code: "440", statute: "(C) R51", wording: "Not equipped with rear guards", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "441", statute: "(C) R50", wording: "Rear guards not maintained", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "442", statute: "(C) R51", wording: "Not equipped with side guards", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "443", statute: "(C) R52", wording: "Side guards not maintained", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "444", statute: "(C) R65", wording: "Not equipped with spray suppression equipment", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "445", statute: "(C) R65", wording: "Spray suppression equipment not maintained", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "448", statute: "(C) R92", wording: "Motorcycle \u2014 sidecar not properly attached (VDR)", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "449", statute: "(C) R108", wording: "Lifting appliance not properly secured (VDR)", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "450", statute: "(C) R10", wording: "No marking of travelling height (VDR)", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "451", statute: "(C) R62", wording: "Leakage of lavatories / sinks on to road (VW)", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "452", statute: "(C) R83", wording: "Drawing more than permitted number of trailers", penalty: "\u00a350 (non-endorsable)", section: "CONSTRUCTION AND USE (MISCELLANEOUS)", form: "4741" },
+  { code: "460", statute: "(E) R11", wording: "Showing red light to front (VDR)", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "461", statute: "(E) R11", wording: "Showing other than red light to rear (VDR)", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "462", statute: "(E) R12", wording: "Lamp capable of being moved, vehicle in motion", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "463", statute: "(E) R13", wording: "Unauthorised flashing lamp", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "464", statute: "(E) R16", wording: "Vehicle fitted with unauthorised warning beacon", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "465", statute: "(E) R18", wording: "Vehicle not equipped with specified lamps (VDR)", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "466", statute: "(E) R20", wording: "Optional lamp not complying with regulations (VDR)", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "467", statute: "(E) R21", wording: "Unlit projecting / overhanging load", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "468", statute: "(E) R22", wording: "No additional side marker lamps", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "469", statute: "(E) R23(1)", wording: "Lamps, reflectors, rear markings not maintained (VDR)", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "470", statute: "(E) R23(1)", wording: "Hazard warning device not maintained (VDR)", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "471", statute: "(M) S97 (A sched 3)", wording: "Use tachograph recording equip mode switch incorrectly set", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "472", statute: "(M) s97(1)", wording: "Failure to enter data on centre field of recording sheet of tachograph recording equipment installed in vehicle", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "473", statute: "(E) R24", wording: "Position lamps not lit when dark, poor visibility", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "474", statute: "(E) R24", wording: "Position lamps not lit when dark, stationary", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "475", statute: "(E) R25", wording: "No dipped headlights in poor visibility / at night", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "477", statute: "(E) R17", wording: "Obligatory warning beacon not fitted", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "478", statute: "(E) R17", wording: "Fail to use obligatory warning beacon", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "479", statute: "(E) R17A", wording: "Fail to display prescribed sign on a bus indicating presence of children being carried to or from school", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "520", statute: "(E) R27", wording: "Headlamps used to cause dazzle", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "521", statute: "(E) R27", wording: "Front fog lamps used to cause dazzle", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "522", statute: "(E) R27", wording: "Rear fog lamps not maintained to prevent dazzle", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "523", statute: "(E) R27", wording: "Misuse of headlamps when vehicle parked", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "524", statute: "(E) R27", wording: "Misuse of hazard warning device", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "526", statute: "(E) R27", wording: "Use vehicle \u2014 reversing light lit when not reversing", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "527", statute: "(E) R27", wording: "Misuse of front fog lamps", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "528", statute: "(E) R27", wording: "Misuse of rear fog lamps", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "530", statute: "(M) sec97(1)(a)(iii)", wording: "Use a record sheet / driver's card period longer than authorised", penalty: "\u00a350 (non-endorsable)", section: "LIGHTING", form: "4741" },
+  { code: "501", statute: "(A) S36", wording: "Contravening traffic signs", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "502", statute: "(A) S36", wording: "Contravening constable on traffic duty", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "503", statute: "(A) S36", wording: "Contravening warden on traffic duty", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "504", statute: "(A) S163 (K Sched. 2)", wording: "Failing to stop for a police constable", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "505", statute: "(A) S35(1) (K Sched. 2)", wording: "Contravening direction by traffic constable / traffic survey", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "506", statute: "(E) R24 (K sec91)", wording: "Use a pedal cycle without lights at night", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "507", statute: "(G) S8(1) (K Sched. 2)", wording: "Riding where prohibited", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "508", statute: "(D) S72", wording: "Cycle on footway", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "509", statute: "(A) S36 (K Sched. 2)", wording: "Contravening automatic traffic signals", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "510", statute: "(L) R3(9)", wording: "Contravening direction of a constable or sign in a Royal Park", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "511", statute: "(A) S24", wording: "Unauthorised passenger on pedal cycle", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "512", statute: "(E) 18(1) sec91 (K)", wording: "Use a pedal cycle without lights being fitted", penalty: "\u00a350 (non-endorsable)", section: "PEDAL CYCLE OFFENCES \u2014 \u00a350 (course available if police officer issued)", form: "4741" },
+  { code: "A700", statute: "(A)", wording: "No test certificate (ANPR only)", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "299b", statute: "(A)", wording: "Driving other than in accordance with a licence \u2014 revoked / expired", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "900", statute: "(A)", wording: "No test certificate", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "901", statute: "(A)", wording: "Failing to exhibit excise licence", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "302", statute: "(A) S14", wording: "Driver failing to wear seat belt", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "303", statute: "(A) S15(2)", wording: "Child in front passenger seat \u2014 no seat belt", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "310", statute: "(A) S14", wording: "Failing to wear seat belt \u2014 adult front passenger", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "316", statute: "(A) S15(4)", wording: "Child in rear passenger seat \u2014 no seat belt (consider the 109 offence code instead if the child is not in a car/booster seat or seatbelt, as this is carrying a passenger likely to cause danger)", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "317", statute: "(A) S14", wording: "Failing to wear seat belt \u2014 adult rear passenger", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "324", statute: "", wording: "Driver of motor vehicle under 3 years not wearing a seatbelt (consider the 109 offence code instead if the child is not in a car/booster seat or seatbelt, as this is carrying a passenger likely to cause danger)", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "453", statute: "(C) R100(2) (A) sec42(k) sched 2", wording: "Use motor vehicle with insecure load \u2014 likely to cause danger", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "454", statute: "(C) R100(3) (A) sec42(k) sched 2", wording: "Use motor vehicle/trailer for an unsuitable purpose", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "455", statute: "(C) R100(1) (A) sec42(k) sched 2", wording: "Use motor vehicle \u2014 condition likely to cause danger", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "480", statute: "(F) S42(1)", wording: "Driving without registration mark (front) (VDR)", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "481", statute: "(F) S42(1)", wording: "Driving without registration mark (rear) (VDR)", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "483", statute: "(F) S.43(1)", wording: "Registration mark obscured or not easily readable", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+  { code: "484", statute: "(F) S59", wording: "Drive a vehicle when the registration mark fails to conform with regulations", penalty: "\u00a3100 (non-endorsable)", section: "\u00a3100 TRAFFIC OFFENCE REPORT", form: "4741" },
+];
+
 
 
 
@@ -9910,6 +10189,22 @@ function ConstableCompanionScreen({ go }) {
     powersGrouped[p.category].push(p);
   });
 
+  // TOR codes have their own shape (code/statute/wording), so they get their
+  // own simple search rather than reusing matchesQuery.
+  const torCodes = tab === "codes"
+    ? TOR_CODES.filter((t) => {
+        if (!q) return true;
+        const haystack = `${t.code} ${t.statute} ${t.wording} ${t.section}`.toLowerCase();
+        return haystack.includes(q);
+      })
+    : [];
+  const torCodesGrouped = {};
+  torCodes.forEach((t) => {
+    if (!torCodesGrouped[t.section]) torCodesGrouped[t.section] = [];
+    torCodesGrouped[t.section].push(t);
+  });
+  const torSections = [...new Set(torCodes.map((t) => t.section))];
+
   // Resolve open item
   const resolved = openItem
     ? openItem.type === "offence"
@@ -9937,6 +10232,7 @@ function ConstableCompanionScreen({ go }) {
           { id: "daily", label: "Daily-use" },
           { id: "az", label: "A–Z" },
           { id: "powers", label: "Powers" },
+          { id: "codes", label: "TOR Codes" },
         ].map((t) => (
           <button
             key={t.id}
@@ -9974,7 +10270,7 @@ function ConstableCompanionScreen({ go }) {
         <div style={{ position: "relative" }}>
           <input
             type="text"
-            placeholder={tab === "powers" ? "Search powers, sections, acts…" : "Search offences, sections, acts…"}
+            placeholder={tab === "powers" ? "Search powers, sections, acts…" : tab === "codes" ? "Search TOR code, statute or wording…" : "Search offences, sections, acts…"}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             style={{
@@ -10248,6 +10544,74 @@ function ConstableCompanionScreen({ go }) {
             )}
           </>
         )}
+
+        {/* TOR CODES tab */}
+        {tab === "codes" && (
+          <>
+            <div style={{
+              background: C.goldBg,
+              border: `1px solid ${C.gold}`,
+              borderRadius: 10,
+              padding: "10px 12px",
+              marginBottom: 16,
+              fontSize: 12,
+              color: C.goldDeep,
+              lineHeight: 1.5,
+            }}>
+              What to write ON THE TRAFFIC OFFENCE REPORT itself — the Met's own Form 4740 (endorsable) and 4741 (non-endorsable) offence codes. Different from the DVLA endorsement codes (SP30, CU80, etc.) elsewhere in Constable Companion, which is what goes on the driver's licence. Codes marked "?" had a torn source card — verify the exact number before relying on it.
+            </div>
+
+            {torCodes.length === 0 ? (
+              <EmptyState query={query} />
+            ) : (
+              <div>
+                {torSections.map((section) => (
+                  <div key={section} style={{ marginBottom: 22 }}>
+                    <div style={{
+                      fontSize: 11,
+                      fontWeight: 600,
+                      letterSpacing: 1,
+                      color: C.textFaint,
+                      textTransform: "uppercase",
+                      marginBottom: 10,
+                    }}>
+                      {section}
+                    </div>
+                    {torCodesGrouped[section].map((t, i) => (
+                      <TorCodeCard key={`${t.code}-${i}`} torCode={t} />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {!query && (
+              <div style={{ marginTop: 8, marginBottom: 8 }}>
+                <div style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: 1,
+                  color: C.textFaint,
+                  textTransform: "uppercase",
+                  marginBottom: 10,
+                }}>
+                  Statute reference key
+                </div>
+                <Card style={{ padding: "12px 14px" }}>
+                  {TOR_STATUTE_KEY.map((k) => (
+                    <div key={k.letter} style={{ display: "flex", gap: 8, fontSize: 12.5, color: C.textMuted, lineHeight: 1.7 }}>
+                      <span style={{ fontFamily: fontMono, fontWeight: 700, color: C.navy, minWidth: 16 }}>{k.letter}</span>
+                      <span>{k.act}</span>
+                    </div>
+                  ))}
+                  <div style={{ fontSize: 11.5, color: C.textFaint, marginTop: 8, lineHeight: 1.5 }}>
+                    VW = normally subject only to a verbal warning. VDR = Vehicle Defect Rectification Scheme (Book 114; not applicable to LGVs, PCVs or taxis).
+                  </div>
+                </Card>
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       {/* Detail modal */}
@@ -10346,6 +10710,57 @@ function PowerCard({ power, onClick }) {
         {power.section} · {power.act}
       </div>
     </button>
+  );
+}
+
+// The source cards abbreviate every Act to a single bracketed letter — (A),
+// (C), (G) and so on. Displayed strings must carry the FULL statute name, so
+// each card spells out every Act its statute reference touches. Letters that
+// are really sub-paragraphs — the (b) in S35(2)(b)(ii) — simply do not appear
+// in the key and are dropped.
+function torActsFor(statute) {
+  if (!statute) return [];
+  const letters = (statute.match(/\(([A-Za-z])\)/g) || [])
+    .map((m) => m.slice(1, -1).toUpperCase());
+  const seen = [];
+  letters.forEach((l) => {
+    const entry = TOR_STATUTE_KEY.find((k) => k.letter === l);
+    if (entry && !seen.includes(entry.act)) seen.push(entry.act);
+  });
+  return seen;
+}
+
+function TorCodeCard({ torCode: t }) {
+  const uncertain = t.code.includes("?");
+  const acts = torActsFor(t.statute);
+  return (
+    <div style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      gap: 10,
+      background: "white",
+      border: `1px solid ${uncertain ? C.gold : C.border}`,
+      borderRadius: 10,
+      padding: "11px 14px",
+      marginBottom: 8,
+      fontFamily: fontBody,
+    }}>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: 14.5, color: C.text, lineHeight: 1.4, marginBottom: 3 }}>{t.wording}</div>
+        <div style={{ fontFamily: fontMono, fontSize: 11.5, color: C.navyLight, letterSpacing: 0.3 }}>
+          {t.code}{t.statute ? ` · ${t.statute}` : ""}
+        </div>
+        {acts.length > 0 && (
+          <div style={{ fontSize: 11.5, color: C.textMuted, lineHeight: 1.45, marginTop: 3 }}>
+            {acts.join(" · ")}
+          </div>
+        )}
+      </div>
+      <div style={{ fontFamily: fontMono, fontSize: 12, fontWeight: 600, color: C.navy, whiteSpace: "nowrap", textAlign: "right" }}>
+        {t.penalty}
+      </div>
+    </div>
   );
 }
 

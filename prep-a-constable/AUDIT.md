@@ -440,3 +440,83 @@ garbage date ranges (all return safely, never negative or >100%); and a
 headless-Chromium run driving the real UI — setup card → enter dates → header and
 card render "week 10 / 10 weeks left", survives reload, rejects a finish-date
 before the start date, and leaves the other screens working. No JS errors.
+
+# Round 8 — Real sign-in, cloud sync, and TOR offence codes
+
+Three pieces of work, in the order they were asked for.
+
+## Real sign-in and cross-device progress sync
+
+Sign-in was `fakeSignIn()` — a 650ms `setTimeout` — and the Supabase database
+held **zero users and zero state rows**. Progress lived only in
+`window.storage` on one device.
+
+The backend for this already existed and is untouched: the `user_state` table
+with Row Level Security on all four verbs, and the sync rules in
+`backend/src/lib/persistence.js`. What was missing is that those modules import
+`AsyncStorage` and `expo-apple-authentication` — they are React Native/Expo and
+**cannot run in a browser**, so nothing on the web ever reached them.
+
+`preview/cloud.js` is the browser counterpart, injected as `window.cloud` in
+the same way `entry.jsx` already provides `window.storage`. The merge rules are
+**not** reimplemented: the app passes its own `mergeState` /
+`loadStateFromRaw` / `SCHEMA_VERSION` in through `configure()`, so the cloud
+merge is identical to the local one and cannot drift from the state contract.
+The merge is grow-only, so two devices disagreeing can never shrink progress.
+
+Wiring: pull-and-merge before first render when a session already exists; an
+auth listener that catches the return from the emailed link; a 3-second
+debounced push; sign-out flushes pending work then ends the real session. The
+app treats `window.cloud` as optional, so the Expo build is unaffected.
+
+Sign-in is **email magic link** (Mr Mansur's choice — no password to store or
+leak, and no third-party setup). Apple and Google buttons call the real
+`signInWithOAuth`; until those providers are configured in the Supabase
+dashboard they surface a genuine "not configured" error rather than faking a
+success, which is the whole bug being removed.
+
+The anon key in `cloud.js` is publishable by design — Row Level Security gates
+every row. The service-role key is not present and must never be.
+
+## TOR offence codes (Constable Companion)
+
+From Mr Mansur's photographs of the physical Met code cards: **Form 4740**
+(endorsable, Oct 2018) and **Form 4741** (non-endorsable, June 2018).
+**235 codes** across 19 sections, in a new **TOR Codes** tab.
+
+These are the codes an officer writes **on the ticket** — deliberately kept
+separate from the DVLA endorsement codes (SP30, CU80…) already in Constable
+Companion, which are what appear on the **driver's licence**. The tab says so
+in a banner so the two are never confused.
+
+Also added: **Section 64A Police and Criminal Evidence Act 1984** — power to
+take a roadside photograph, Section 64A(2) removal of obstructing items, and
+Section 117 reasonable force — under a new "Traffic & Roadside" powers
+category.
+
+Every card spells out the **full statute name** (the source cards abbreviate
+each Act to a single bracketed letter), satisfying the no-abbreviations rule;
+verified that all 229 rows carrying a statute resolve to at least one full Act
+name, with sub-paragraph letters like the (b) in S35(2)(b)(ii) correctly
+ignored.
+
+**Two honest caveats, both flagged in the UI:**
+- Two codes on Form 4741 (motorcycle eye protectors / no protective headgear)
+  were **physically torn** on the card. Wording and statute are legible, the
+  code numbers are not — shown as `300?` / `301?` with a gold border.
+- The brief wordings are transcribed **verbatim**, because the card itself
+  states "THE OFFENCE CODE AND BRIEF WORDING WILL BE ENTERED ON THE TOR IN
+  FULL." Some therefore retain source abbreviations (LGV, DTp, CPC, ANPR).
+  Rewriting them would make the app disagree with the ticket.
+
+**Verified:** esbuild parse, balance 0/0, no duplicate ids or functions, state
+contract **27/27**, no `localStorage` in the app file, clean preview build, a
+unit test of the statute expansion over all 235 rows, and headless-Chromium
+runs — 14/14 on the sign-in screen and 12/12 on the TOR tab (tab renders,
+statute key shows, search by code "130" returns the 30 mph entry, the new
+photograph power is findable under Powers). No JS errors beyond the sandbox's
+blocked-network noise.
+
+**NOT verified:** no real magic-link email could be sent or received — this
+sandbox blocks `supabase.co`. That round trip needs a live check once the Email
+provider and redirect URL are set in the Supabase dashboard.
