@@ -24,20 +24,16 @@ PAIRS = ["EURUSD", "GBPUSD"]
 SIDE_BY_WEEKDAY = {0: "BUY", 2: "SELL"}      # Monday long, Wednesday short (London weekday)
 ENTRY_LON = (0, 15)                          # enter at/after 00:15 Europe/London
 ENTRY_LATE_CUTOFF_LON = (1, 15)              # never enter at/after 01:15 London
-EXIT_LON = (12, 0)                           # time-exit at/after 12:00 London
-# Noon exit (changed 2026-08-24, see backtest/REPORT.md "Hold-time"): by 12:00
-# the trade holds 81% of the full day's return with 38% of the drawdown. The
-# lower drawdown is what permits the larger size below. Well clear of rollover,
-# so no swap either.
+EXIT_LON = (21, 45)                          # time-exit at/after 21:45 London (pre-rollover)
+# A noon exit was adopted 2026-08-24 and REVERTED 2026-08-25 after a 2026-only
+# test: at matched risk the 21:45 clock earns more (+15.5% vs +11.8% full
+# period), and in 2026 the afternoon block pays significantly (paired t=+3.73).
+# The apparent improvement came from the sizing increase, not the clock.
+# See backtest/REPORT.md "Hold-time revision, and its reversal".
 
-# ---- risk & sizing (spec §3-§4) ----
-RISK_PER_PAIR = 0.0075                       # 0.75% per pair (1.5x, funded by the
-                                             # noon exit's halved drawdown; the
-                                             # backtest supported 2.5x - 1.5x is
-                                             # deliberately conservative because
-                                             # the ATR stop fires only 0.8% of
-                                             # the time on this shorter hold)
-MAX_DAILY_RISK = 0.015                       # hard cap on total OPEN risk
+# ---- risk & sizing (spec §3-§4; 0.5%/pair is the prudent MAXIMUM) ----
+RISK_PER_PAIR = 0.005                        # 0.5% of live balance per pair
+MAX_DAILY_RISK = 0.010                       # hard cap on total OPEN risk
                                              # MUST be >= 2 x RISK_PER_PAIR or the
                                              # second pair is silently refused
 K_ATR = 1.5                                  # protective stop = K_ATR x ATR14(daily)

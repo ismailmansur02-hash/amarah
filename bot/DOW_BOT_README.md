@@ -2,7 +2,7 @@
 
 The day-of-week bot built to `DOW_BOT_SPEC.md`. Monday it buys EURUSD & GBPUSD,
 Wednesday it sells them; enters 00:15 London, protective stop at 1.5×ATR(14,
-daily), always flat by 12:00 London (no overnight, no swap, no weekend risk).
+daily), always flat by 21:45 London (no overnight, no swap, no weekend risk).
 0.5% of balance risked per pair, red-news days skipped, hard kill-switches.
 
 **This is a DEMO forward-test build. Do not point it at funded money until the
@@ -60,7 +60,7 @@ shell:startup or set it in Task Scheduler the same way.)
 | Alert | Meaning |
 |---|---|
 | `ENTER BUY EURUSD 0.55 @ …` | Monday/Wednesday entry filled, stop attached |
-| `closed EURUSD #… (P&L was …)` | 12:00 time-exit |
+| `closed EURUSD #… (P&L was …)` | 21:45 time-exit |
 | `… position gone before time-exit` | the 1.5×ATR protective stop took it out |
 | `SKIPPED today - USD CPI [High]` | red-news day, sat out (your rule) |
 | `calendar unavailable (fail-safe…)` | news feed down → bot refuses to trade blind — check internet |

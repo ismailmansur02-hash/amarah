@@ -711,3 +711,55 @@ figure blends a weak regime and a strong one.
   future drawdown.
 - Not implemented. The spec stays frozen pending the user's decision and forward
   validation.
+
+---
+
+## 2026-only test suite — and the reversal of the noon exit (2026-08-25)
+
+Script: `backtest/test_2026.py`. **2026 sat inside the window used to select the
+noon exit, so this is characterisation, not independent validation.**
+
+### The headline: the change was wrong and has been reverted
+
+| 2026 only (Jan–mid Jul, 111 trades) | Total | maxDD | Win |
+|---|---|---|---|
+| 21:45 @0.50% (original) | **+9.17%** | −1.69% | 67% |
+| 12:00 @0.75% (shipped 08-24) | +1.95% | −2.39% | 57% |
+| 12:00 @0.50% (clock alone) | +1.30% | −1.60% | 57% |
+
+Isolating clock from sizing over the full 2023–26 period exposed the error in
+the original comparison — it pitted the new clock at 0.75% against the old at
+0.50%, so the **sizing** produced the gain, not the clock:
+
+| Spec | Total | maxDD |
+|---|---|---|
+| 21:45 @0.50% | **+15.50%** | −6.22% |
+| 12:00 @0.50% | **+11.78%** | −2.48% |
+
+At matched risk the original clock earns **more**. Paired by day and pair
+(n=724), noon-minus-21:45 is t = −0.75 across all data, and **t = −3.73 in
+2026** where the afternoon block now pays; difference-in-differences between
+2023–24 and 2026 is t = −3.75. Reverted to the original constants.
+
+### The rest of the 2026 suite (original spec)
+
+- **Month by month:** Jan +1.63, Feb −0.89, Mar −0.75, Apr +1.04, May −0.88,
+  Jun +1.29, Jul +0.54 (on the *noon* variant); the original clock returned
+  **+9.17%** over the same period.
+- **News filter:** removes 57 of 111 trades and improves both return and
+  drawdown — consistent with the July/August finding.
+- **Tail risk:** worst day −1.05%, worst week −1.61%, longest losing run 4
+  trading days, only 1 day beyond −1%. **Neither the −2% daily halt nor the −8%
+  drawdown halt would have fired.**
+- **Cost sensitivity:** still positive at a 2.4/3.2-pip spread (4× the assumed
+  cost), though thin.
+- **Prop challenge on the 2026 distribution alone** (3000 bootstrapped runs):
+  ~81% pass at 0.75%/pair with **0% busts**, ~90% at 1.0%/pair with 1–2% busts;
+  median 17–23 months. Consistent with the earlier FundingPips work.
+
+### The lesson worth keeping
+
+The noon exit passed a train/test wall, was positive in all four years, and had
+a coherent mechanism — and was still wrong, because the comparison that sold it
+was not like-for-like. A held-out window does not protect against comparing two
+things that differ in more than one variable at a time.

@@ -2,9 +2,9 @@
 
 Reproduces the spec (bot/DOW_BOT_SPEC.md) faithfully:
   - Mon LONG / Wed SHORT, EURUSD + GBPUSD.
-  - Entry 00:15 London, time-exit 12:00 London (see REPORT.md hold-time).
+  - Entry 00:15 London, time-exit 21:45 London (pre-rollover, no swap).
   - Protective stop = K_ATR x ATR14(daily), checked intrabar on 5-min bars.
-  - Risk RISK_PER_PAIR of a $100k USD account per pair (0.75% default).
+  - Risk RISK_PER_PAIR of a $100k USD account per pair (0.5% default).
   - Costs: per-pair round-trip spread in price terms.
   - Both pairs on ONE account; monthly + per-year returns and max drawdown.
 
@@ -28,8 +28,8 @@ DATA = os.path.join(os.path.dirname(__file__), "data")
 CONTRACT = 100_000
 BAL0 = 100_000.0
 K_ATR = 1.5
-RISK_PER_PAIR = 0.0075         # 0.75% of balance per pair (matches bot/dow_config.py)
-ENTRY_LON, EXIT_LON = 0.25, 12.0    # 00:15, 12:00 London (hours)
+RISK_PER_PAIR = 0.005          # 0.5% of balance per pair (matches bot/dow_config.py)
+ENTRY_LON, EXIT_LON = 0.25, 21.75   # 00:15, 21:45 London (hours)
 COST_PIPS = {"EURUSD": 0.6, "GBPUSD": 0.8}   # round-trip, pips
 
 

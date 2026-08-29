@@ -26,7 +26,7 @@ Validated (see `backtest/oos_test.py`, `stress_test*.py`, REPORT.md Addenda 2–
 | EURUSD 2026 | +7.9% | 2.69 | significant |
 | GBPUSD 2025 | +11.4% | 2.30 | significant |
 | GBPUSD 2026 | +10.8% | 3.41 | significant |
-| EURUSD 00:15–21:45 clock, 2025+26 | +11.9% | 2.08 | the original live clock (revised to noon 2026-08-24) |
+| EURUSD 00:15–21:45 clock, 2025+26 | +11.9% | 2.08 | the exact live clock (below) |
 
 Passed: multiple-comparison permutation (corrected p=0.037), 10k bootstrap
 (90% CI clears 0), outlier removal (18/27 Weds profitable), day-boundary
@@ -77,13 +77,12 @@ calendar day**:
 3. **Protective stop** (safety only, not the primary exit): attach SL at
    `entry ∓ STOP_DIST` (below entry for BUY, above for SELL), where
    `STOP_DIST = K_ATR × ATR14_daily` (§4). No take-profit.
-4. **Exit**: at/after **12:00 Europe/London** the same day, **close at market**.
+4. **Exit**: at/after **21:45 Europe/London** the same day, **close at market**.
    This is the primary exit and always fires before the 22:00 London rollover
    (so: no swap, no weekend gap, no overnight-hold rule breach).
 5. **Max one entry per pair per day.** After exit, no re-entry that day.
 
-Rationale for the ORIGINAL clock (superseded 2026-08-24 by the noon exit — see
-the Hold-time revision at the end): 00:15→21:45 London captured the strongest, cleanest
+Rationale for the clock: 00:15→21:45 London captured the strongest, cleanest
 edge in testing (+11.9%, t=2.08 on EUR 2025+26) while closing before the
 illiquid rollover. Trimming to London-only hours **weakened** it — do not
 "optimise" the window further; it was already swept and this is the robust point.
@@ -130,7 +129,7 @@ day's two trades as **~one correlated position**, not two independent ones.
   more safety. Never raise it to force a target.
 - **Never scale up** the surviving pair when the other is skipped (news/holiday).
   A one-pair day simply risks 0.5%. Simpler = fewer failure modes.
-- **Hard cap**: total open risk across all pairs ≤ `MAX_DAILY_RISK = 1.5%`.
+- **Hard cap**: total open risk across all pairs ≤ `MAX_DAILY_RISK = 1.0%`.
   This **must** stay ≥ 2×`RISK_PER_PAIR`, or the second pair is silently refused.
   The bot must refuse any order that would breach this.
 
@@ -185,7 +184,7 @@ if a trade day carries a red event affecting our pairs, **sit out**.
   is the USD/EUR/GBP rule, which already covers essentially every red day that
   moves EUR/GBP.
 - **Window**: block a pair if a qualifying red event is timestamped **within the
-  holding window (00:15–12:00 London)** that day, **or** within
+  holding window (00:15–21:45 London)** that day, **or** within
   `NEWS_BUFFER_MIN = 60` min **before** the 00:15 entry (overnight spillover).
   All-day events / events with no precise time → treat as blocking the day.
 - **FAIL-SAFE (critical)**: if the calendar cannot be fetched or parsed and no
@@ -289,15 +288,15 @@ Each poll:
 3. Enforce halts (§6): drawdown/consec → may set `bot_halted`; daily → `day_halted`.
 4. If `wd not in {Mon, Wed}` or holiday or `day_halted` → ensure flat, idle.
 5. For each enabled pair with `status == idle`:
-   - If `now_london ≥ 12:00` → too late to open today → mark `closed` (skipped).
+   - If `now_london ≥ 21:45` → too late to open today → mark `closed` (skipped).
    - Elif `00:15 ≤ now_london < 01:15` and calendar `is_blocked` is False and
      spread OK and risk-cap OK → **enter** (market + ATR SL), set `status=open`,
      persist. If blocked/late/guard-fail → mark `blocked`/`closed` with reason.
 6. For each pair with `status == open`:
-   - If `now_london ≥ 12:00` **or** position no longer exists (SL hit) → close if
+   - If `now_london ≥ 21:45` **or** position no longer exists (SL hit) → close if
      needed, set `status=closed`, persist, record P&L.
 7. **Restart safety**: on startup, for any pair whose state says `open`: if a live
-   position exists and `now_london ≥ 12:00` → close immediately; if it exists and
+   position exists and `now_london ≥ 21:45` → close immediately; if it exists and
    still in-window → adopt it (do not re-enter); if no live position but state
    said open → mark `closed` (SL already took it).
 8. Sleep `POLL_SECONDS`.
@@ -312,9 +311,9 @@ never die on a transient error; only `SystemExit`/`KILL` stops it.
 - **Bot starts after 00:15 but before 01:15** → enter (still within window).
 - **Bot starts after 01:15** → skip entry for the day (never chase a late entry;
   it changes the trade vs backtest).
-- **Bot down over the 12:00 exit, restarts later with position open** → close
+- **Bot down over the 21:45 exit, restarts later with position open** → close
   immediately on first poll (§8.7).
-- **SL hit before 12:00** → position gone; mark closed; do not re-enter.
+- **SL hit before 21:45** → position gone; mark closed; do not re-enter.
 - **Holiday Monday/Wednesday** (thin) → skip (holiday list + optional
   volume/spread sanity).
 - **Calendar fetch fails, no fresh cache** → skip the whole day (fail-safe).
@@ -340,9 +339,9 @@ never die on a transient error; only `SystemExit`/`KILL` stops it.
 | `SIDE_BY_WEEKDAY` | `{0:"BUY", 2:"SELL"}` | Mon long, Wed short |
 | `ENTRY_LON` | `00:15` | entry time (London) |
 | `ENTRY_LATE_CUTOFF_LON` | `01:15` | latest allowed entry |
-| `EXIT_LON` | `12:00` | time exit (noon; see §Hold-time revision) |
-| `RISK_PER_PAIR` | `0.0075` | 0.75% risk per pair |
-| `MAX_DAILY_RISK` | `0.015` | hard daily gross-risk cap (must be >= 2x RISK_PER_PAIR) |
+| `EXIT_LON` | `21:45` | time exit (pre-rollover) |
+| `RISK_PER_PAIR` | `0.005` | 0.5% risk per pair |
+| `MAX_DAILY_RISK` | `0.010` | hard daily gross-risk cap (must be >= 2x RISK_PER_PAIR) |
 | `K_ATR` | `1.5` | stop = K_ATR × ATR14(daily) |
 | `NEWS_IMPACT_BLOCK` | `["High"]` | impact levels that skip a day ("red") |
 | `NEWS_CCYS` | `{USD, EUR, GBP}` | currencies whose red events block |
@@ -362,7 +361,7 @@ never die on a transient error; only `SystemExit`/`KILL` stops it.
 ## 11. Data & backtest ACCEPTANCE GATE (must pass before any live/demo money)
 
 Build `backtest/dow_acceptance.py` that reproduces the **exact live rules**
-(the then-current 00:15→21:45 London clock, 1.5×ATR protective stop, News filter, 0.5%/pair
+(00:15→21:45 London clock, 1.5×ATR protective stop, News filter, 0.5%/pair
 sizing, spread & holiday skips) on historical data and asserts:
 
 - **[GATE-1] — PASS.** Positive on **EURUSD 2025/2026 and GBPUSD 2025/2026**
@@ -455,7 +454,7 @@ audited helpers into a shared `bot/broker.py`).
 | News spike inside the day | red-day skip + spread guard + 1.5×ATR stop |
 | Broker clock / DST bug | London-time math + server-offset; DST unit tests |
 | Calendar source breaks | pluggable sources + 48h cache + fail-safe skip |
-| Over-optimisation of the clock | clock already swept; **revised ONCE to 00:15–12:00 on the hold-time evidence (2026-08-24), then re-frozen |
+| Over-optimisation of the clock | clock already swept; **frozen** at 00:15–21:45, no further tuning |
 | Prop rule breach | intraday-only, drawdown halt at 6% (below firm's 10%) |
 
 ---
@@ -486,39 +485,53 @@ Everything else above is decided. Build to this document.
 
 ---
 
-## Hold-time revision (2026-08-24) — the exit moved to noon
+## Hold-time revision (2026-08-24) — adopted, then REVERTED (2026-08-25)
 
-Changed after `backtest/edge_holdtime.py` showed the trade holds **81% of the
-full day's return by 12:00 London with 38% of the drawdown**. The remaining
-9.75 hours added 19% of the return and 62% of the risk. Because drawdown — not
-Sharpe — is what caps position size, halving it is what allowed the size
-increase; every earlier improvement raised Sharpe only and could not be
-converted into return.
+Recorded in full because the reasoning error is worth keeping.
 
-| Constant | Was | Now |
+A noon exit was adopted on the finding that the trade holds 81% of the day's
+return by 12:00 London with 38% of the drawdown, and the acceptance gate showed
+**+18.2% vs +15.5%**. A 2026-only test then reversed the decision.
+
+**The error.** That +18.2% compared the noon clock at **0.75%**/pair against the
+original clock at **0.50%**/pair. The sizing did the work, not the clock.
+Isolating them over 2023–26:
+
+| Spec | Total | maxDD |
 |---|---|---|
-| `EXIT_LON` | 21:45 | **12:00** |
-| `RISK_PER_PAIR` | 0.005 | **0.0075** |
-| `MAX_DAILY_RISK` | 0.010 | **0.015** |
+| 21:45 @0.50% (original) | **+15.50%** | −6.22% |
+| 21:45 @0.75% | +23.93% | −9.22% (breaches the 8% halt) |
+| 12:00 @0.50% | **+11.78%** | −2.48% |
+| 12:00 @0.75% (shipped briefly) | +18.10% | −3.70% |
 
-Acceptance gate re-run on the full 2023–26 data, both pairs:
+**At matched risk the 21:45 clock earns more.** The noon exit's only real
+advantage was lower drawdown, which is a weaker basis for a change because it
+relies on historical max drawdown as a sizing input, and that always understates
+future drawdown.
 
-| Spec | Total | maxDD | Stops hit | Worst year |
+**The 2026 evidence.** Paired by day and pair, with only the exit clock differing
+(n=724), the noon-minus-21:45 difference:
+
+| Year | mean diff/trade | t | 21:45 total | 12:00 total |
 |---|---|---|---|---|
-| Old (21:45, 0.5%/pair) | +15.5% | −6.2% | 5% | 2024 **−1.9%** |
-| **New (12:00, 0.75%/pair)** | **+18.2%** | **−3.6%** | 1% | 2024 **+0.4%** |
+| 2023 | +0.0117% | 0.92 | +1.39% | +3.80% |
+| 2024 | +0.0074% | 0.51 | −1.35% | +0.23% |
+| 2025 | −0.0013% | −0.10 | +6.31% | +6.06% |
+| **2026** | **−0.0676%** | **−3.73** | **+9.17%** | **+1.30%** |
+| ALL | −0.0054% | −0.75 | **+16.09%** | +11.78% |
 
-Higher return, **drawdown almost halved**, and no losing year.
+The noon exit's advantage lived in 2023–24 and **significantly reversed in
+2026**: the afternoon block now pays (t = +3.73), and the difference-in-
+differences between 2023–24 and 2026 is t = −3.75. Across all data the paired
+test gives t = −0.75 — no evidence the noon clock is better, with the point
+estimate against it.
 
-**Sizing note:** the backtest supported 2.5× the old size at a matched 8%
-drawdown budget; 1.5× was chosen deliberately. On the shorter hold the 1.5×ATR
-stop fires only **0.8%** of the time, so risk control rests on the time exit
-rather than the stop, and historical drawdown always understates future
-drawdown. The unused headroom is the safety margin.
+**Reverted** to `EXIT_LON=(21,45)`, `RISK_PER_PAIR=0.005`,
+`MAX_DAILY_RISK=0.010`. The bar for changing a spec validated over 3.5 years is
+higher than the bar for undoing a change that rests on one drawdown estimate and
+is contradicted by the most recent data.
 
-**Status:** this is one parameter change selected from 9 pre-registered exit
-times (Bonferroni bar |t|>2.7; GBPUSD reached 2.5, EURUSD 1.4). It was adopted
-on consistency evidence — positive in all four years, train→test Sharpe
-1.07→1.25 where the old clock ran 0.40→1.79 — not on the t-statistic alone.
-It still requires forward validation on the demo account. **Now re-frozen: no
-further clock or sizing changes without new out-of-sample evidence.**
+**Kept from the episode:** a unit test asserting `2 × RISK_PER_PAIR ≤
+MAX_DAILY_RISK` (raising per-pair risk without raising the cap would silently
+refuse the second pair), and a lot-sizing test pinned to the live risk constant
+rather than a hard-coded literal (lot-step flooring is not linear in risk).
