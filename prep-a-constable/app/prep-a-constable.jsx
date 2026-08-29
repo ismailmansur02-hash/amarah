@@ -11435,6 +11435,7 @@ function LoginScreen({ dispatch }) {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(null); // which provider is "loading"
   const [emailError, setEmailError] = useState("");
+  const [oauthError, setOauthError] = useState("");
   const [sent, setSent] = useState("");     // email a magic link was just sent to
   const [legal, setLegal] = useState(null); // "privacy" | "terms" | null
 
@@ -11476,6 +11477,23 @@ function LoginScreen({ dispatch }) {
     }
 
     fakeSignIn({ provider: "email", email: e, displayName: e.split("@")[0] });
+  };
+
+  // Google/Apple redirect the whole page away, so there is no local success
+  // callback to wire up here — App's onAuthChange listener catches the
+  // return trip. We only need to catch the case where the provider hasn't
+  // been switched on in Supabase yet and say so honestly.
+  const onOAuth = async (which) => {
+    setOauthError("");
+    setBusy(which);
+    try {
+      if (which === "apple") await cloud.signInWithApple();
+      else await cloud.signInWithGoogle();
+      // no further action: a successful call navigates the page away
+    } catch (err) {
+      setBusy(null);
+      setOauthError((err && err.message) || `${which === "apple" ? "Apple" : "Google"} sign-in isn't set up yet.`);
+    }
   };
 
   const providerBtn = (label, mark, bg, fg, border, onClick, key) => (
@@ -11564,13 +11582,12 @@ function LoginScreen({ dispatch }) {
         <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", paddingBottom: 24 }}>
           {mode === "choices" ? (
             <>
-              {/* Apple and Google are shown only in demo mode. With real cloud
-                  sign-in active they would be fake buttons that silently fail
-                  to sync, so they stay hidden until those providers are
-                  actually configured. */}
-              {!cloudOn && providerBtn("Continue with Apple", <AppleMark />, "#000", "#fff", "none", () => fakeSignIn({ provider: "apple", displayName: "Apple User" }), "apple")}
-              {!cloudOn && providerBtn("Continue with Google", <GoogleMark />, "#fff", C.text, `1.5px solid ${C.borderStrong}`, () => fakeSignIn({ provider: "google", displayName: "Google User" }), "google")}
+              {providerBtn("Continue with Apple", <AppleMark />, "#000", "#fff", "none", () => cloudOn ? onOAuth("apple") : fakeSignIn({ provider: "apple", displayName: "Apple User" }), "apple")}
+              {providerBtn("Continue with Google", <GoogleMark />, "#fff", C.text, `1.5px solid ${C.borderStrong}`, () => cloudOn ? onOAuth("google") : fakeSignIn({ provider: "google", displayName: "Google User" }), "google")}
               {providerBtn(cloudOn ? "Sign in with email" : "Continue with email", <MailMark />, "#fff", C.text, `1.5px solid ${C.borderStrong}`, () => setMode("email"), "email-open")}
+              {oauthError && (
+                <p style={{ color: C.error, fontSize: 12.5, textAlign: "center", margin: "2px 0 4px", lineHeight: 1.5 }}>{oauthError}</p>
+              )}
 
               <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "18px 0" }}>
                 <div style={{ flex: 1, height: 1, background: C.border }} />

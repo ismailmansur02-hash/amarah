@@ -100,6 +100,28 @@ window.cloud = {
     return true;
   },
 
+  // Google / Apple both navigate the whole page away to the provider and
+  // back — supabase-js does the redirect itself (no popup, no extra window).
+  // On return, detectSessionInUrl + onAuthChange (below) pick up the session,
+  // the same path the magic link already uses. Throws a REAL error — e.g.
+  // "Unsupported provider" — if the provider hasn't been enabled in the
+  // Supabase dashboard yet, rather than pretending to sign the officer in.
+  async signInWithGoogle() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin + window.location.pathname },
+    });
+    if (error) throw new Error(error.message || "Google sign-in is not available yet.");
+  },
+
+  async signInWithApple() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: { redirectTo: window.location.origin + window.location.pathname },
+    });
+    if (error) throw new Error(error.message || "Apple sign-in is not available yet.");
+  },
+
   async getSession() {
     return currentSession();
   },
