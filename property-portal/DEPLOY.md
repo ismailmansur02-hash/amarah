@@ -99,6 +99,26 @@ which matters on a shared phone.
 
 ---
 
+## Keeping the database awake
+
+Supabase pauses a **free-tier** project after roughly a week without activity.
+When that happens the portal goes down — clients see errors and someone with
+dashboard access has to wake it by hand. A quiet week is normal for a property
+manager, so the app would put itself to sleep exactly when it looks most broken.
+
+`netlify/functions/keep-database-awake.mts` runs daily (06:00 UTC) and touches
+the database so the idle timer never runs out. Its log line says whether the
+database was reachable; if that starts failing, the project is probably already
+paused.
+
+The app also recovers on its own if a pause does happen: a query that fails
+because the connection died is retried once against a fresh pool, so the first
+request after the database wakes succeeds rather than failing for whoever
+arrives first.
+
+The permanent fix is a paid Supabase plan, which does not pause. Once on one,
+this scheduled function can be deleted.
+
 ## Backups
 
 Supabase takes managed backups. For an independent copy you control — worth
