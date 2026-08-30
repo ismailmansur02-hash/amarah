@@ -8942,17 +8942,8 @@ function ExamPrepScreen({ state, dispatch, go }) {
           In the order you'll be taught them at Hendon.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
-          {topicMastery.map((t, idx) => (
-            <React.Fragment key={t.id}>
-              {t.studyWeek && (idx === 0 || topicMastery[idx - 1].studyWeek !== t.studyWeek) && (
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: idx === 0 ? 0 : 6 }}>
-                  <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: 1, color: C.textFaint, textTransform: "uppercase" }}>
-                    Week {t.studyWeek}
-                  </span>
-                  <div style={{ flex: 1, height: 1, background: C.border }} />
-                </div>
-              )}
-            <button onClick={() => go({ name: "topic", topicId: t.id })} style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 14px", cursor: "pointer", fontFamily: fontBody, textAlign: "left", display: "flex", alignItems: "center", gap: 14, width: "100%" }}>
+          {topicMastery.map((t) => (
+            <button key={t.id} onClick={() => go({ name: "topic", topicId: t.id })} style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 14px", cursor: "pointer", fontFamily: fontBody, textAlign: "left", display: "flex", alignItems: "center", gap: 14, width: "100%" }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
                   <span style={{ fontWeight: 600, fontSize: 14.5 }}>{t.title}</span>
@@ -8962,7 +8953,6 @@ function ExamPrepScreen({ state, dispatch, go }) {
               </div>
               <span style={{ color: C.textFaint, fontSize: 20 }}>›</span>
             </button>
-            </React.Fragment>
           ))}
         </div>
 
