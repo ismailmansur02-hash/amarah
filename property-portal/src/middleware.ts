@@ -21,10 +21,11 @@ function getSecret(): Uint8Array {
 }
 
 /**
- * Reachable without a session: login, the login API, the install guide, and
- * the health probe the host calls before traffic is routed.
+ * Reachable without a session: the landing page, login, the login API, the
+ * install guide, and the health probe the host calls before traffic is routed.
+ * The landing page itself sends anyone already signed in to their dashboard.
  */
-const PUBLIC_PATHS = ["/login", "/api/login", "/install", "/api/health"];
+const PUBLIC_PATHS = ["/", "/login", "/api/login", "/install", "/api/health"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

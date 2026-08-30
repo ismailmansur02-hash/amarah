@@ -1,6 +1,89 @@
 @import "tailwindcss";
 
+:root {
+  --ink: #05070d;
+  --ink-soft: #0b1120;
+  --accent: #34d399;
+  --accent-2: #22d3ee;
+}
+
 body {
   background-color: #f8fafc;
   color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Marketing surfaces run dark; the signed-in app stays light and legible. */
+body:has(.marketing) {
+  background-color: var(--ink);
+}
+
+/* ---------------------------------------------------------------- */
+/* Scroll reveals                                                    */
+/* Elements start slightly low and transparent, then settle as they  */
+/* come into view. Anyone who has asked their system for less motion */
+/* simply gets the finished state.                                   */
+/* ---------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Slow drifting colour behind the hero. */
+@keyframes aurora-drift {
+  0%   { transform: translate3d(-6%, -4%, 0) scale(1); }
+  50%  { transform: translate3d(6%, 4%, 0) scale(1.15); }
+  100% { transform: translate3d(-6%, -4%, 0) scale(1); }
+}
+.aurora {
+  animation: aurora-drift 22s ease-in-out infinite;
+}
+.aurora-slow {
+  animation: aurora-drift 34s ease-in-out infinite reverse;
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+.rise {
+  animation: rise-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* A hairline grid, very faint, to give the dark sections some structure. */
+.grid-lines {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(14px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .aurora,
+  .aurora-slow,
+  .rise {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

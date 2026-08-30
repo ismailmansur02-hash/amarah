@@ -61,7 +61,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </div>
           </header>
         )}
-        <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
+        {/* Signed-in pages sit in a readable column. The marketing and sign-in
+            pages run full-bleed and set their own layout. */}
+        {session ? (
+          <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
+        ) : (
+          <main>{children}</main>
+        )}
         <InstallPrompt />
       </body>
     </html>

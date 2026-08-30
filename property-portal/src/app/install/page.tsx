@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function InstallPage() {
   return (
-    <div className="mx-auto mt-10 max-w-2xl pb-24">
+    <div className="mx-auto max-w-2xl px-4 pb-24 pt-10">
       <h1 className="text-2xl font-semibold tracking-tight">
         {BRAND.mark} <span className="text-slate-400">{BRAND.rest}</span>
       </h1>
