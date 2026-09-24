@@ -687,3 +687,78 @@ these screens.
   verified in this container. This is a real difference from the web app and
   Mr Mansur's call to make — see "Deliberate omissions" above.
 - Nothing has run on an actual iPhone.
+
+---
+
+# Round 11 — the microphone, and an honest AP4 sit
+
+## Verbal Drills now use the microphone
+
+`expo-speech-recognition@57.1.0` wired in, with the web screen's full phase
+machine ported: drill list → idle → recording (blank navy screen, script
+hidden) → result, plus "nothing captured" and "microphone unavailable".
+
+- `src/speech.js` guards the import. It is a NATIVE module, so it exists in a
+  development or EAS build and NOT in Expo Go — an unguarded import takes the
+  whole app down on launch there. `Speech.available` is false in that case and
+  the drill falls back to typing, so nothing is ever a dead control.
+- Listeners attach through `addListener` inside ONE `useEffect` rather than the
+  package's `useSpeechRecognitionEvent` hook, so no hook is ever called
+  conditionally on the module existing.
+- Continuous recognition returns MULTIPLE final results. Keeping only the
+  latest would throw away most of a 40-word caution, so finals accumulate in
+  `committedRef` and the in-progress phrase sits in `interimRef` — the same
+  approach the web build uses.
+- `en-GB`, deliberately: a US recogniser mangles "offence" and "practise".
+- The recogniser also ends by itself after a pause (and Android 12 and earlier
+  has no continuous mode at all), so `end` restarts it unless the officer asked
+  to stop. A `no-speech` error mid-pause does the same.
+- `stopAndScore` also scores on a 900 ms timer, so a module that never fires
+  `end` cannot strand the officer on a blank screen.
+
+Verified: config plugin applies (`expo prebuild` puts
+`NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription` into
+Info.plist, and the privacy manifest survives); autolinking resolves
+`ExpoSpeechRecognitionModule` for iOS; iOS bundle still exports; 9 new tests
+drive the listeners directly, covering accumulation, restart-on-pause, nothing
+captured, permission refused and the typed fallback. 88 tests pass.
+
+The privacy policy gained a paragraph on the microphone — it is used only
+during a drill, no audio is recorded, stored or uploaded, and the transcript is
+discarded. An app that uses the microphone while its own policy says it does
+not is a review failure.
+
+**Still not verified:** nobody has spoken into it. Recognition accuracy on a
+real device, and how Siri handles the caution's wording, need a phone.
+
+## An AP4 mock, sat honestly — 40/40
+
+Method, so it can be checked: a script picked the AP4 paper with the app's own
+`pickQuestions()` and `getShuffledOptions()`, then wrote TWO files — the paper
+with `correctOptionId` and `explanation` stripped (asserted, not assumed), and
+the key separately. The answers were written and hashed
+(`0e2bc322f665f52ff…`) BEFORE the key was opened.
+
+Result: **40/40, 100%.** Pass mark 60%.
+
+## Why that score is not the good news it looks like
+
+A 100% that easy was suspicious, so the bank was measured rather than trusted:
+
+- In **776 of 885 questions (88%)** the correct answer is the longest option.
+- Correct options average **113 characters**; wrong ones average **37** — the
+  right answer is over **three times longer** than the wrong ones.
+- A candidate who has read no law at all, picking only the longest option every
+  time, scores **AP1 94%, AP2 76%, AP3 86%, AP4 86%** — a comfortable pass in
+  every single Assessment Point.
+
+No answer is wrong; every one checked was legally correct. The bank is beatable
+on shape rather than on law, which means a recruit scoring 90% here can still
+walk into the real assessment unprepared. Full per-topic figures and the 311
+worst examples are in `docs/QUESTION-DISTRACTOR-AUDIT.md`.
+
+This is CONTENT and therefore Mr Mansur's to fix — the cardinal rule stands, no
+legal content is written or rewritten here. The mechanical part is making wrong
+options match the right one in length and specificity; the case citations and
+capitalised key phrases that appear only in correct options are themselves part
+of the tell.

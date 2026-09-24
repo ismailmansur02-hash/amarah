@@ -32,6 +32,13 @@ here is an officer-safety issue, not a style preference.
    options:[{id:"A".."D",text}], correctOptionId, explanation }` — one line per
    object. Every topic keeps ≥25 questions. Scenario-based questions put the
    situation in `scenario`, not the stem.
+   **Wrong options must match the right one in length and specificity.** 88% of
+   the current bank has the correct answer as the longest option, and a
+   candidate picking only the longest option passes every AP (see
+   `docs/QUESTION-DISTRACTOR-AUDIT.md`). Never write a question whose correct
+   option is the detailed one and whose distractors are short dismissals — the
+   case citations and capitalised phrases that appear only in correct answers
+   are part of the tell. Re-run the audit script after adding questions.
 4. **Grading is shuffle-aware.** Options are displayed shuffled via
    `getShuffledOptions(q)`; ALL grading and review displays must use the shuffled
    `correctOptionId`, never the original. (A bug here once marked correct answers
@@ -78,7 +85,12 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
   `window.cloud` is injected.
 - Apple and Google sign-in are deliberately NOT offered on native. Neither
   provider is configured, a dead button is a review rejection, and offering any
-  third-party sign-in would oblige Sign in with Apple. Email magic link only.
+  third-party sign-in would oblige Sign in with Apple.
+- `src/speech.js` guards the `expo-speech-recognition` import. It is a NATIVE
+  module: it does NOT exist in Expo Go, and an unguarded import crashes the app
+  on launch there. Keep the typed fallback — it is what makes the mic button
+  safe to show. The privacy policy describes the microphone; if that behaviour
+  changes, change the policy in `shared/content/legal.js` too. Email magic link only.
 - In-app account deletion exists in native Settings. Apple REQUIRES it wherever
   accounts can be created — do not remove it.
 - The Legal card on Profile (Privacy Policy, Terms of Service) and the screen it

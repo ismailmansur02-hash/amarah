@@ -66,6 +66,8 @@ describe('VerbalDrillScreen', () => {
     });
     // the list itself, not a drill already in progress
     expect(t).not.toContain('Type what you said');
+    // no recogniser under jest, so the fallback is explained rather than silent
+    expect(t).toContain("Voice recognition isn't available in this build");
   });
 
   it('grades a perfect caution at 100%', () => {
@@ -74,7 +76,9 @@ describe('VerbalDrillScreen', () => {
     pressLabel(tree, `Drill ${caution.title}`);
     typeInto(tree, 'What you said', caution.script);
     pressLabel(tree, 'Check my answer');
-    expect(allText(tree)).toContain('100% word-for-word');
+    const t = allText(tree);
+    expect(t).toContain('100%');
+    expect(t).toContain('Word-perfect. Well delivered.');
   });
 
   it('marks missing words as misses', () => {
@@ -84,8 +88,10 @@ describe('VerbalDrillScreen', () => {
     typeInto(tree, 'What you said', 'You do not have to say anything');
     pressLabel(tree, 'Check my answer');
     const t = allText(tree);
-    expect(t).toMatch(/\d+% word-for-word/);
-    expect(t).not.toContain('100% word-for-word');
+    expect(t).toMatch(/\d+ of \d+ words covered/);
+    expect(t).not.toContain('Word-perfect');
+    // and the correct wording is shown back when it was not word-perfect
+    expect(t).toContain(caution.display);
   });
 
   it('credits covered components in checklist drills', () => {
@@ -95,7 +101,7 @@ describe('VerbalDrillScreen', () => {
     typeInto(tree, 'What you said', 'my grounds are, the object of the search is stolen goods, here is my warrant card');
     pressLabel(tree, 'Check my answer');
     const t = allText(tree);
-    expect(t).toMatch(/\d+ of \d+ covered/);
+    expect(t).toMatch(/\d+ of \d+ components covered/);
     // and the element labels must be listed, not blank rows
     g.components.forEach((c) => expect(t).toContain(c.label));
   });

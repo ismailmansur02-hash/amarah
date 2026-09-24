@@ -14,6 +14,16 @@
       "image": "./assets/splash-icon.png"
     },
     "assetBundlePatterns": ["**/*"],
+    "plugins": [
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Prep a Constable uses the microphone so you can practise delivering the caution and stop-search wording out loud.",
+          "speechRecognitionPermission": "Prep a Constable converts what you say into text so your verbal drill can be marked word-for-word. Nothing is recorded or uploaded.",
+          "androidSpeechServicePackages": ["com.google.android.googlequicksearchbox"]
+        }
+      ]
+    ],
     "ios": {
       "bundleIdentifier": "uk.co.prepaconstable.app",
       "buildNumber": "1",
