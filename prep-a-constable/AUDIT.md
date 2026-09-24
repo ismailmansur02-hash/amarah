@@ -762,3 +762,74 @@ legal content is written or rewritten here. The mechanical part is making wrong
 options match the right one in length and specificity; the case citations and
 capitalised key phrases that appear only in correct options are themselves part
 of the tell.
+
+---
+
+# Round 12 — submission prep
+
+## App size: 3.9 MB of fonts down to 736 KB
+
+`App.js` imported font faces from the `@expo-google-fonts` package roots. Those
+index files `require` every weight they ship, and Metro cannot tree-shake a
+required asset — so importing three Fraunces faces bundled all eighteen. Across
+the three families that was **41 font files, 3.9 MB**, in an app whose entire
+JavaScript bundle is 3.9 MB.
+
+Each `.ttf` is now required by its own path. Export drops to **8 files,
+736 KB** — the eight faces actually registered. Nothing else changed.
+
+## The £6.99 one-off, in the legal documents
+
+Mr Mansur's decision: a one-off purchase, not the subscription the documents
+described. Both the privacy policy and the terms said subscriptions were billed
+through RevenueCat and renewed automatically. None of that was ever true of the
+shipped app — there is no purchase code in it at all — and a reviewer reads the
+privacy policy.
+
+Replaced with an accurate description of a paid app: £6.99 once, nothing
+renews, payment taken by Apple or Google, refunds through the store. RevenueCat
+removed from the third-party list. The "v0.9 prototype" line in Profile now
+reads v1.0 on both builds; `app.json` is 1.0.0.
+
+**This assumes a paid app** — Apple charges at download, which needs no code.
+Free-with-unlock is a different build: StoreKit, a paywall and Restore
+Purchases, all reviewed. Flagged to him, not assumed.
+
+## A flaky test, found and fixed
+
+The drill tests failed roughly one run in four — worse than failing, because a
+green run meant nothing. `src/speech.js` computed `available` **once at module
+load**, so its value depended on which test file loaded the module first: a file
+without the mock froze it to false, and the drill tests then saw the typed
+fallback instead of the microphone.
+
+The same staleness is a real runtime bug. An officer can switch dictation off in
+iOS Settings while the app sits in the background, and the app would go on
+offering a microphone that no longer works. `available` is now `isAvailable()`,
+asked on every render.
+
+Ten consecutive `--runInBand` runs green, in the configuration that reproduced
+the flake.
+
+## Store assets
+
+- `docs/store-screenshots/` — 11 screenshots at **1320 × 2868**, Apple's 6.9-inch
+  iPhone size, captured from the real app through react-native-web.
+  **They must be retaken on device before submission.** The layout and content
+  are right, but iOS draws text differently and Apple expects screenshots of
+  the app in use.
+- `docs/APP-STORE-LISTING.md` — description, keywords, subtitle, the App Privacy
+  questionnaire answers (audio data is a **No**, correctly: nothing leaves the
+  device), the age-rating answers, and the App Review notes telling the reviewer
+  how to get in without an account and where the microphone is used.
+
+The description carries an explicit line that the app is independent and not
+endorsed by the Metropolitan Police Service or the College of Policing. Without
+it a reviewer can read the app as claiming official status, which is a
+guideline 5.2 rejection.
+
+## Still blocked on Mr Mansur
+
+Apple Developer Program enrolment; Supabase Email provider and the
+`prepaconstable://` redirect; a public URL for the privacy policy. And nothing
+has yet run on an iPhone.

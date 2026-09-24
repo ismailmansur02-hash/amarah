@@ -7,7 +7,7 @@
 //
 // SPEECH: expo-speech-recognition is a native module, so it exists in a
 // development or EAS build and NOT in Expo Go. Everything goes through
-// ../speech, which guards the import — `Speech.available` is false there and
+// ../speech, which guards the import — `Speech.isAvailable()` is false there and
 // the drill falls back to typing rather than showing a mic that cannot work.
 // Grading is identical either way: the shared matchers take a plain string, so
 // a spoken transcript and a typed one go through exactly the same code as the
@@ -36,11 +36,15 @@ const MicGlyph = ({ size = 44, color = 'white' }) => (
 );
 
 export default function VerbalDrillScreen({ go }) {
+  // Asked every render rather than read from a module constant: the officer can
+  // switch dictation off in Settings while the app is backgrounded.
+  const speechAvailable = Speech.isAvailable();
+
   const [drillId, setDrillId] = useState(null);
   const [phase, setPhase] = useState('idle'); // idle | permcheck | recording | result | nothing | unsupported
   const [result, setResult] = useState(null);
   const [liveHeard, setLiveHeard] = useState('');
-  const [typing, setTyping] = useState(!Speech.available);
+  const [typing, setTyping] = useState(!speechAvailable);
   const [typed, setTyped] = useState('');
   const [showScript, setShowScript] = useState(false);
 
@@ -117,7 +121,7 @@ export default function VerbalDrillScreen({ go }) {
   const leaveDrill = () => { Speech.abort(); setDrillId(null); setShowScript(false); reset(); };
 
   const startRecording = async () => {
-    if (!Speech.available) { setTyping(true); return; }
+    if (!speechAvailable) { setTyping(true); return; }
     setPhase('permcheck');
     const granted = await Speech.requestPermissions();
     if (!granted) { setPhase('unsupported'); return; }
@@ -170,7 +174,7 @@ export default function VerbalDrillScreen({ go }) {
               <Text style={s.drillChevron}>›</Text>
             </Pressable>
           ))}
-          {!Speech.available ? (
+          {!speechAvailable ? (
             <View style={s.noticeBox}>
               <Text style={s.noticeText}>
                 Voice recognition isn't available in this build, so the drills take typed input instead. It
@@ -372,7 +376,7 @@ export default function VerbalDrillScreen({ go }) {
                 <PrimaryButton full onPress={submitTyped} accessibilityLabel="Check my answer">Check</PrimaryButton>
               </View>
             </Card>
-            {Speech.available ? (
+            {speechAvailable ? (
               <Pressable
                 onPress={() => setTyping(false)}
                 accessibilityRole="button"

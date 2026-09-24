@@ -145,7 +145,7 @@ export default function SettingsScreen({ state, dispatch, go, cloud }) {
         <Card style={{ marginBottom: 14 }}>
           <Text style={s.cardHeading}>About this build</Text>
           <Text style={s.cardBody}>
-            Prep a Constable v0.9 prototype. 885 exam-style questions across 35 topics covering AP1 to AP4,
+            Prep a Constable v1.0. 885 exam-style questions across 35 topics covering AP1 to AP4,
             with AP-scoped mock exams, 333 flashcards, 40 mnemonics, spoken verbal drills (caution, GOWISELY,
             ESD arrest), a Constable Companion reference library of 151 offences and 24 powers with points to
             prove, and real assessment result tracking. Progress stored locally on this device and synced to

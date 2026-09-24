@@ -12,18 +12,19 @@ import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, initialWindowMetrics } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
-import {
-  Fraunces_500Medium,
-  Fraunces_500Medium_Italic,
-  Fraunces_600SemiBold,
-} from '@expo-google-fonts/fraunces';
-import {
-  Manrope_400Regular,
-  Manrope_500Medium,
-  Manrope_600SemiBold,
-  Manrope_700Bold,
-} from '@expo-google-fonts/manrope';
-import { JetBrainsMono_500Medium } from '@expo-google-fonts/jetbrains-mono';
+// Each .ttf is required by its own path, NOT imported from the package root.
+// The @expo-google-fonts index files `require` every weight they ship, and
+// Metro cannot tree-shake a required asset — importing three faces from
+// '@expo-google-fonts/fraunces' therefore bundled all eighteen. Across the
+// three families that was 41 font files and 3.9 MB of a ~4 MB app.
+const Fraunces_500Medium = require('@expo-google-fonts/fraunces/500Medium/Fraunces_500Medium.ttf');
+const Fraunces_500Medium_Italic = require('@expo-google-fonts/fraunces/500Medium_Italic/Fraunces_500Medium_Italic.ttf');
+const Fraunces_600SemiBold = require('@expo-google-fonts/fraunces/600SemiBold/Fraunces_600SemiBold.ttf');
+const Manrope_400Regular = require('@expo-google-fonts/manrope/400Regular/Manrope_400Regular.ttf');
+const Manrope_500Medium = require('@expo-google-fonts/manrope/500Medium/Manrope_500Medium.ttf');
+const Manrope_600SemiBold = require('@expo-google-fonts/manrope/600SemiBold/Manrope_600SemiBold.ttf');
+const Manrope_700Bold = require('@expo-google-fonts/manrope/700Bold/Manrope_700Bold.ttf');
+const JetBrainsMono_500Medium = require('@expo-google-fonts/jetbrains-mono/500Medium/JetBrainsMono_500Medium.ttf');
 
 import * as Linking from 'expo-linking';
 

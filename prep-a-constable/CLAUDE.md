@@ -89,8 +89,13 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
 - `src/speech.js` guards the `expo-speech-recognition` import. It is a NATIVE
   module: it does NOT exist in Expo Go, and an unguarded import crashes the app
   on launch there. Keep the typed fallback — it is what makes the mic button
-  safe to show. The privacy policy describes the microphone; if that behaviour
-  changes, change the policy in `shared/content/legal.js` too. Email magic link only.
+  safe to show. Availability is `isAvailable()`, asked on every render, never a
+  module constant: dictation can be switched off in iOS Settings while the app
+  is backgrounded, and freezing it at load also made the drill tests flaky.
+- The app is a **one-off £6.99 paid app**. There is deliberately NO purchase
+  code — Apple charges at download. `shared/content/legal.js` says exactly that;
+  if the model ever changes to free-with-unlock, the policy, the terms AND a
+  StoreKit paywall with Restore Purchases all have to change together. Email magic link only.
 - In-app account deletion exists in native Settings. Apple REQUIRES it wherever
   accounts can be created — do not remove it.
 - The Legal card on Profile (Privacy Policy, Terms of Service) and the screen it
@@ -177,8 +182,11 @@ would have crashed on launch with every other test green.
 project root, so Metro cannot see it otherwise) and `disableHierarchicalLookup`
 stops Metro walking up and pulling a second React out of `preview/node_modules`.
 
-Font weights: the `@expo-google-fonts/*` packages ship every weight and Metro
-bundles them all (~4 MB of unused faces). Trim before store submission.
+Font faces are required by their own `.ttf` path in `App.js`, never imported
+from the `@expo-google-fonts` package root. Those index files `require` every
+weight they ship and Metro cannot tree-shake a required asset, so a root import
+bundles all of them — it was 41 files and 3.9 MB before this was fixed, against
+736 KB now. Keep it that way when adding a face.
 
 ## Web preview build
 

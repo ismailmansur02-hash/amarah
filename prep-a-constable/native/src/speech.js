@@ -21,17 +21,20 @@ try {
   mod = null;
 }
 
-// `isRecognitionAvailable` also returns false on a device with no recogniser
-// (an iPhone with Siri dictation switched off, an Android without Google's
-// speech service), so ask it rather than assuming the module's presence.
-export const available = (() => {
+// Asked on every render, NOT frozen at module load. `isRecognitionAvailable`
+// also returns false on a device with no recogniser — an iPhone with Siri
+// dictation switched off, an Android without Google's speech service — and the
+// officer can change that in Settings while the app sits in the background, so
+// a value captured once at startup goes stale. (It was also load-order
+// dependent under jest, which made the drill tests flaky.)
+export function isAvailable() {
   if (!mod) return false;
   try {
     return typeof mod.isRecognitionAvailable !== 'function' || !!mod.isRecognitionAvailable();
   } catch (e) {
     return false;
   }
-})();
+}
 
 export async function requestPermissions() {
   if (!mod) return false;

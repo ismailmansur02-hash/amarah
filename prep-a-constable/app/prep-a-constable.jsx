@@ -2565,7 +2565,7 @@ function SettingsScreen({ state, dispatch, go }) {
         <Card style={{ marginBottom: 14 }}>
           <h3 style={{ fontFamily: fontDisplay, margin: "0 0 6px", fontSize: 18 }}>About this build</h3>
           <p style={{ margin: 0, color: C.textMuted, fontSize: 14, lineHeight: 1.5 }}>
-            Prep a Constable v0.9 prototype. 885 exam-style questions across 35 topics covering AP1 to AP4, with AP-scoped mock exams, 333 flashcards, 40 mnemonics, spoken verbal drills (caution, GOWISELY, ESD arrest), a Constable Companion reference library of 151 offences and 24 powers with points to prove, and real assessment result tracking. Progress stored locally on this device and synced to your account when signed in.
+            Prep a Constable v1.0. 885 exam-style questions across 35 topics covering AP1 to AP4, with AP-scoped mock exams, 333 flashcards, 40 mnemonics, spoken verbal drills (caution, GOWISELY, ESD arrest), a Constable Companion reference library of 151 offences and 24 powers with points to prove, and real assessment result tracking. Progress stored locally on this device and synced to your account when signed in.
           </p>
         </Card>
         <Card style={{ marginBottom: 14 }}>
