@@ -7,8 +7,7 @@ import ProgressBar from "@/components/ProgressBar";
 import ApiForm from "@/components/ApiForm";
 import InlineSelect from "@/components/InlineSelect";
 
-const inputCls =
-  "rounded-md border border-slate-300 px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none";
+const inputCls = "input input-sm";
 
 export default function Overview({
   property,
@@ -40,94 +39,131 @@ export default function Overview({
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">Next owner payment</p>
-          <p className="mt-1 text-xl font-semibold text-emerald-900">
+      {/* The payment leads at full size; the supporting figures share one card
+          beside it. Everything the same size says nothing is important. */}
+      <div className="grid gap-5 lg:grid-cols-[1fr_1.6fr]">
+        <div className="card p-6">
+          <p className="label">Next owner payment</p>
+          <p className="num mt-3 text-[2.25rem] font-semibold leading-none">
             {nextPayout ? money(nextPayout.owner_payout) : "—"}
           </p>
-          <p className="text-xs text-emerald-700">
+          <p className="mt-2.5 text-[13px] text-[var(--ink-3)]">
             {nextPayout ? `scheduled ${fmtDate(nextPayout.payout_date)}` : "no payout scheduled"}
           </p>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Management fee</p>
-          <p className="mt-1 text-xl font-semibold">{feeLabel(property.management_fee_type, property.management_fee_value)}</p>
-          <p className="text-xs text-slate-400">{money(feesYtd)} paid this year</p>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Tax deductions YTD</p>
-          <p className="mt-1 text-xl font-semibold">{money(taxYtd)}</p>
-          <p className="text-xs text-slate-400">fees & deductible expenses</p>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Open requests</p>
-          <p className="mt-1 text-xl font-semibold">{openRequests}</p>
-          <p className="text-xs text-slate-400">maintenance & management</p>
+
+        <div className="card grid gap-px overflow-hidden bg-[var(--line)] sm:grid-cols-3">
+          <Figure
+            label="Management fee"
+            value={feeLabel(property.management_fee_type, property.management_fee_value)}
+            sub={`${money(feesYtd)} paid this year`}
+          />
+          <Figure
+            label="Tax deductions YTD"
+            value={money(taxYtd)}
+            sub="fees & deductible expenses"
+          />
+          <Figure
+            label="Open requests"
+            value={String(openRequests)}
+            sub="maintenance & management"
+          />
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-4">
-          <p className="text-sm font-semibold">Rent-ready legal checklist</p>
-          <p className="mb-2 text-xs text-slate-400">{stepsDone} of {steps.length} steps complete</p>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="card p-6">
+          <p className="text-[15px] font-medium">Rent-ready legal checklist</p>
+          <p className="mb-4 mt-1 text-[13px] text-[var(--ink-3)]">
+            {stepsDone} of {steps.length} steps complete
+          </p>
           <ProgressBar percent={steps.length ? (100 * stepsDone) / steps.length : 0} />
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-4">
-          <p className="text-sm font-semibold">Renovation</p>
-          <p className="mb-2 text-xs text-slate-400">{tasksDone} of {tasks.length} tasks complete</p>
-          <ProgressBar percent={tasks.length ? (100 * tasksDone) / tasks.length : 0} colorClass="bg-orange-500" />
+        <div className="card p-6">
+          <p className="text-[15px] font-medium">Renovation</p>
+          <p className="mb-4 mt-1 text-[13px] text-[var(--ink-3)]">
+            {tasksDone} of {tasks.length} tasks complete
+          </p>
+          <ProgressBar
+            percent={tasks.length ? (100 * tasksDone) / tasks.length : 0}
+            tone="#c2410c"
+          />
         </div>
       </div>
 
       {isManager && (
-        <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4">
-          <span className="text-sm font-medium text-slate-600">Property status:</span>
+        <div className="card flex flex-wrap items-center gap-x-4 gap-y-2 p-5">
+          <span className="text-[14px] font-medium">Property status</span>
           <InlineSelect
             action={`/api/properties/${property.id}`}
             name="status"
             value={property.status}
             options={Object.entries(STATUS_LABELS).map(([value, label]) => ({ value, label }))}
           />
-          <span className="text-xs text-slate-400">Status changes are logged to the activity checklist.</span>
+          <span className="text-[13px] text-[var(--ink-3)]">
+            Changes are logged to the activity checklist.
+          </span>
         </div>
       )}
 
       <section>
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-lg font-semibold">Activity checklist since takeover</h2>
-          <span className="text-xs text-slate-400">
-            everything accomplished from {fmtDate(property.takeover_date)} to today
-          </span>
-        </div>
+        <h2 className="display-sm text-xl">Activity since takeover</h2>
+        <p className="mt-1.5 text-[14px] text-[var(--ink-2)]">
+          Everything accomplished from {fmtDate(property.takeover_date)} to today.
+        </p>
 
         {isManager && (
           <ApiForm
             action={`/api/properties/${property.id}/activity`}
             submitLabel="Log accomplishment"
-            className="mt-3 rounded-xl border border-slate-200 bg-white p-4"
+            className="card mt-5 p-5"
           >
             <div className="grid gap-3 sm:grid-cols-2">
-              <input name="action" required placeholder="What was accomplished (e.g. Passed city inspection)" className={inputCls} />
+              <input
+                name="action"
+                required
+                placeholder="What was accomplished (e.g. Passed city inspection)"
+                className={inputCls}
+              />
               <input name="detail" placeholder="Detail (optional)" className={inputCls} />
             </div>
           </ApiForm>
         )}
 
-        <ol className="mt-4 space-y-0 border-l-2 border-slate-200 pl-5">
+        {/* A hairline timeline. The rule is one pixel and the markers are small
+            — the entries are the content, not the decoration around them. */}
+        <ol className="mt-7 border-l border-[var(--line)] pl-6">
           {activity.map((a) => (
-            <li key={a.id} className="relative pb-5">
-              <span className="absolute -left-[27px] top-1 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />
-              <p className="text-sm font-medium text-slate-800">{a.action}</p>
-              {a.detail && <p className="text-sm text-slate-500">{a.detail}</p>}
-              <p className="text-xs text-slate-400">
-                {fmtDate(a.created_at)}{a.actor_name ? ` · ${a.actor_name}` : ""}
+            <li key={a.id} className="relative pb-7 last:pb-0">
+              <span
+                className="absolute -left-[26.5px] top-[7px] h-[9px] w-[9px] rounded-full ring-4 ring-[var(--paper)]"
+                style={{ background: "var(--accent)" }}
+              />
+              <p className="text-[15px] font-medium">{a.action}</p>
+              {a.detail && (
+                <p className="mt-0.5 text-[14px] text-[var(--ink-2)]">{a.detail}</p>
+              )}
+              <p className="mt-1 text-[13px] text-[var(--ink-3)]">
+                {fmtDate(a.created_at)}
+                {a.actor_name ? ` · ${a.actor_name}` : ""}
               </p>
             </li>
           ))}
-          {activity.length === 0 && <li className="text-sm text-slate-400">Nothing logged yet.</li>}
+          {activity.length === 0 && (
+            <li className="text-[14px] text-[var(--ink-3)]">Nothing logged yet.</li>
+          )}
         </ol>
       </section>
+    </div>
+  );
+}
+
+function Figure({ label, value, sub }: { label: string; value: string; sub: string }) {
+  return (
+    <div className="bg-[var(--surface)] p-6">
+      <p className="label">{label}</p>
+      <p className="num mt-3 text-balance text-[1.25rem] font-semibold leading-tight">{value}</p>
+      <p className="mt-2 text-[13px] text-[var(--ink-3)]">{sub}</p>
     </div>
   );
 }

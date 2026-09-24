@@ -24,12 +24,19 @@ export const STATUS_LABELS: Record<string, string> = {
   occupied: "Occupied",
 };
 
-export const STATUS_COLORS: Record<string, string> = {
-  onboarding: "bg-slate-100 text-slate-700",
-  rent_ready_prep: "bg-amber-100 text-amber-800",
-  renovation: "bg-orange-100 text-orange-800",
-  listed: "bg-sky-100 text-sky-800",
-  occupied: "bg-emerald-100 text-emerald-800",
+/**
+ * One colour per status, shown as a small dot on an otherwise neutral pill.
+ *
+ * Five differently tinted pills on one screen is noise and reads as a
+ * template; five identical pills with a coloured dot each reads as a legend,
+ * and keeps the colour budget for things that actually need attention.
+ */
+export const STATUS_DOTS: Record<string, string> = {
+  onboarding: "#86868b",
+  rent_ready_prep: "#c98a00",
+  renovation: "#c2410c",
+  listed: "#1d5fbf",
+  occupied: "#0a6c4a",
 };
 
 export function feeLabel(type: string, value: number): string {

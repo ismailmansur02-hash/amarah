@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PropertyRow } from "@/lib/access";
 import {
   ActivityRow, ChecklistStepRow, DocumentRow, LeaseRow, LedgerRow,
@@ -15,13 +15,13 @@ import Accounting from "./sections/Accounting";
 import Maintenance from "./sections/Maintenance";
 
 const TABS = [
-  { key: "overview", label: "Overview" },
-  { key: "info", label: "1 · Property Info" },
-  { key: "legal", label: "2 · Legal" },
-  { key: "renovation", label: "3 · Renovation" },
-  { key: "tenants", label: "4 · Tenants & Lease" },
-  { key: "accounting", label: "5 · Accounting & Tax" },
-  { key: "maintenance", label: "6 · Maintenance" },
+  { key: "overview", n: "", label: "Overview" },
+  { key: "info", n: "1", label: "Property" },
+  { key: "legal", n: "2", label: "Legal" },
+  { key: "renovation", n: "3", label: "Renovation" },
+  { key: "tenants", n: "4", label: "Tenants & Lease" },
+  { key: "accounting", n: "5", label: "Accounting & Tax" },
+  { key: "maintenance", n: "6", label: "Maintenance" },
 ];
 
 /**
@@ -64,36 +64,67 @@ export default function PropertyTabs({
   initialTab: string;
 }) {
   const [tab, setTab] = useState(initialTab);
+  const stripRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const url = new URL(window.location.href);
     if (tab === "overview") url.searchParams.delete("tab");
     else url.searchParams.set("tab", tab);
     window.history.replaceState(null, "", url.toString());
+
+    // On a phone the strip scrolls sideways, so the tab you just chose — or
+    // the one restored from the address — has to be brought into view itself.
+    const active = stripRef.current?.querySelector('[aria-selected="true"]');
+    active?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
   }, [tab]);
 
   const docsBySection = (section: string) => docs.filter((d) => d.section === section);
 
   return (
     <>
-      <nav className="flex flex-wrap gap-1 border-b border-slate-200 pb-px text-sm">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => setTab(t.key)}
-            className={
-              t.key === tab
-                ? "rounded-t-md border border-b-white border-slate-200 bg-white px-3 py-2 font-medium text-slate-900"
-                : "rounded-t-md px-3 py-2 text-slate-500 hover:text-slate-800"
-            }
-          >
-            {t.label}
-          </button>
-        ))}
-      </nav>
+      {/*
+       * A segmented control rather than folder tabs. It stays with you as you
+       * read down a long file, and on a phone it scrolls sideways instead of
+       * wrapping into three ragged rows.
+       */}
+      <div
+        ref={stripRef}
+        className="no-scrollbar sticky top-[calc(env(safe-area-inset-top)+3.6rem)] z-30 -mx-5 overflow-x-auto px-5 py-2"
+      >
+        <nav
+          role="tablist"
+          aria-label="Property file sections"
+          className="inline-flex gap-0.5 rounded-full border border-[var(--line)] bg-[color-mix(in_srgb,var(--paper)_75%,transparent)] p-1 backdrop-blur-xl"
+        >
+          {TABS.map((t) => {
+            const on = t.key === tab;
+            return (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={on}
+                onClick={() => setTab(t.key)}
+                className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-[14px] transition-all duration-300 ease-[var(--ease-quick)] ${
+                  on
+                    ? "bg-[var(--surface)] font-medium text-[var(--ink)] shadow-[0_1px_2px_rgba(0,0,0,0.06),0_4px_12px_-8px_rgba(0,0,0,0.3)]"
+                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
+                }`}
+              >
+                {t.n && (
+                  <span className={`num mr-1.5 ${on ? "text-[var(--ink-3)]" : "text-[var(--ink-3)]"}`}>
+                    {t.n}
+                  </span>
+                )}
+                {t.label}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
 
-      <div className="mt-6">
+      {/* Keyed on the tab, so each panel fades in rather than snapping. */}
+      <div key={tab} className="fade-in mt-8">
         {tab === "overview" && (
           <Overview
             property={property}

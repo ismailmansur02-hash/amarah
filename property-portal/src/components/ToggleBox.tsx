@@ -31,7 +31,7 @@ export default function ToggleBox({
   return (
     <input
       type="checkbox"
-      className="h-5 w-5 accent-emerald-600"
+      className="h-5 w-5 shrink-0 accent-[var(--accent)]"
       defaultChecked={checked}
       disabled={disabled || busy}
       onChange={onChange}

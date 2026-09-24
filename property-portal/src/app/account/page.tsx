@@ -2,56 +2,71 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import ApiForm from "@/components/ApiForm";
-
-
-const inputCls =
-  "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none";
+import Field from "@/components/Field";
 
 export default async function AccountPage() {
   const session = await getSession();
   if (!session) redirect("/login");
 
+  const facts: [string, string][] = [
+    ["Name", session.name],
+    ["Username", session.username],
+    ["Role", session.role],
+  ];
+
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="rise mx-auto max-w-lg">
       <Link
         href={session.role === "manager" ? "/dashboard" : "/my"}
-        className="text-sm text-slate-500 hover:text-slate-700"
+        className="group inline-flex items-center gap-1.5 text-[14px] text-[var(--ink-2)] transition-colors duration-200 hover:text-[var(--ink)]"
       >
-        ← Back to {session.role === "manager" ? "dashboard" : "my properties"}
+        <span className="transition-transform duration-300 ease-[var(--ease)] group-hover:-translate-x-0.5">
+          ←
+        </span>
+        {session.role === "manager" ? "Dashboard" : "My properties"}
       </Link>
 
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight">Your account</h1>
+      <h1 className="display mt-5 text-[clamp(1.875rem,4.5vw,2.5rem)]">Your account</h1>
 
-      <dl className="mt-4 rounded-xl border border-slate-200 bg-white p-5 text-sm">
-        <div className="flex justify-between py-1">
-          <dt className="text-slate-500">Name</dt>
-          <dd className="font-medium">{session.name}</dd>
-        </div>
-        <div className="flex justify-between py-1">
-          <dt className="text-slate-500">Username</dt>
-          <dd className="font-mono text-xs">{session.username}</dd>
-        </div>
-        <div className="flex justify-between py-1">
-          <dt className="text-slate-500">Role</dt>
-          <dd className="font-medium capitalize">{session.role}</dd>
-        </div>
+      <dl className="rows card mt-7 overflow-hidden">
+        {facts.map(([k, v]) => (
+          <div key={k} className="flex items-center justify-between gap-4 px-5 py-4">
+            <dt className="label">{k}</dt>
+            <dd className={k === "Username" ? "font-mono text-[14px]" : "text-[15px] capitalize"}>
+              {v}
+            </dd>
+          </div>
+        ))}
       </dl>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold">Change your password</h2>
+      <div className="mt-12">
+        <h2 className="display-sm text-xl">Change your password</h2>
         <ApiForm
           action={`/api/users/${session.uid}/password`}
           submitLabel="Update password"
-          className="mt-3 rounded-xl border border-slate-200 bg-white p-5"
+          className="card mt-5 p-6"
         >
-          <label className="block text-xs font-medium text-slate-500">
-            Current password
-            <input name="current_password" type="password" required autoComplete="current-password" className={inputCls} />
-          </label>
-          <label className="mt-3 block text-xs font-medium text-slate-500">
-            New password (at least 8 characters)
-            <input name="password" type="password" required minLength={8} autoComplete="new-password" className={inputCls} />
-          </label>
+          <div className="space-y-4">
+            <Field label="Current password">
+              <input
+                name="current_password"
+                type="password"
+                required
+                autoComplete="current-password"
+                className="input"
+              />
+            </Field>
+            <Field label="New password" hint="At least 8 characters">
+              <input
+                name="password"
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                className="input"
+              />
+            </Field>
+          </div>
         </ApiForm>
       </div>
     </div>

@@ -16,9 +16,9 @@ export default function Field({
 }) {
   return (
     <label className={`block ${className}`}>
-      <span className="mb-1 block text-xs font-medium text-slate-600">{label}</span>
+      <span className="mb-1.5 block text-[13px] font-medium text-[var(--ink-2)]">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-xs text-slate-400">{hint}</span>}
+      {hint && <span className="mt-1.5 block text-[12px] text-[var(--ink-3)]">{hint}</span>}
     </label>
   );
 }

@@ -4,15 +4,14 @@ import { getSession } from "@/lib/auth";
 import { sql, one } from "@/lib/db";
 import { PropertyRow } from "@/lib/access";
 import { UserRow, LedgerRow } from "@/lib/types";
-import { money, fmtDate, STATUS_LABELS, STATUS_COLORS, feeLabel } from "@/lib/format";
+import { money, fmtDate, feeLabel } from "@/lib/format";
 import ProgressBar from "@/components/ProgressBar";
 import ApiForm from "@/components/ApiForm";
 import Field from "@/components/Field";
 import GettingStarted from "@/components/GettingStarted";
+import StatusPill from "@/components/StatusPill";
 
-
-const inputCls =
-  "w-full rounded-md border border-slate-300 px-2 py-2 text-sm focus:border-slate-500 focus:outline-none";
+const inputCls = "input";
 
 export default async function ManagerDashboard() {
   const session = await getSession();
@@ -48,22 +47,19 @@ export default async function ManagerDashboard() {
   /* ---- Add a property ---- */
   const propertySection = (
     <section key="property" id="add-property">
-      <h2 className="text-lg font-semibold">Add a property</h2>
+      <h2 className="display-sm text-xl">Add a property</h2>
 
       {!hasClients ? (
         // A property must belong to an owner, so with no client logins there is
         // nothing to attach it to. Say so instead of showing an empty dropdown.
-        <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-5">
-          <p className="font-medium text-amber-900">Create a client login first</p>
-          <p className="mt-1 text-sm text-amber-800">
+        <div className="card mt-4 p-6">
+          <p className="text-[15px] font-medium">Create a client login first</p>
+          <p className="mt-2 max-w-prose text-[14px] leading-relaxed text-[var(--ink-2)]">
             Every property belongs to an owner, so there has to be a client login to attach it to.
-            Create one under <strong>Client logins</strong>, then come back here — the owner will
-            appear in the list.
+            Create one under <strong className="font-medium text-[var(--ink)]">Client logins</strong>,
+            then come back here — the owner will appear in the list.
           </p>
-          <a
-            href="#client-logins"
-            className="mt-3 inline-block rounded-md bg-amber-900 px-4 py-2 text-sm font-medium text-white hover:bg-amber-800"
-          >
+          <a href="#client-logins" className="btn btn-sm mt-5">
             Go to client logins
           </a>
         </div>
@@ -71,7 +67,7 @@ export default async function ManagerDashboard() {
         <ApiForm
           action="/api/properties"
           submitLabel="Create property file"
-          className="mt-3 rounded-xl border border-slate-200 bg-white p-4"
+          className="card mt-4 p-6"
         >
           <div className="grid gap-3 sm:grid-cols-2">
             <Field label="Owner (client)" className="sm:col-span-2">
@@ -137,7 +133,7 @@ export default async function ManagerDashboard() {
               />
             </Field>
           </div>
-          <p className="mt-2 text-xs text-slate-400">
+          <p className="mt-4 text-[13px] text-[var(--ink-3)]">
             The 14-step rent-ready legal checklist is created automatically for every new property.
           </p>
         </ApiForm>
@@ -148,60 +144,50 @@ export default async function ManagerDashboard() {
   /* ---- Client logins ---- */
   const clientSection = (
     <section key="clients" id="client-logins">
-      <h2 className="text-lg font-semibold">Client logins</h2>
-      <div className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500">
-              <th className="px-4 py-2.5">Name</th>
-              <th className="px-4 py-2.5">Username</th>
-              <th className="px-4 py-2.5">Reset password</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {clients.map((c) => (
-              <tr key={c.id}>
-                <td className="px-4 py-2.5">
-                  {c.name}
-                  {c.email && <p className="text-xs text-slate-400">{c.email}</p>}
-                </td>
-                <td className="px-4 py-2.5 font-mono text-xs">{c.username}</td>
-                <td className="px-4 py-2.5">
-                  <ApiForm
-                    action={`/api/users/${c.id}/password`}
-                    submitLabel="Set"
-                    buttonClassName="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-50"
-                  >
-                    <input
-                      name="password"
-                      type="text"
-                      required
-                      minLength={8}
-                      placeholder="New password"
-                      aria-label={`New password for ${c.name}`}
-                      className="w-36 rounded-md border border-slate-300 px-2 py-1 text-xs focus:border-slate-500 focus:outline-none"
-                    />
-                  </ApiForm>
-                </td>
-              </tr>
-            ))}
-            {!hasClients && (
-              <tr>
-                <td colSpan={3} className="px-4 py-6 text-center text-slate-400">
-                  No client logins yet — create the first one below.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <h2 className="display-sm text-xl">Client logins</h2>
 
-      <ApiForm
-        action="/api/clients"
-        submitLabel="Create client login"
-        className="mt-3 rounded-xl border border-slate-200 bg-white p-4"
-      >
-        <p className="mb-3 text-xs text-slate-500">
+      {hasClients ? (
+        <ul className="rows card-flat mt-4 overflow-hidden">
+          {clients.map((c) => (
+            <li
+              key={c.id}
+              className="flex flex-wrap items-center justify-between gap-4 px-5 py-4"
+            >
+              <div className="min-w-0">
+                <p className="text-[15px] font-medium">{c.name}</p>
+                <p className="text-[13px] text-[var(--ink-3)]">
+                  <span className="font-mono">{c.username}</span>
+                  {c.email && ` · ${c.email}`}
+                </p>
+              </div>
+              <ApiForm
+                action={`/api/users/${c.id}/password`}
+                submitLabel="Set"
+                buttonClassName="btn-quiet btn-sm"
+                className="flex shrink-0 items-center gap-2"
+                footerClassName="flex items-center gap-2"
+              >
+                <input
+                  name="password"
+                  type="text"
+                  required
+                  minLength={8}
+                  placeholder="New password"
+                  aria-label={`New password for ${c.name}`}
+                  className="input input-sm w-40"
+                />
+              </ApiForm>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="card-flat mt-4 px-5 py-8 text-center text-[14px] text-[var(--ink-3)]">
+          No client logins yet — create the first one below.
+        </p>
+      )}
+
+      <ApiForm action="/api/clients" submitLabel="Create client login" className="card mt-4 p-6">
+        <p className="mb-5 max-w-prose text-[13px] leading-relaxed text-[var(--ink-2)]">
           You choose the username and password, then hand them to your client. They will only ever
           see their own properties.
         </p>
@@ -224,23 +210,31 @@ export default async function ManagerDashboard() {
   );
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Manager Dashboard</h1>
-        <p className="text-sm text-slate-500">
+    <div className="space-y-12">
+      <div className="rise">
+        <h1 className="display text-[clamp(2rem,5vw,2.75rem)]">Dashboard</h1>
+        <p className="mt-2 text-[15px] text-[var(--ink-2)]">
           Every property file, client login, and payout in one place.
         </p>
       </div>
 
       {(!hasClients || properties.length === 0) && (
-        <GettingStarted hasClients={hasClients} hasProperties={properties.length > 0} />
+        <div className="rise rise-1">
+          <GettingStarted hasClients={hasClients} hasProperties={properties.length > 0} />
+        </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Properties" value={String(properties.length)} sub={`${occupied} occupied`} />
-        <StatCard label="Monthly rent roll" value={money(rentRoll?.total ?? 0)} sub="active leases" />
-        <StatCard label="Open requests" value={String(openRequests?.n ?? 0)} sub="maintenance & management" />
-        <StatCard
+      {/* The four numbers share one card divided by hairlines, rather than
+          floating as four separate boxes. Related figures should look related. */}
+      <div className="rise rise-1 card grid gap-px overflow-hidden bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-4">
+        <Stat label="Properties" value={String(properties.length)} sub={`${occupied} occupied`} />
+        <Stat label="Monthly rent roll" value={money(rentRoll?.total ?? 0)} sub="active leases" />
+        <Stat
+          label="Open requests"
+          value={String(openRequests?.n ?? 0)}
+          sub="maintenance & management"
+        />
+        <Stat
           label="Payouts scheduled"
           value={String(scheduledPayouts.length)}
           sub={
@@ -252,69 +246,64 @@ export default async function ManagerDashboard() {
       </div>
 
       {properties.length > 0 && (
-        <section>
-          <h2 className="text-lg font-semibold">Properties</h2>
-          <div className="mt-3 overflow-x-auto rounded-xl border border-slate-200 bg-white">
-            <table className="w-full min-w-[720px] text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500">
-                  <th className="px-4 py-3">Property</th>
-                  <th className="px-4 py-3">Client</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Rent-ready progress</th>
-                  <th className="px-4 py-3">Mgmt fee</th>
-                  <th className="px-4 py-3">Takeover</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {properties.map((p) => {
-                  const prog = progressByProperty.get(p.id);
-                  const pct = prog && prog.total > 0 ? (100 * prog.done) / prog.total : 0;
-                  return (
-                    <tr key={p.id} className="hover:bg-slate-50">
-                      <td className="px-4 py-3">
-                        <Link href={`/property/${p.id}`} className="font-medium text-sky-700 hover:underline">
-                          {p.name}
-                        </Link>
-                        <p className="text-xs text-slate-500">
-                          {p.address}, {p.city} {p.state}
+        <section className="rise rise-2">
+          <h2 className="display-sm text-xl">Properties</h2>
+
+          {/* A list of pressable rows rather than a data table. A table forces
+              a horizontal scrollbar on a phone, which is where most of these
+              get opened. */}
+          <ul className="rows card mt-4 overflow-hidden">
+            {properties.map((p) => {
+              const prog = progressByProperty.get(p.id);
+              const pct = prog && prog.total > 0 ? (100 * prog.done) / prog.total : 0;
+              return (
+                <li key={p.id}>
+                  <Link
+                    href={`/property/${p.id}`}
+                    className="block px-5 py-5 transition-colors duration-200 hover:bg-black/[0.02]"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+                      <div className="min-w-0">
+                        <p className="text-[17px] font-medium tracking-tight">{p.name}</p>
+                        <p className="mt-0.5 text-[13px] text-[var(--ink-3)]">
+                          {p.address}, {p.city} {p.state} · {p.client_name}
                         </p>
-                      </td>
-                      <td className="px-4 py-3">{p.client_name}</td>
-                      <td className="px-4 py-3">
-                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_COLORS[p.status]}`}>
-                          {STATUS_LABELS[p.status]}
-                        </span>
-                      </td>
-                      <td className="min-w-40 px-4 py-3"><ProgressBar percent={pct} /></td>
-                      <td className="px-4 py-3 text-slate-600">
-                        {feeLabel(p.management_fee_type, p.management_fee_value)}
-                      </td>
-                      <td className="px-4 py-3 text-slate-600">{fmtDate(p.takeover_date)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                      <StatusPill status={p.status} />
+                    </div>
+
+                    <div className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+                      <div className="max-w-sm">
+                        <ProgressBar percent={pct} />
+                      </div>
+                      <p className="text-[13px] text-[var(--ink-3)] sm:text-right">
+                        {feeLabel(p.management_fee_type, p.management_fee_value)} · since{" "}
+                        {fmtDate(p.takeover_date)}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </section>
       )}
 
       {/* With no clients yet, the login form is the thing to do first, so it
           leads. Once set up, adding properties is the commoner action. */}
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="rise rise-3 grid gap-12 lg:grid-cols-2 lg:gap-10">
         {hasClients ? [propertySection, clientSection] : [clientSection, propertySection]}
       </div>
     </div>
   );
 }
 
-function StatCard({ label, value, sub }: { label: string; value: string; sub: string }) {
+function Stat({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
-      <p className="mt-1 text-2xl font-semibold">{value}</p>
-      <p className="text-xs text-slate-400">{sub}</p>
+    <div className="bg-[var(--surface)] p-6">
+      <p className="label">{label}</p>
+      <p className="num mt-3 text-[1.75rem] font-semibold leading-none">{value}</p>
+      <p className="mt-2 text-[13px] text-[var(--ink-3)]">{sub}</p>
     </div>
   );
 }

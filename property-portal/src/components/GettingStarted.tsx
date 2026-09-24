@@ -29,23 +29,31 @@ export default function GettingStarted({
   ];
 
   return (
-    <section className="rounded-xl border border-sky-200 bg-sky-50 p-5">
-      <h2 className="text-lg font-semibold text-sky-900">Getting started</h2>
-      <ol className="mt-3 space-y-3">
+    <section className="card p-6 sm:p-7">
+      <h2 className="display-sm text-xl">Getting started</h2>
+      <ol className="mt-5 space-y-5">
         {steps.map((s, i) => (
-          <li key={i} className="flex gap-3">
+          <li key={i} className="flex gap-4">
             <span
-              className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                s.done ? "bg-emerald-600 text-white" : "bg-white text-sky-800 ring-1 ring-sky-300"
-              }`}
+              className="num flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold transition-colors duration-500"
+              style={
+                s.done
+                  ? { background: "var(--accent)", color: "#fff" }
+                  : { border: "1px solid var(--line)", color: "var(--ink-3)" }
+              }
             >
               {s.done ? "✓" : i + 1}
             </span>
             <div className="min-w-0">
-              <p className={`text-sm font-medium ${s.done ? "text-emerald-800" : "text-sky-900"}`}>
+              <p
+                className="text-[15px] font-medium"
+                style={s.done ? { color: "var(--ink-3)" } : undefined}
+              >
                 {s.title}
               </p>
-              <p className="text-xs text-sky-800/80">{s.body}</p>
+              <p className="mt-1 max-w-prose text-[14px] leading-relaxed text-[var(--ink-2)]">
+                {s.body}
+              </p>
             </div>
           </li>
         ))}

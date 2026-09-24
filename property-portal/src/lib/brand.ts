@@ -2,10 +2,11 @@
 export const BRAND = {
   /** Full legal/display name. */
   name: "E, Management",
-  /** Leading mark rendered in white in the wordmark. */
+  /** Leading mark, rendered in full-strength ink in the wordmark. */
   mark: "E,",
   /** Trailing word rendered muted in the wordmark. */
   rest: "Management",
   tagline: "Property management portal for owners and managers",
-  themeColor: "#0f172a",
+  /** Matches --paper, so the browser and PWA chrome continue the page. */
+  themeColor: "#fbfbfd",
 };

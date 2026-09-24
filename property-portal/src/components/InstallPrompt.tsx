@@ -79,31 +79,32 @@ export default function InstallPrompt() {
     <>
       {/* Reserves scroll room so the fixed banner never covers page content. */}
       <div aria-hidden className="h-28 sm:h-24" />
-      <div className="fixed inset-x-0 bottom-0 z-50 p-3 sm:p-4">
-        <div className="mx-auto flex max-w-2xl items-center gap-3 rounded-xl border border-slate-700 bg-slate-900 p-3 text-white shadow-lg sm:p-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-lg font-bold">
-            E<span className="text-emerald-400">,</span>
+      <div
+        className="fixed inset-x-0 bottom-0 z-50 p-3 sm:p-4"
+        style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+      >
+        {/* Frosted, light, and it slides up rather than simply being there. */}
+        <div className="slide-up mx-auto flex max-w-xl items-center gap-3 rounded-2xl border border-[var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] p-3 shadow-[0_2px_8px_rgba(0,0,0,0.04),0_24px_60px_-24px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-3.5">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--ink)] text-[17px] font-semibold text-white">
+            E<span style={{ color: "#8fd3b4" }}>,</span>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium">Install E, Management</p>
-            <p className="text-xs text-slate-300">
+            <p className="text-[14px] font-medium">Install E, Management</p>
+            <p className="text-[13px] leading-snug text-[var(--ink-2)]">
               {showIOSHint
-                ? "Tap the Share button, then “Add to Home Screen”."
-                : "Add it to your device to check your properties any time."}
+                ? "Tap Share, then “Add to Home Screen”."
+                : "Check your properties any time."}
             </p>
           </div>
           {!showIOSHint && (
-            <button
-              onClick={install}
-              className="shrink-0 rounded-md bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100"
-            >
+            <button onClick={install} className="btn btn-sm shrink-0">
               Install
             </button>
           )}
           <button
             onClick={dismiss}
             aria-label="Dismiss"
-            className="shrink-0 rounded-md px-2 py-1.5 text-sm text-slate-400 hover:text-white"
+            className="shrink-0 rounded-full px-2 py-1.5 text-[14px] text-[var(--ink-3)] transition-colors duration-200 hover:text-[var(--ink)]"
           >
             ✕
           </button>

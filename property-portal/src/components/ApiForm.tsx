@@ -12,7 +12,10 @@ export default function ApiForm({
   children,
   submitLabel,
   className = "",
-  buttonClassName = "rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50",
+  buttonClassName = "btn btn-sm",
+  /** Wrapper for the submit button and error text. Override to sit them beside
+      the fields rather than beneath them. */
+  footerClassName = "mt-4 flex flex-wrap items-center gap-3",
   resetOnSuccess = true,
 }: {
   action: string;
@@ -20,6 +23,7 @@ export default function ApiForm({
   submitLabel: string;
   className?: string;
   buttonClassName?: string;
+  footerClassName?: string;
   resetOnSuccess?: boolean;
 }) {
   const router = useRouter();
@@ -59,11 +63,11 @@ export default function ApiForm({
   return (
     <form onSubmit={onSubmit} className={className}>
       {children}
-      <div className="mt-2 flex items-center gap-3">
+      <div className={footerClassName}>
         <button type="submit" disabled={busy} className={buttonClassName}>
           {busy ? "Saving…" : submitLabel}
         </button>
-        {error && <span className="text-sm text-red-600">{error}</span>}
+        {error && <span className="text-[13px] text-[var(--bad)]">{error}</span>}
       </div>
     </form>
   );

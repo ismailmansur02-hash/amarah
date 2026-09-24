@@ -23,7 +23,9 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: BRAND.name,
-    statusBarStyle: "black-translucent",
+    // The app is light, so the status bar wants dark text on the page's own
+    // background rather than a dark bar sitting above it.
+    statusBarStyle: "default",
   },
 };
 
@@ -41,20 +43,29 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-screen antialiased">
         <ServiceWorkerRegistrar />
         {session && (
-          <header className="bg-slate-900 text-white">
-            <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+          /*
+           * The bar stays with you and lets the page pass underneath it,
+           * frosted. It reads as a layer of the same page rather than a
+           * separate dark chrome bolted on top.
+           */
+          <header
+            className="sticky top-0 z-40 border-b border-[var(--line)] bg-[color-mix(in_srgb,var(--paper)_80%,transparent)] backdrop-blur-xl backdrop-saturate-150"
+            style={{ paddingTop: "env(safe-area-inset-top)" }}
+          >
+            <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3.5">
               <Link
                 href={session.role === "manager" ? "/dashboard" : "/my"}
-                className="whitespace-nowrap text-base font-semibold tracking-tight sm:text-lg"
+                className="whitespace-nowrap text-[17px] font-semibold tracking-tight"
               >
-                {BRAND.mark} <span className="text-slate-400">{BRAND.rest}</span>
+                {BRAND.mark} <span className="text-[var(--ink-3)]">{BRAND.rest}</span>
               </Link>
-              <div className="flex items-center gap-2 text-sm sm:gap-4">
-                <Link href="/account" className="whitespace-nowrap text-slate-300 hover:text-white">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Link
+                  href="/account"
+                  className="flex items-center gap-2 whitespace-nowrap text-[14px] text-[var(--ink-2)] transition-colors duration-200 hover:text-[var(--ink)]"
+                >
                   <span className="hidden sm:inline">{session.name}</span>
-                  <span className="rounded bg-slate-700 px-2 py-0.5 text-xs uppercase tracking-wide sm:ml-2">
-                    {session.role}
-                  </span>
+                  <span className="pill">{session.role}</span>
                 </Link>
                 <LogoutButton />
               </div>
@@ -64,7 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Signed-in pages sit in a readable column. The marketing and sign-in
             pages run full-bleed and set their own layout. */}
         {session ? (
-          <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
+          <main className="mx-auto max-w-6xl px-5 pb-24 pt-8">{children}</main>
         ) : (
           <main>{children}</main>
         )}

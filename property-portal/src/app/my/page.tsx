@@ -4,8 +4,9 @@ import { getSession } from "@/lib/auth";
 import { sql, one } from "@/lib/db";
 import { listPropertiesForSession } from "@/lib/access";
 import { LedgerRow } from "@/lib/types";
-import { money, fmtDate, STATUS_LABELS, STATUS_COLORS, feeLabel } from "@/lib/format";
+import { money, fmtDate, feeLabel } from "@/lib/format";
 import ProgressBar from "@/components/ProgressBar";
+import StatusPill from "@/components/StatusPill";
 
 
 export default async function ClientHome() {
@@ -36,68 +37,75 @@ export default async function ClientHome() {
   );
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Welcome, {session.name}</h1>
-        <p className="text-sm text-slate-500">
-          Your properties, payouts, and records — everything your manager files is visible here.
+    <div className="space-y-10">
+      <div className="rise">
+        <p className="eyebrow">Welcome back, {session.name.split(" ")[0]}</p>
+        <h1 className="display mt-3 text-[clamp(2rem,5vw,2.75rem)]">Your properties</h1>
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--ink-2)]">
+          Payouts, documents and progress — everything your manager files is visible here, the
+          moment it changes.
         </p>
       </div>
 
       {properties.length === 0 && (
-        <p className="rounded-xl border border-slate-200 bg-white p-6 text-slate-500">
+        <p className="card rise rise-1 p-8 text-[15px] text-[var(--ink-2)]">
           No properties are linked to your account yet. Contact your property manager.
         </p>
       )}
 
-      <div className="grid gap-5 md:grid-cols-2">
-        {cards.map(({ p, nextPayout, taxYtd, progress }) => (
+      <div className="grid gap-6 md:grid-cols-2">
+        {cards.map(({ p, nextPayout, taxYtd, progress }, i) => (
           <Link
             key={p.id}
             href={`/property/${p.id}`}
-            className="block rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow"
+            className={`card card-link rise block p-6 sm:p-7 ${
+              i < 3 ? `rise-${i + 1}` : "rise-4"
+            }`}
           >
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="text-lg font-semibold">{p.name}</h2>
-                <p className="text-sm text-slate-500">
+              <div className="min-w-0">
+                <h2 className="display-sm text-[1.375rem]">{p.name}</h2>
+                <p className="mt-1 text-[13px] text-[var(--ink-3)]">
                   {p.address}, {p.city} {p.state} {p.zip}
                 </p>
               </div>
-              <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_COLORS[p.status]}`}>
-                {STATUS_LABELS[p.status]}
-              </span>
+              <StatusPill status={p.status} />
             </div>
 
-            <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-lg bg-emerald-50 p-3">
-                <dt className="text-xs font-medium uppercase tracking-wide text-emerald-700">Next payment</dt>
-                <dd className="mt-0.5 font-semibold text-emerald-900">
-                  {nextPayout
-                    ? `${money(nextPayout.owner_payout)} · ${fmtDate(nextPayout.payout_date)}`
-                    : "None scheduled"}
-                </dd>
-              </div>
-              <div className="rounded-lg bg-slate-50 p-3">
-                <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">Management fee</dt>
-                <dd className="mt-0.5 font-semibold">
+            {/*
+             * The next payment is the reason an owner opens this at all, so it
+             * gets the size. The other three sit beneath it as plain figures —
+             * four equally tinted boxes made everything look equally urgent.
+             */}
+            <div className="mt-7">
+              <p className="label">Next payment</p>
+              <p className="num mt-2 text-[2rem] font-semibold leading-none">
+                {nextPayout ? money(nextPayout.owner_payout) : "—"}
+              </p>
+              <p className="mt-2 text-[13px] text-[var(--ink-3)]">
+                {nextPayout ? `scheduled ${fmtDate(nextPayout.payout_date)}` : "none scheduled"}
+              </p>
+            </div>
+
+            <dl className="mt-7 grid grid-cols-3 gap-4 border-t border-[var(--line-2)] pt-5">
+              <div>
+                <dt className="text-[12px] text-[var(--ink-3)]">Management fee</dt>
+                <dd className="num mt-1 text-[14px] font-medium">
                   {feeLabel(p.management_fee_type, p.management_fee_value)}
                 </dd>
               </div>
-              <div className="rounded-lg bg-slate-50 p-3">
-                <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">Tax deductions YTD</dt>
-                <dd className="mt-0.5 font-semibold">{money(taxYtd)}</dd>
+              <div>
+                <dt className="text-[12px] text-[var(--ink-3)]">Deductions YTD</dt>
+                <dd className="num mt-1 text-[14px] font-medium">{money(taxYtd)}</dd>
               </div>
-              <div className="rounded-lg bg-slate-50 p-3">
-                <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">Takeover date</dt>
-                <dd className="mt-0.5 font-semibold">{fmtDate(p.takeover_date)}</dd>
+              <div>
+                <dt className="text-[12px] text-[var(--ink-3)]">Managed since</dt>
+                <dd className="num mt-1 text-[14px] font-medium">{fmtDate(p.takeover_date)}</dd>
               </div>
             </dl>
 
-            <div className="mt-4">
-              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-500">
-                Rent-ready progress
-              </p>
+            <div className="mt-6">
+              <p className="label mb-2">Rent-ready progress</p>
               <ProgressBar
                 percent={progress && progress.total ? (100 * progress.done) / progress.total : 0}
               />

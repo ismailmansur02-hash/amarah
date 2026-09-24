@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { isIOS, isStandalone } from "./InstallPrompt";
+import Disclosure from "./Disclosure";
+import { BRAND } from "@/lib/brand";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -79,10 +81,11 @@ export default function InstallGuide() {
 
   if (platform === "installed" || installed) {
     return (
-      <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
-        <p className="font-medium text-emerald-900">The app is installed on this device.</p>
-        <p className="mt-1 text-sm text-emerald-700">
-          Open it from your home screen or app list and sign in with the login your manager gave you.
+      <div className="card fade-in mt-10 p-6">
+        <p className="text-[15px] font-medium">The app is installed on this device.</p>
+        <p className="mt-2 text-[14px] leading-relaxed text-[var(--ink-2)]">
+          Open it from your home screen or app list and sign in with the login your manager gave
+          you.
         </p>
       </div>
     );
@@ -91,43 +94,35 @@ export default function InstallGuide() {
   const guide = STEPS[platform];
 
   return (
-    <div className="mt-6 space-y-4">
+    <div className="fade-in mt-10 space-y-5">
       {deferred && (
-        <button
-          onClick={install}
-          className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-700"
-        >
-          Install E, Management on this device
+        <button onClick={install} className="btn w-full py-3.5">
+          Install {BRAND.name} on this device
         </button>
       )}
 
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          {guide.heading}
-        </h2>
-        <ol className="mt-3 space-y-2">
+      <div className="card p-6 sm:p-7">
+        <p className="eyebrow">{guide.heading}</p>
+        <ol className="mt-5 space-y-4">
           {guide.steps.map((step, i) => (
-            <li key={i} className="flex gap-3 text-sm text-slate-700">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
+            <li key={i} className="flex gap-4 text-[15px] leading-relaxed">
+              <span className="num flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[var(--line)] text-[12px] font-semibold text-[var(--ink-3)]">
                 {i + 1}
               </span>
-              <span className="pt-0.5">{step}</span>
+              <span>{step}</span>
             </li>
           ))}
         </ol>
       </div>
 
-      <details className="rounded-xl border border-slate-200 bg-white p-5">
-        <summary className="cursor-pointer text-sm font-medium text-sky-700">
-          Instructions for other devices
-        </summary>
-        <div className="mt-4 space-y-4">
+      <Disclosure label="Instructions for other devices" className="card p-6">
+        <div className="mt-5 space-y-6">
           {(Object.keys(STEPS) as Exclude<Platform, "installed">[])
             .filter((k) => k !== platform)
             .map((k) => (
               <div key={k}>
-                <h3 className="text-sm font-semibold text-slate-700">{STEPS[k].heading}</h3>
-                <ol className="mt-1 list-decimal space-y-1 pl-5 text-sm text-slate-600">
+                <p className="eyebrow">{STEPS[k].heading}</p>
+                <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-[14px] leading-relaxed text-[var(--ink-2)]">
                   {STEPS[k].steps.map((s, i) => (
                     <li key={i}>{s}</li>
                   ))}
@@ -135,7 +130,7 @@ export default function InstallGuide() {
               </div>
             ))}
         </div>
-      </details>
+      </Disclosure>
     </div>
   );
 }

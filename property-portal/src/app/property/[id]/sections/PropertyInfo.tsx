@@ -25,18 +25,20 @@ export default function PropertyInfo({
 
   return (
     <div className="space-y-8">
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="text-lg font-semibold">Property information</h2>
-        <dl className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+      <section className="card p-6 sm:p-7">
+        <h2 className="display-sm text-xl">Property information</h2>
+        <dl className="mt-6 grid gap-x-10 gap-y-5 sm:grid-cols-2">
           {facts.map(([label, value]) => (
             <div key={label}>
-              <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</dt>
-              <dd className="mt-0.5 text-sm text-slate-800">{value}</dd>
+              <dt className="label">{label}</dt>
+              <dd className="mt-1 text-[15px]">{value}</dd>
             </div>
           ))}
         </dl>
         {property.notes && (
-          <div className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-600">{property.notes}</div>
+          <p className="mt-7 border-t border-[var(--line-2)] pt-5 text-[14px] leading-relaxed text-[var(--ink-2)]">
+            {property.notes}
+          </p>
         )}
       </section>
 

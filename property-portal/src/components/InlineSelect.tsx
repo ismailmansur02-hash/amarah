@@ -55,7 +55,7 @@ export default function InlineSelect({
         value={current}
         onChange={onChange}
         disabled={disabled}
-        className="rounded-md border border-slate-300 px-2 py-1 text-sm"
+        className="input input-sm w-auto"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
@@ -63,7 +63,9 @@ export default function InlineSelect({
           </option>
         ))}
       </select>
-      {failed && <span className="text-xs text-red-600">Not saved — try again</span>}
+      {failed && (
+        <span className="text-[12px] text-[var(--bad)]">Not saved — try again</span>
+      )}
     </span>
   );
 }

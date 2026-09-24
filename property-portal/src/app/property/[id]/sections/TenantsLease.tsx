@@ -3,9 +3,10 @@ import { DocumentRow, LeaseRow, TenantRow } from "@/lib/types";
 import { money, fmtDate } from "@/lib/format";
 import ApiForm from "@/components/ApiForm";
 import DocSection from "@/components/DocSection";
+import Disclosure from "@/components/Disclosure";
+import Field from "@/components/Field";
 
-const inputCls =
-  "rounded-md border border-slate-300 px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none";
+const inputCls = "input input-sm";
 
 export default function TenantsLease({
   property,
@@ -21,29 +22,32 @@ export default function TenantsLease({
   docs: DocumentRow[];
 }) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <section>
-        <h2 className="text-lg font-semibold">Tenants</h2>
+        <h2 className="display-sm text-xl">Tenants</h2>
         {tenants.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-400">No tenants on file.</p>
+          <p className="card-flat mt-4 px-5 py-8 text-center text-[14px] text-[var(--ink-3)]">
+            No tenants on file.
+          </p>
         ) : (
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {tenants.map((t) => (
-              <div key={t.id} className="rounded-xl border border-slate-200 bg-white p-4">
-                <p className="font-medium text-slate-800">{t.name}</p>
-                <p className="text-sm text-slate-500">{t.email || "no email"} · {t.phone || "no phone"}</p>
-                {t.notes && <p className="mt-1 text-xs text-slate-400">{t.notes}</p>}
+              <div key={t.id} className="card p-5">
+                <p className="text-[15px] font-medium">{t.name}</p>
+                <p className="mt-1 text-[13px] text-[var(--ink-2)]">
+                  {t.email || "no email"} · {t.phone || "no phone"}
+                </p>
+                {t.notes && <p className="mt-2 text-[13px] text-[var(--ink-3)]">{t.notes}</p>}
               </div>
             ))}
           </div>
         )}
         {isManager && (
-          <details className="mt-3">
-            <summary className="cursor-pointer text-sm font-medium text-sky-700">+ Add tenant</summary>
+          <Disclosure label="Add tenant" className="mt-4">
             <ApiForm
               action={`/api/properties/${property.id}/tenants`}
               submitLabel="Add tenant"
-              className="mt-3 rounded-lg border border-slate-200 bg-white p-4"
+              className="card-flat mt-3 p-5"
             >
               <div className="grid gap-3 sm:grid-cols-2">
                 <input name="name" required placeholder="Full name" className={inputCls} />
@@ -52,70 +56,104 @@ export default function TenantsLease({
                 <input name="notes" placeholder="Notes" className={inputCls} />
               </div>
             </ApiForm>
-          </details>
+          </Disclosure>
         )}
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold">Lease</h2>
+        <h2 className="display-sm text-xl">Lease</h2>
         {leases.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-400">No lease recorded.</p>
+          <p className="card-flat mt-4 px-5 py-8 text-center text-[14px] text-[var(--ink-3)]">
+            No lease recorded.
+          </p>
         ) : (
-          <div className="mt-3 space-y-3">
+          <div className="mt-4 space-y-4">
             {leases.map((l) => (
+              /* The active lease is the one that matters; older ones are
+                 history and step back rather than being tinted a colour. */
               <div
                 key={l.id}
-                className={`rounded-xl border p-4 ${
-                  l.status === "active" ? "border-emerald-200 bg-emerald-50/50" : "border-slate-200 bg-white"
-                }`}
+                className={l.status === "active" ? "card p-6" : "card-flat p-6 opacity-70"}
               >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-semibold text-slate-800">
-                    {money(l.monthly_rent)}/month
-                    <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium uppercase text-slate-600">
-                      {l.status}
-                    </span>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+                  <p className="num text-[1.5rem] font-semibold leading-none">
+                    {money(l.monthly_rent)}
+                    <span className="text-[15px] font-normal text-[var(--ink-3)]"> / month</span>
                   </p>
-                  <p className="text-sm text-slate-500">
-                    {fmtDate(l.start_date)} → {fmtDate(l.end_date)}
-                  </p>
+                  <span className="pill">
+                    <span
+                      className="dot"
+                      style={{ background: l.status === "active" ? "var(--accent)" : "#86868b" }}
+                    />
+                    {l.status}
+                  </span>
                 </div>
-                <p className="mt-1 text-sm text-slate-500">
-                  Deposit {money(l.deposit)} · Rent due day {l.due_day} of the month
-                </p>
-                {l.notes && <p className="mt-1 text-xs text-slate-400">{l.notes}</p>}
+
+                <dl className="mt-6 grid grid-cols-2 gap-5 border-t border-[var(--line-2)] pt-5 sm:grid-cols-4">
+                  <div>
+                    <dt className="text-[12px] text-[var(--ink-3)]">Term</dt>
+                    <dd className="num mt-1 text-[14px] font-medium">
+                      {fmtDate(l.start_date)} → {fmtDate(l.end_date)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[12px] text-[var(--ink-3)]">Deposit</dt>
+                    <dd className="num mt-1 text-[14px] font-medium">{money(l.deposit)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[12px] text-[var(--ink-3)]">Rent due</dt>
+                    <dd className="num mt-1 text-[14px] font-medium">
+                      day {l.due_day} of the month
+                    </dd>
+                  </div>
+                </dl>
+
+                {l.notes && (
+                  <p className="mt-5 text-[13px] text-[var(--ink-3)]">{l.notes}</p>
+                )}
               </div>
             ))}
           </div>
         )}
+
         {isManager && (
-          <details className="mt-3">
-            <summary className="cursor-pointer text-sm font-medium text-sky-700">+ Record a lease</summary>
+          <Disclosure label="Record a lease" className="mt-4">
             <ApiForm
               action={`/api/properties/${property.id}/lease`}
               submitLabel="Record lease"
-              className="mt-3 rounded-lg border border-slate-200 bg-white p-4"
+              className="card-flat mt-3 p-5"
             >
-              <div className="grid gap-3 sm:grid-cols-3">
-                <label className="text-xs text-slate-500">
-                  Start date
-                  <input name="start_date" type="date" required className={`${inputCls} mt-1 block w-full`} />
-                </label>
-                <label className="text-xs text-slate-500">
-                  End date
-                  <input name="end_date" type="date" required className={`${inputCls} mt-1 block w-full`} />
-                </label>
-                <label className="text-xs text-slate-500">
-                  Monthly rent ($)
-                  <input name="monthly_rent" type="number" step="0.01" required className={`${inputCls} mt-1 block w-full`} />
-                </label>
-                <input name="deposit" type="number" step="0.01" placeholder="Deposit ($)" className={inputCls} />
-                <input name="due_day" type="number" min="1" max="28" placeholder="Rent due day (1–28)" className={inputCls} />
-                <input name="notes" placeholder="Notes" className={inputCls} />
+              <div className="grid gap-4 sm:grid-cols-3">
+                <Field label="Start date">
+                  <input name="start_date" type="date" required className={inputCls} />
+                </Field>
+                <Field label="End date">
+                  <input name="end_date" type="date" required className={inputCls} />
+                </Field>
+                <Field label="Monthly rent ($)">
+                  <input
+                    name="monthly_rent"
+                    type="number"
+                    step="0.01"
+                    required
+                    className={inputCls}
+                  />
+                </Field>
+                <Field label="Deposit ($)">
+                  <input name="deposit" type="number" step="0.01" className={inputCls} />
+                </Field>
+                <Field label="Rent due day" hint="1–28">
+                  <input name="due_day" type="number" min="1" max="28" className={inputCls} />
+                </Field>
+                <Field label="Notes">
+                  <input name="notes" className={inputCls} />
+                </Field>
               </div>
-              <p className="mt-2 text-xs text-slate-400">Recording a new lease marks any previously active lease as ended.</p>
+              <p className="mt-4 text-[13px] text-[var(--ink-3)]">
+                Recording a new lease marks any previously active lease as ended.
+              </p>
             </ApiForm>
-          </details>
+          </Disclosure>
         )}
       </section>
 

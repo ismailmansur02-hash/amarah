@@ -1,45 +1,61 @@
 @import "tailwindcss";
 
 /*
- * Marketing type stack.
+ * One visual language for the whole product.
  *
- * -apple-system resolves to SF Pro on iPhones and Macs — the same typeface
- * Apple sets their own site in — and degrades to the platform UI face
- * everywhere else. No webfont to download, and it looks native on the device
- * most owners will open this on.
+ * The marketing page and the software behind it used to be two different
+ * websites: paper and ink out front, default slate-blue Tailwind once you
+ * signed in. The palette below is the front door's, applied everywhere, so
+ * signing in feels like walking further into the same building.
  */
 :root {
+  /*
+   * -apple-system resolves to SF Pro on iPhones and Macs — the same typeface
+   * Apple sets their own site in — and degrades to the platform UI face
+   * everywhere else. No webfont to download, and it looks native on the device
+   * most owners will open this on.
+   */
   --font-display:
     -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI",
     system-ui, sans-serif;
 
   --paper: #fbfbfd;
+  --surface: #ffffff;
   --ink: #1d1d1f;
   --ink-2: #6e6e73;
   --ink-3: #86868b;
   --line: rgba(0, 0, 0, 0.08);
+  --line-2: rgba(0, 0, 0, 0.05);
   --accent: #0a6c4a;
+  --warn: #8a5a00;
+  --bad: #b3261e;
+
+  --r: 1.125rem;
+  --r-sm: 0.625rem;
 
   /* One long, slow curve used everywhere, so motion feels like one hand. */
   --ease: cubic-bezier(0.22, 0.61, 0.24, 1);
+  /* And one short one for anything that answers a tap. */
+  --ease-quick: cubic-bezier(0.32, 0.72, 0.22, 1);
+}
+
+html {
+  background: var(--paper);
 }
 
 body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  font-family: var(--font-display);
+  background: var(--paper);
+  color: var(--ink);
+  letter-spacing: -0.015em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Marketing pages set their own surface and typeface. */
+/* Marketing pages open the tracking up; large type needs tighter spacing than
+   interface type does. */
 .marketing {
-  font-family: var(--font-display);
-  background: var(--paper);
-  color: var(--ink);
   letter-spacing: -0.022em;
-}
-body:has(.marketing) {
-  background: var(--paper);
 }
 
 /* Display type: tight leading and negative tracking at large sizes is most of
@@ -59,9 +75,293 @@ body:has(.marketing) {
   border-color: var(--line);
 }
 
+@layer components {
+  /* ---------------------------------------------------------------- */
+  /* Surfaces                                                          */
+  /* ---------------------------------------------------------------- */
+
+  /* Cards are defined by a hairline and a little lift, never by a heavy
+     border. Depth comes from shadow, which is how a real material behaves. */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 8px 24px -16px rgba(0, 0, 0, 0.18);
+  }
+
+  .card-flat {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+  }
+
+  /* A card you can press. It rises very slightly to say so. */
+  .card-link {
+    transition:
+      transform 0.35s var(--ease-quick),
+      box-shadow 0.35s var(--ease-quick),
+      border-color 0.35s var(--ease-quick);
+  }
+  .card-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 0, 0, 0.14);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 18px 40px -22px rgba(0, 0, 0, 0.3);
+  }
+  .card-link:active {
+    transform: translateY(0);
+    transition-duration: 0.08s;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Type                                                              */
+  /* ---------------------------------------------------------------- */
+
+  /* Small print above a value. Sentence case, not shouted uppercase. */
+  .label {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--ink-3);
+    letter-spacing: -0.01em;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* Figures line up in a column when they share a width. */
+  .num {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Controls                                                          */
+  /* ---------------------------------------------------------------- */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    padding: 0.625rem 1.15rem;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition:
+      background-color 0.25s var(--ease-quick),
+      transform 0.12s var(--ease-quick),
+      opacity 0.2s linear;
+  }
+  .btn:hover {
+    background: #000;
+  }
+  .btn:active {
+    transform: scale(0.975);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    transform: none;
+  }
+
+  .btn-quiet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    padding: 0.5rem 0.95rem;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition:
+      background-color 0.25s var(--ease-quick),
+      border-color 0.25s var(--ease-quick),
+      transform 0.12s var(--ease-quick);
+  }
+  .btn-quiet:hover {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.16);
+  }
+  .btn-quiet:active {
+    transform: scale(0.975);
+  }
+  .btn-quiet:disabled {
+    opacity: 0.45;
+    transform: none;
+  }
+
+  .btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 13px;
+  }
+
+  /* A link that reads as an action without shouting. */
+  .link {
+    color: var(--ink);
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.22);
+    transition: box-shadow 0.25s var(--ease-quick);
+  }
+  .link:hover {
+    box-shadow: inset 0 -1px 0 0 var(--ink);
+  }
+
+  .input {
+    width: 100%;
+    border-radius: var(--r-sm);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: var(--surface);
+    padding: 0.6rem 0.75rem;
+    font-size: 15px;
+    color: var(--ink);
+    transition:
+      border-color 0.2s var(--ease-quick),
+      box-shadow 0.2s var(--ease-quick);
+  }
+  .input::placeholder {
+    color: var(--ink-3);
+  }
+  .input:focus {
+    outline: none;
+    border-color: rgba(0, 0, 0, 0.42);
+    box-shadow: 0 0 0 3.5px rgba(0, 0, 0, 0.05);
+  }
+  .input-sm {
+    padding: 0.35rem 0.55rem;
+    font-size: 13px;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Data                                                              */
+  /* ---------------------------------------------------------------- */
+
+  /* Status reads as a neutral pill with one coloured dot. Six differently
+     tinted pills on one screen is noise; six identical pills with a dot each
+     is a legend. */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    padding: 0.2rem 0.6rem 0.2rem 0.5rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    flex: none;
+  }
+
+  /* Rows are separated by a hairline, not boxed individually. */
+  .rows > * + * {
+    border-top: 1px solid var(--line-2);
+  }
+
+  /* A strip that scrolls sideways on a phone without a scrollbar cutting
+     through it. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* ---------------------------------------------------------------- */
 /* Motion                                                            */
 /* ---------------------------------------------------------------- */
+
+/* Content arrives rather than appearing. Kept short and small — this is a
+   working tool, and nobody wants to wait on an animation to read a number. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.55s var(--ease) both;
+}
+.rise-1 {
+  animation-delay: 0.05s;
+}
+.rise-2 {
+  animation-delay: 0.1s;
+}
+.rise-3 {
+  animation-delay: 0.15s;
+}
+.rise-4 {
+  animation-delay: 0.2s;
+}
+
+/* A bar draws itself to its width. Server-rendered HTML arrives with the final
+   width already set, so the growth has to come from a transform rather than
+   from a transition on width — there is no "before" for width to animate from. */
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.grow-x {
+  transform-origin: left;
+  animation: grow-x 0.9s var(--ease) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  animation: fade-in 0.35s var(--ease) both;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(120%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.slide-up {
+  animation: slide-up 0.7s var(--ease) both;
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -96,6 +396,15 @@ body:has(.marketing) {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .rise,
+  .fade-in,
+  .grow-x,
+  .slide-up {
+    animation: none;
+  }
+  .card-link:hover {
+    transform: none;
   }
   html {
     scroll-behavior: auto;

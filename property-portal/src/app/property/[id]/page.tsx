@@ -7,7 +7,8 @@ import {
   ActivityRow, ChecklistStepRow, DocumentRow, LeaseRow, LedgerRow,
   MaintenanceRow, RenovationTaskRow, TenantRow,
 } from "@/lib/types";
-import { STATUS_LABELS, STATUS_COLORS, fmtDate } from "@/lib/format";
+import { fmtDate } from "@/lib/format";
+import StatusPill from "@/components/StatusPill";
 import PropertyTabs from "./PropertyTabs";
 
 
@@ -56,26 +57,29 @@ export default async function PropertyPage({
     ]);
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="space-y-8">
+      <div className="rise">
         <Link
           href={isManager ? "/dashboard" : "/my"}
-          className="text-sm text-slate-500 hover:text-slate-700"
+          className="group inline-flex items-center gap-1.5 text-[14px] text-[var(--ink-2)] transition-colors duration-200 hover:text-[var(--ink)]"
         >
-          ← Back to {isManager ? "dashboard" : "my properties"}
+          <span className="transition-transform duration-300 ease-[var(--ease)] group-hover:-translate-x-0.5">
+            ←
+          </span>
+          {isManager ? "Dashboard" : "My properties"}
         </Link>
-        <div className="mt-2 flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">{property.name}</h1>
-            <p className="text-sm text-slate-500">
+
+        <div className="mt-5 flex flex-wrap items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="display text-[clamp(1.875rem,4.5vw,2.75rem)]">{property.name}</h1>
+            <p className="mt-2 text-[14px] text-[var(--ink-2)]">
               {property.address}, {property.city} {property.state} {property.zip}
-              {" · "}Owner: {client?.name}
-              {" · "}Takeover {fmtDate(property.takeover_date)}
+            </p>
+            <p className="mt-1 text-[13px] text-[var(--ink-3)]">
+              {client?.name} · managed since {fmtDate(property.takeover_date)}
             </p>
           </div>
-          <span className={`rounded-full px-3 py-1 text-sm font-medium ${STATUS_COLORS[property.status]}`}>
-            {STATUS_LABELS[property.status]}
-          </span>
+          <StatusPill status={property.status} />
         </div>
       </div>
 

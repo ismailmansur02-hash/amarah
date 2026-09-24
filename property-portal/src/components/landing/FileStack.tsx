@@ -131,11 +131,19 @@ export default function FileStack() {
                 const y = leaving ? offset * 58 : Math.min(offset, 3) * 16;
                 const scale = leaving ? 1 : 1 - Math.min(offset, 3) * 0.045;
                 const opacity = offset < -1.1 ? 0 : offset > 3.2 ? 0 : 1;
+                // Only the front file shows its contents. The ones behind are
+                // blank edges, which is what a stack of files actually looks
+                // like from the front — and stops a lower card's rows showing
+                // through the gap beneath the top one.
+                const inkOpacity = Math.max(0, 1 - Math.max(0, offset) * 2.6);
 
                 return (
                   <article
                     key={f.n}
-                    className="absolute inset-x-0 top-0 rounded-[1.75rem] border border-black/[0.07] bg-white p-7 shadow-[0_24px_70px_-32px_rgba(0,0,0,0.35)] sm:p-9"
+                    /* inset-0 rather than top-0: every card is the same size,
+                       so the deck reads as one stack of files instead of a
+                       taller card showing its contents below a shorter one. */
+                    className="absolute inset-0 overflow-hidden rounded-[1.75rem] border border-black/[0.07] bg-white p-7 shadow-[0_24px_70px_-32px_rgba(0,0,0,0.35)] sm:p-9"
                     style={{
                       transform: `translate3d(0, ${y}%, 0) scale(${scale})`,
                       opacity,
@@ -144,26 +152,28 @@ export default function FileStack() {
                     }}
                     aria-hidden={i !== current}
                   >
-                    <div className="flex items-baseline justify-between">
-                      <span className="font-mono text-xs tracking-widest text-[var(--ink-3)]">
-                        {f.n}
-                      </span>
-                      <span className="text-xs text-[var(--ink-3)]">Maple Avenue Duplex</span>
+                    <div style={{ opacity: inkOpacity, transition: "opacity .3s linear" }}>
+                      <div className="flex items-baseline justify-between">
+                        <span className="font-mono text-xs tracking-widest text-[var(--ink-3)]">
+                          {f.n}
+                        </span>
+                        <span className="text-xs text-[var(--ink-3)]">Maple Avenue Duplex</span>
+                      </div>
+
+                      <h3 className="display-sm mt-6 text-3xl">{f.title}</h3>
+
+                      <ul className="mt-7 space-y-0">
+                        {f.items.map((item) => (
+                          <li
+                            key={item}
+                            className="flex items-center justify-between border-t border-black/[0.06] py-3.5 text-[15px] text-[var(--ink-2)]"
+                          >
+                            <span>{item}</span>
+                            <span className="text-[var(--ink-3)]">›</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-
-                    <h3 className="display-sm mt-6 text-3xl">{f.title}</h3>
-
-                    <ul className="mt-7 space-y-0">
-                      {f.items.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-center justify-between border-t border-black/[0.06] py-3.5 text-[15px] text-[var(--ink-2)]"
-                        >
-                          <span>{item}</span>
-                          <span className="text-[var(--ink-3)]">›</span>
-                        </li>
-                      ))}
-                    </ul>
                   </article>
                 );
               })}
