@@ -23,7 +23,7 @@ export default function ReferenceScreen({ go }) {
 
   return (
     <Screen>
-      <Header title="Reference" onBack={() => go({ name: 'home' })} />
+      <Header title="Reference" onBack={() => go({ name: 'home' })} bg={C.teal} />
 
       <View style={{ padding: 16 }}>
         <View style={s.segment}>
@@ -92,10 +92,10 @@ const s = StyleSheet.create({
   meaning: { flex: 1, fontFamily: fontBody, fontSize: 13.5, color: C.text, lineHeight: 20, paddingTop: 3 },
   note: { marginTop: 12, padding: 10, backgroundColor: '#F4F1EA', borderRadius: 6, fontFamily: fontBody, fontSize: 12.5, color: C.text, lineHeight: 19, fontStyle: 'italic' },
   caseCard: {
-    backgroundColor: '#F7F4EF', borderWidth: 1, borderColor: C.borderStrong,
-    borderLeftWidth: 3, borderLeftColor: C.warning, borderRadius: 10, padding: 14,
+    backgroundColor: 'white', borderWidth: 1, borderColor: C.border,
+    borderLeftWidth: 3, borderLeftColor: C.teal, borderRadius: 10, padding: 16,
   },
-  caseName: { fontFamily: fontDisplayItalic, fontSize: 16, color: C.text },
-  caseTopic: { fontFamily: fontBodySemi, fontSize: 12, color: C.navyLight, marginTop: 3, marginBottom: 6 },
-  caseSummary: { fontFamily: fontBody, fontSize: 14, color: C.text, lineHeight: 21 },
+  caseName: { fontFamily: fontDisplayItalic, fontSize: 18, color: C.text, letterSpacing: -0.2, marginBottom: 4 },
+  caseTopic: { fontFamily: fontBodySemi, fontSize: 12.5, color: C.teal, marginBottom: 10 },
+  caseSummary: { fontFamily: fontBody, fontSize: 14, color: C.text, lineHeight: 22 },
 });

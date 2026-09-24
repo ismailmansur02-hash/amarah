@@ -13,5 +13,6 @@ export { LESSONS } from './lessons.js';
 export { OFFENCE_CATEGORIES, OFFENCES } from './offences.js';
 export { POWER_CATEGORIES, POWERS } from './powers.js';
 export { TOR_STATUTE_KEY, TOR_CODES } from './torCodes.js';
+export { SEARCH_SYNONYMS } from './search.js';
 export { VERBAL_DRILLS } from './verbalDrills.js';
 export { LEGAL_DOCS } from './legal.js';

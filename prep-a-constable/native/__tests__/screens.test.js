@@ -21,6 +21,7 @@ import LessonScreen from '../src/screens/LessonScreen';
 import ExamPrepScreen from '../src/screens/ExamPrepScreen';
 import LessonBlock from '../src/LessonBlock';
 import BottomNav from '../src/BottomNav';
+import * as Graphics from '../src/Graphics';
 
 const go = jest.fn();
 const dispatch = jest.fn();
@@ -45,26 +46,83 @@ describe('HomeScreen', () => {
     expect(t).toContain(`${TOPICS.length} acts of parliament`);
     expect(TOPICS.length).toBeGreaterThan(30);
   });
+
+  it('draws the shield, the skyline and the streak ring', () => {
+    // The illustrations are the app's identity. Rendering Home without them
+    // once shipped a screen Mr Mansur did not recognise as his own app, and
+    // "it bundles" said nothing about it.
+    const tree = drawBare(<HomeScreen state={base()} go={go} />);
+    const svgs = tree.root.findAll((n) => typeof n.type === 'string' && /Svg/i.test(n.type));
+    expect(svgs.length).toBeGreaterThan(2);
+    // the streak ring prints the streak number in its centre
+    expect(hasExactText(tree, '0')).toBe(true);
+  });
+
+  it('surfaces the review queue and weak spots when there are any', () => {
+    const s = base();
+    // three wrong answers on one topic: due for review AND a weak spot
+    const wrong = QUESTIONS.filter((q) => q.topicId === TOPICS[0].id).slice(0, 6);
+    wrong.forEach((q) => {
+      s.answered[q.id] = {
+        correctCount: 0, totalCount: 3, lastCorrect: false, flagged: false,
+        box: 0, dueAt: '2020-01-01T00:00:00.000Z',
+      };
+    });
+    const t = allText(draw(<HomeScreen state={s} go={go} />));
+    expect(t).toContain('Review due');
+    expect(t).toContain('Your weak spots');
+    expect(t).toContain('Drill');
+  });
+
+  it('hides review and weak spots on a clean slate', () => {
+    const t = allText(draw(<HomeScreen state={base()} go={go} />));
+    expect(t).not.toContain('Review due');
+    expect(t).not.toContain('Your weak spots');
+  });
+});
+
+describe('Graphics', () => {
+  it('every exported graphic renders', () => {
+    // A missing import inside Graphics.js is a runtime ReferenceError that
+    // only shows when that one component is drawn.
+    const nodes = [
+      <Graphics.ShieldLogo key="a" />,
+      <Graphics.HeroGradient key="b" />,
+      <Graphics.HomeIllustration key="c" />,
+      <Graphics.StreakRing key="d" pct={40} current={3} />,
+      <Graphics.ProgressRing key="e" value={5} max={10} />,
+      <Graphics.BadgeIcon key="f" color="#1A3A6C" />,
+      <Graphics.BookIcon key="g" color="#1F5C3F" />,
+      <Graphics.AlertIcon key="h" color="#8C2B2B" />,
+      <Graphics.RefIcon key="i" color="#1F5C6B" />,
+      <Graphics.CalendarIcon key="j" />,
+    ];
+    nodes.forEach((node) => expect(drawBare(node).toJSON()).toBeTruthy());
+  });
+
+  it('the streak ring and the progress ring print their values', () => {
+    expect(allText(drawBare(<Graphics.StreakRing pct={40} current={7} />))).toBe('7');
+    expect(allText(drawBare(<Graphics.ProgressRing value={5} max={10} />))).toBe('50%');
+  });
 });
 
 describe('TopicsListScreen', () => {
-  it('lists every topic', () => {
+  it('lists every topic with its description and mastery count, as web does', () => {
     const t = allText(draw(<TopicsListScreen state={base()} go={go} />));
-    TOPICS.forEach((topic) => expect(t).toContain(topic.title));
+    expect(t).toContain('Choose a topic to study and practise.');
+    TOPICS.forEach((topic) => {
+      expect(t).toContain(topic.title);
+      expect(t).toContain(topic.description);
+    });
+    expect(t).toContain('mastered');
   });
 
-  it('orders topics by Hendon teaching week, and every topic has one', () => {
-    expect(TOPICS.filter((x) => !x.studyWeek)).toHaveLength(0);
-    const ordered = TOPICS.map((x, i) => ({ ...x, _i: i }))
-      .sort((a, b) => a.studyWeek - b.studyWeek || a._i - b._i);
-    const weeks = ordered.map((x) => x.studyWeek);
-    expect(weeks).toEqual([...weeks].sort((a, b) => a - b));
-
-    // and the rendered order must match that, not the declaration order
+  it('keeps the declaration order, matching web', () => {
+    // Hendon teaching order belongs to Exam Prep's "Mastery by topic" only —
+    // sorting here too would silently change a second screen.
     const rendered = allText(draw(<TopicsListScreen state={base()} go={go} />));
-    const first = ordered[0].title;
-    const last = ordered[ordered.length - 1].title;
-    expect(rendered.indexOf(first)).toBeLessThan(rendered.indexOf(last));
+    const positions = TOPICS.map((x) => rendered.indexOf(x.title));
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
 });
 
@@ -72,8 +130,20 @@ describe('TopicScreen', () => {
   it('renders a topic with its lessons', () => {
     const topic = TOPICS.find((x) => (LESSONS[x.id] || []).length > 0);
     const t = allText(draw(<TopicScreen topicId={topic.id} state={base()} go={go} />));
-    expect(t).toContain(topic.title);
+    expect(t).toContain(topic.shortTitle);
     LESSONS[topic.id].forEach((l) => expect(t).toContain(l.title));
+  });
+
+  it('offers both ways into the topic’s questions', () => {
+    // Without these the screen is read-only — there is no route from a topic
+    // into its questions at all.
+    const topic = TOPICS.find((x) => (LESSONS[x.id] || []).length > 0);
+    const qs = QUESTIONS.filter((q) => q.topicId === topic.id);
+    const t = allText(draw(<TopicScreen topicId={topic.id} state={base()} go={go} />));
+    expect(t).toContain(`Start practice (${qs.length} questions)`);
+    expect(t).toContain('Quick timed quiz');
+    expect(t).toContain('Lessons');
+    expect(t).toContain('Mastered');
   });
 
   it('does not crash on an unknown topic', () => {

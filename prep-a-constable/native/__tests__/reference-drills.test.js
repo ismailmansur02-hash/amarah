@@ -58,9 +58,14 @@ describe('ReferenceScreen', () => {
 });
 
 describe('VerbalDrillScreen', () => {
-  it('lists every drill and opens on the first', () => {
+  it('opens on the drill list, as web does', () => {
     const t = allText(draw(<VerbalDrillScreen go={go} />));
-    VERBAL_DRILLS.forEach((d) => expect(t).toContain(d.title));
+    VERBAL_DRILLS.forEach((d) => {
+      expect(t).toContain(d.title);
+      expect(t).toContain(d.sub);
+    });
+    // the list itself, not a drill already in progress
+    expect(t).not.toContain('Type what you said');
   });
 
   it('grades a perfect caution at 100%', () => {
@@ -96,9 +101,12 @@ describe('VerbalDrillScreen', () => {
   });
 
   it('shows the wording when asked', () => {
-    const tree = draw(<VerbalDrillScreen go={go} />);
-    pressLabel(tree, 'Show the wording');
     const caution = VERBAL_DRILLS.find((d) => !d.componentMode);
+    const tree = draw(<VerbalDrillScreen go={go} />);
+    pressLabel(tree, `Drill ${caution.title}`);
+    // hidden until asked for — the point of the drill is delivery from memory
+    expect(allText(tree)).not.toContain((caution.display || caution.script).slice(0, 40));
+    pressLabel(tree, 'Show the wording');
     expect(allText(tree)).toContain((caution.display || caution.script).slice(0, 40));
   });
 });

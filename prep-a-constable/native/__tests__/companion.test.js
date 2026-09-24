@@ -7,7 +7,7 @@ import { act } from 'react-test-renderer';
 import { draw, allText } from './helpers';
 
 import ConstableCompanionScreen from '../src/screens/ConstableCompanionScreen';
-import { OFFENCES, POWERS, TOR_CODES, TOR_STATUTE_KEY } from '../../shared/content/index.js';
+import { OFFENCES, POWERS, TOR_CODES, TOR_STATUTE_KEY, SEARCH_SYNONYMS } from '../../shared/content/index.js';
 import { torActsFor } from '../../shared/logic.js';
 
 const go = jest.fn();
@@ -73,6 +73,30 @@ describe('ConstableCompanionScreen', () => {
     const tree = draw(<ConstableCompanionScreen go={go} />);
     typeSearch(tree, 'zzzz-no-such-offence');
     expect(allText(tree)).toContain('Nothing matches');
+  });
+
+  it('expands police abbreviations, as web does', () => {
+    // The cards use full titles ("anti-social behaviour"), so a bare substring
+    // search finds nothing for the abbreviations an officer actually types.
+    const expected = OFFENCES.filter((o) => {
+      const hay = [o.title, o.section, o.act, o.notes || '', o.category || ''].join(' ').toLowerCase();
+      return ['asb', ...SEARCH_SYNONYMS.asb].some((term) => hay.includes(term));
+    });
+    expect(expected.length).toBeGreaterThan(0);
+
+    const tree = draw(<ConstableCompanionScreen go={go} />);
+    pressTab(tree, 'A–Z');
+    typeSearch(tree, 'asb');
+    const t = allText(tree);
+    expect(t).not.toContain('Nothing matches');
+    expected.slice(0, 3).forEach((o) => expect(t).toContain(o.title));
+  });
+
+  it('also expands an abbreviation typed with dots', () => {
+    const tree = draw(<ConstableCompanionScreen go={go} />);
+    pressTab(tree, 'A–Z');
+    typeSearch(tree, 'g.b.h');
+    expect(allText(tree)).not.toContain('Nothing matches');
   });
 });
 

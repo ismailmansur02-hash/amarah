@@ -1,11 +1,12 @@
 // ============================================================================
 // VerbalDrillScreen — the caution, GOWISELY and the ESD drink-drive procedure.
 //
+// Two stages, as on web: the drill list, then the drill itself.
+//
 // SPEECH: the web build uses window.SpeechRecognition, which has no equivalent
 // in React Native. On-device recognition needs a native module
-// (@react-native-voice/voice or expo-speech-recognition), and those require a
-// custom dev build — they do NOT run in Expo Go, which is currently the only
-// way to preview this app on a real phone.
+// (@react-native-voice/voice or expo-speech-recognition) and a custom dev
+// build; none of that can be run or verified in this container.
 //
 // So the drill takes TYPED input here. The shared matchers take a plain string
 // either way, so the grading is byte-identical to the web build's; wiring a
@@ -23,12 +24,12 @@ import { VERBAL_DRILLS } from '../../../shared/content/index.js';
 import { matchScript, matchComponents } from '../../../shared/logic.js';
 
 export default function VerbalDrillScreen({ go }) {
-  const [drillId, setDrillId] = useState(VERBAL_DRILLS[0]?.id);
+  const [drillId, setDrillId] = useState(null);
   const [spoken, setSpoken] = useState('');
   const [result, setResult] = useState(null);
   const [showScript, setShowScript] = useState(false);
 
-  const drill = VERBAL_DRILLS.find((d) => d.id === drillId) || VERBAL_DRILLS[0];
+  const drill = VERBAL_DRILLS.find((d) => d.id === drillId) || null;
 
   const pick = (id) => { setDrillId(id); setSpoken(''); setResult(null); setShowScript(false); };
 
@@ -44,25 +45,43 @@ export default function VerbalDrillScreen({ go }) {
 
   const reset = () => { setSpoken(''); setResult(null); };
 
-  return (
-    <Screen>
-      <Header title="Verbal Drills" onBack={() => go({ name: 'home' })} />
-
-      <View style={{ padding: 16, gap: 14 }}>
-        <View style={s.pills}>
+  // ---- LIST VIEW ----
+  if (!drill) {
+    return (
+      <Screen>
+        <Header title="Verbal Drills" onBack={() => go({ name: 'home' })} />
+        <View style={{ padding: 18 }}>
+          <Text style={s.intro}>
+            Practise delivering the caution and stop-search information word-perfect. Say it out loud from
+            memory with the script hidden — then see exactly what you missed.
+          </Text>
           {VERBAL_DRILLS.map((d) => (
             <Pressable
               key={d.id}
               onPress={() => pick(d.id)}
               accessibilityRole="button"
               accessibilityLabel={`Drill ${d.title}`}
-              style={[s.pill, drill.id === d.id && s.pillActive]}
+              style={({ pressed }) => [s.drillCard, pressed && { opacity: 0.85 }]}
             >
-              <Text style={[s.pillText, drill.id === d.id && { color: 'white' }]}>{d.title}</Text>
+              <View style={s.drillIcon}><Text style={{ fontSize: 22 }}>🎙</Text></View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.drillTitle}>{d.title}</Text>
+                <Text style={s.drillSub}>{d.sub}</Text>
+              </View>
+              <Text style={s.drillChevron}>›</Text>
             </Pressable>
           ))}
         </View>
+      </Screen>
+    );
+  }
 
+  // ---- DRILL VIEW ----
+  return (
+    <Screen>
+      <Header title={drill.title} onBack={() => { setDrillId(null); reset(); }} />
+
+      <View style={{ padding: 16, gap: 14 }}>
         <View>
           <Text style={s.title}>{drill.title}</Text>
           <Text style={s.sub}>{drill.sub}</Text>
@@ -171,10 +190,16 @@ function ComponentResult({ result }) {
 }
 
 const s = StyleSheet.create({
-  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  pill: { borderWidth: 1.5, borderColor: C.border, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 14, backgroundColor: 'white' },
-  pillActive: { backgroundColor: C.navy, borderColor: C.navy },
-  pillText: { fontFamily: fontBodySemi, fontSize: 13, color: C.text },
+  intro: { fontFamily: fontBody, fontSize: 14.5, color: C.textMuted, lineHeight: 22, marginBottom: 18 },
+  drillCard: {
+    backgroundColor: 'white', borderWidth: 2, borderColor: C.navy, borderRadius: 16,
+    paddingVertical: 16, paddingHorizontal: 18, marginBottom: 12,
+    flexDirection: 'row', alignItems: 'center', gap: 14,
+  },
+  drillIcon: { width: 48, height: 48, borderRadius: 12, backgroundColor: '#E8EFF8', alignItems: 'center', justifyContent: 'center' },
+  drillTitle: { fontFamily: fontDisplaySemi, fontSize: 19, color: C.navy, letterSpacing: -0.2 },
+  drillSub: { fontFamily: fontBody, fontSize: 12.5, color: C.textMuted, marginTop: 2 },
+  drillChevron: { color: C.navy, fontSize: 22 },
   title: { fontFamily: fontDisplay, fontSize: 24, color: C.text, letterSpacing: -0.4 },
   sub: { fontFamily: fontBody, fontSize: 13, color: C.textMuted, marginTop: 3 },
   help: { fontFamily: fontBody, fontSize: 13, color: C.textMuted, lineHeight: 19, marginBottom: 10 },

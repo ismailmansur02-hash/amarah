@@ -1,59 +1,59 @@
 // ============================================================================
-// TopicsListScreen — every topic with its mastery bar, in Hendon teaching
-// order (studyWeek), matching the web app's Mastery by topic ordering.
+// TopicsListScreen — a port of the web TopicsListScreen.
+//
+// Green header, then one card per topic carrying its accent as a top rule, the
+// mastered count, the title, the description and a mastery bar.
+//
+// Order is the plain TOPICS order, as on web. The Hendon teaching order
+// (studyWeek) applies only to "Mastery by topic" on Exam Prep — sorting here
+// too would silently change a second screen Mr Mansur did not ask about.
 // ============================================================================
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Screen, Header, ProgressBar } from '../ui';
-import { C, fontDisplay, fontBody, fontBodySemi } from '../theme';
+import { C, fontDisplay, fontBody, fontBodyMed } from '../theme';
 import { TOPICS, QUESTIONS } from '../../../shared/content/index.js';
 
 export default function TopicsListScreen({ state, go }) {
-  const rows = useMemo(
-    () =>
-      TOPICS.map((t, i) => {
-        const qs = QUESTIONS.filter((q) => q.topicId === t.id);
-        const mastered = qs.filter((q) => state.answered[q.id]?.lastCorrect).length;
-        return { ...t, total: qs.length, mastered, _i: i };
-      }).sort((a, b) => (a.studyWeek || 99) - (b.studyWeek || 99) || a._i - b._i),
-    [state.answered]
-  );
-
   return (
     <Screen>
-      <Header title="Topics" onBack={() => go({ name: 'home' })} />
-      <View style={{ padding: 16, gap: 10 }}>
-        <Text style={s.caption}>In the order you'll be taught them at Hendon.</Text>
-        {rows.map((t) => (
-          <Pressable
-            key={t.id}
-            onPress={() => go({ name: 'topic', topicId: t.id })}
-            accessibilityRole="button"
-            style={({ pressed }) => [s.row, pressed && { opacity: 0.85 }]}
-          >
-            <View style={{ flex: 1 }}>
-              <View style={s.rowTop}>
-                <Text style={s.title} numberOfLines={2}>{t.title}</Text>
-                <Text style={s.count}>{t.mastered}/{t.total}</Text>
-              </View>
-              <ProgressBar value={t.mastered} max={t.total} color={t.accent} />
-            </View>
-            <Text style={{ color: C.textFaint, fontSize: 20 }}>›</Text>
-          </Pressable>
-        ))}
+      <Header title="Topics" onBack={() => go({ name: 'home' })} bg={C.green} />
+      <View style={{ padding: 18 }}>
+        <Text style={s.intro}>Choose a topic to study and practise.</Text>
+
+        <View style={{ gap: 12 }}>
+          {TOPICS.map((t) => {
+            const qs = QUESTIONS.filter((q) => q.topicId === t.id);
+            const mastered = qs.filter((q) => state.answered[q.id]?.lastCorrect).length;
+            return (
+              <Pressable
+                key={t.id}
+                onPress={() => go({ name: 'topic', topicId: t.id })}
+                accessibilityRole="button"
+                accessibilityLabel={t.title}
+                style={({ pressed }) => [s.card, { borderTopColor: t.accent }, pressed && { opacity: 0.85 }]}
+              >
+                <Text style={s.mastered}>{mastered}/{qs.length} mastered</Text>
+                <Text style={s.title}>{t.title}</Text>
+                <Text style={s.desc}>{t.description}</Text>
+                <ProgressBar value={mastered} max={qs.length} color={t.accent} />
+              </Pressable>
+            );
+          })}
+        </View>
       </View>
     </Screen>
   );
 }
 
 const s = StyleSheet.create({
-  caption: { fontFamily: fontBody, fontSize: 12.5, color: C.textMuted, lineHeight: 19, marginBottom: 2 },
-  row: {
-    backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 12,
-    paddingVertical: 12, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 14,
+  intro: { fontFamily: fontBody, fontSize: 14, color: C.textMuted, lineHeight: 21, marginBottom: 18 },
+  card: {
+    backgroundColor: 'white', borderWidth: 1, borderColor: C.border,
+    borderTopWidth: 3, borderRadius: 12, padding: 16,
   },
-  rowTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6, gap: 8 },
-  title: { flex: 1, fontFamily: fontBodySemi, fontSize: 14.5, color: C.text },
-  count: { fontFamily: fontBodySemi, fontSize: 12, color: C.textMuted },
+  mastered: { fontFamily: fontBodyMed, fontSize: 12, color: C.textFaint, marginBottom: 6 },
+  title: { fontFamily: fontDisplay, fontSize: 19, color: C.text, letterSpacing: -0.2, marginBottom: 6, lineHeight: 24 },
+  desc: { fontFamily: fontBody, fontSize: 13.5, color: C.textMuted, lineHeight: 20, marginBottom: 12 },
 });

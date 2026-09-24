@@ -9,7 +9,7 @@
 
 import React from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet, Platform } from 'react-native';
-import { C, fontDisplay, fontDisplaySemi, fontBody, fontBodySemi, fontMono } from './theme';
+import { C, fontDisplay, fontDisplaySemi, fontBody, fontBodySemi, fontBodyBold, fontMono } from './theme';
 
 // The chequered Metropolitan Police band that tops every screen on web.
 // Drawn as alternating squares rather than a repeating CSS gradient.
@@ -48,9 +48,9 @@ export function Screen({ children, scroll = true, style }) {
   );
 }
 
-export function Header({ title, onBack, right }) {
+export function Header({ title, onBack, right, bg = C.navy, fg = 'white' }) {
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { backgroundColor: bg }]}>
       {onBack ? (
         <Pressable
           onPress={onBack}
@@ -59,10 +59,11 @@ export function Header({ title, onBack, right }) {
           hitSlop={8}
           style={styles.backBtn}
         >
-          <Text style={{ color: 'white', fontSize: 18, lineHeight: 20 }}>←</Text>
+          <Text style={{ color: fg, fontSize: 18, lineHeight: 20 }}>←</Text>
         </Pressable>
       ) : null}
-      <Text style={styles.headerTitle} numberOfLines={1}>
+      {/* Long titles step down a size, as on web, so they still fit on one line. */}
+      <Text style={[styles.headerTitle, { color: fg, fontSize: title && title.length > 30 ? 15 : 18 }]} numberOfLines={1}>
         {title}
       </Text>
       {right ?? null}
@@ -74,8 +75,12 @@ export function SectionLabel({ children, style }) {
   return <Text style={[styles.sectionLabel, style]}>{children}</Text>;
 }
 
-export function Card({ children, style, onPress }) {
-  const inner = <View style={[styles.card, style]}>{children}</View>;
+export function Card({ children, style, onPress, accent }) {
+  const inner = (
+    <View style={[styles.card, accent && { borderTopWidth: 3, borderTopColor: accent }, style]}>
+      {children}
+    </View>
+  );
   if (!onPress) return inner;
   return (
     <Pressable onPress={onPress} accessibilityRole="button" style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}>
@@ -84,7 +89,9 @@ export function Card({ children, style, onPress }) {
   );
 }
 
-export function PrimaryButton({ children, onPress, secondary, full, disabled, style, accessibilityLabel }) {
+export function PrimaryButton({ children, onPress, secondary, danger, full, disabled, style, accessibilityLabel }) {
+  const bg = disabled ? '#C7CCD5' : danger ? C.error : secondary ? 'white' : C.navy;
+  const color = secondary && !disabled ? C.navy : 'white';
   return (
     <Pressable
       onPress={disabled ? undefined : onPress}
@@ -93,22 +100,23 @@ export function PrimaryButton({ children, onPress, secondary, full, disabled, st
       accessibilityState={{ disabled: !!disabled }}
       style={({ pressed }) => [
         styles.btn,
-        secondary ? styles.btnSecondary : styles.btnPrimary,
+        { backgroundColor: bg },
+        secondary && { borderWidth: 1.5, borderColor: C.navy },
         full && { alignSelf: 'stretch' },
-        (disabled || pressed) && { opacity: disabled ? 0.5 : 0.85 },
+        pressed && !disabled && { opacity: 0.85 },
         style,
       ]}
     >
-      <Text style={[styles.btnText, secondary && { color: C.navy }]}>{children}</Text>
+      <Text style={[styles.btnText, { color }]}>{children}</Text>
     </Pressable>
   );
 }
 
-export function ProgressBar({ value, max, color = C.navy, height = 8 }) {
+export function ProgressBar({ value, max, color = C.navy, height = 6 }) {
   const pct = max > 0 ? Math.max(0, Math.min(1, value / max)) : 0;
   return (
     <View
-      style={{ height, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: C.border, borderRadius: 999, overflow: 'hidden' }}
+      style={{ height, backgroundColor: '#E8ECF2', borderRadius: 999, overflow: 'hidden', width: '100%' }}
       accessibilityRole="progressbar"
       accessibilityValue={{ min: 0, max: max || 0, now: value || 0 }}
     >
@@ -149,29 +157,27 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 11,
-    fontFamily: fontBodySemi,
-    letterSpacing: 1,
-    color: C.textFaint,
+    fontFamily: fontBodyBold,
+    letterSpacing: 1.4,
+    color: C.textMuted,
     textTransform: 'uppercase',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   card: {
     backgroundColor: C.card,
     borderWidth: 1,
     borderColor: C.border,
-    borderRadius: 12,
-    padding: 14,
+    borderRadius: 14,
+    padding: 18,
   },
   btn: {
-    borderRadius: 10,
-    paddingVertical: 13,
-    paddingHorizontal: 18,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnPrimary: { backgroundColor: C.navy },
-  btnSecondary: { backgroundColor: 'white', borderWidth: 1.5, borderColor: C.navy },
-  btnText: { color: 'white', fontFamily: fontBodySemi, fontSize: 15 },
+  btnText: { fontFamily: fontBodySemi, fontSize: 16, letterSpacing: 0.2 },
 });
 
 export { styles as uiStyles };

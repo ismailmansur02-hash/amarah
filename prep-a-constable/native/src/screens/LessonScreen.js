@@ -8,7 +8,8 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Screen, Header, PrimaryButton } from '../ui';
 import LessonBlock from '../LessonBlock';
 import { C, fontDisplay, fontBody, fontBodySemi, fontMono } from '../theme';
-import { TOPICS, LESSONS } from '../../../shared/content/index.js';
+import { TOPICS, LESSONS, QUESTIONS } from '../../../shared/content/index.js';
+import { shuffle } from '../../../shared/logic.js';
 
 export default function LessonScreen({ topicId, lessonId, state, dispatch, go }) {
   const topic = TOPICS.find((t) => t.id === topicId);
@@ -54,22 +55,27 @@ export default function LessonScreen({ topicId, lessonId, state, dispatch, go })
           <LessonBlock key={i} block={b} topicAccent={topic.accent} />
         ))}
 
-        <Pressable
-          onPress={() => dispatch({ type: 'markLessonRead', lessonId: lesson.id })}
-          accessibilityRole="checkbox"
-          accessibilityState={{ checked: isRead }}
-          style={[
-            s.readBox,
-            { backgroundColor: isRead ? C.successBg : '#F2F4F8', borderColor: isRead ? C.success : C.border },
-          ]}
-        >
+        <View style={[
+          s.readBox,
+          { backgroundColor: isRead ? C.successBg : '#F2F4F8', borderColor: isRead ? C.success : C.border },
+        ]}>
           <View style={[s.tick, { borderColor: isRead ? C.success : C.borderStrong, backgroundColor: isRead ? C.success : 'white' }]}>
-            {isRead ? <Text style={{ color: 'white', fontSize: 13 }}>✓</Text> : null}
+            {isRead ? <Text style={{ color: 'white', fontSize: 14 }}>✓</Text> : null}
           </View>
           <Text style={s.readLabel}>
-            {isRead ? 'Marked as read' : 'Mark this lesson as read'}
+            {isRead ? 'Lesson complete' : 'Mark this lesson as read'}
           </Text>
-        </Pressable>
+          {!isRead ? (
+            <Pressable
+              onPress={() => dispatch({ type: 'markLessonRead', lessonId: lesson.id })}
+              accessibilityRole="button"
+              accessibilityLabel="Mark read"
+              style={s.markBtn}
+            >
+              <Text style={s.markText}>Mark read</Text>
+            </Pressable>
+          ) : null}
+        </View>
 
         <View style={s.nav}>
           <View style={{ flex: 1 }}>
@@ -81,19 +87,34 @@ export default function LessonScreen({ topicId, lessonId, state, dispatch, go })
               >
                 ← Previous
               </PrimaryButton>
-            ) : null}
+            ) : (
+              <PrimaryButton secondary full onPress={() => go({ name: 'topic', topicId })}>
+                ← Topic
+              </PrimaryButton>
+            )}
           </View>
           <View style={{ flex: 1 }}>
-            <PrimaryButton
-              full
-              onPress={() =>
-                markReadAnd(() =>
-                  next ? go({ name: 'lesson', topicId, lessonId: next.id }) : go({ name: 'topic', topicId })
-                )
-              }
-            >
-              {next ? 'Next →' : 'Finish'}
-            </PrimaryButton>
+            {next ? (
+              <PrimaryButton
+                full
+                onPress={() => markReadAnd(() => go({ name: 'lesson', topicId, lessonId: next.id }))}
+              >
+                Next →
+              </PrimaryButton>
+            ) : (
+              // The last lesson leads into the topic's questions, as on web —
+              // finishing a lesson and being dropped back at a list is a dead end.
+              <PrimaryButton
+                full
+                onPress={() => markReadAnd(() => go({
+                  name: 'practice',
+                  title: topic.shortTitle,
+                  questionIds: shuffle(QUESTIONS.filter((q) => q.topicId === topicId).map((q) => q.id)),
+                }))}
+              >
+                Practise →
+              </PrimaryButton>
+            )}
           </View>
         </View>
       </View>
@@ -110,7 +131,9 @@ const s = StyleSheet.create({
     marginTop: 24, padding: 14, borderWidth: 1, borderRadius: 10,
     flexDirection: 'row', alignItems: 'center', gap: 12,
   },
-  tick: { width: 22, height: 22, borderRadius: 6, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
-  readLabel: { fontFamily: fontBodySemi, fontSize: 14, color: C.text },
-  nav: { flexDirection: 'row', gap: 10, marginTop: 14 },
+  tick: { width: 24, height: 24, borderRadius: 6, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
+  readLabel: { flex: 1, fontFamily: fontBody, fontSize: 13.5, color: C.text },
+  markBtn: { backgroundColor: C.navy, borderRadius: 6, paddingVertical: 6, paddingHorizontal: 12 },
+  markText: { fontFamily: fontBodySemi, fontSize: 12, color: 'white' },
+  nav: { flexDirection: 'row', gap: 10, marginTop: 18 },
 });

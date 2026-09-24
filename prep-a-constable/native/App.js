@@ -42,6 +42,11 @@ import ConstableCompanionScreen from './src/screens/ConstableCompanionScreen';
 import PracticeScreen from './src/screens/PracticeScreen';
 import FlashcardsScreen from './src/screens/FlashcardsScreen';
 import MockListScreen from './src/screens/MockListScreen';
+import MockSetupScreen from './src/screens/MockSetupScreen';
+import MockScreen from './src/screens/MockScreen';
+import ResultsScreen from './src/screens/ResultsScreen';
+import RealExamScreen from './src/screens/RealExamScreen';
+import LegalScreen from './src/screens/LegalScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import ReferenceScreen from './src/screens/ReferenceScreen';
 import VerbalDrillScreen from './src/screens/VerbalDrillScreen';
@@ -195,18 +200,38 @@ export default function App() {
         <PracticeScreen
           questionIds={view.questionIds}
           title={view.title}
-          durationMins={view.durationMins}
-          examLevel={view.examLevel}
           state={state}
           dispatch={dispatch}
           go={go}
         />
       );
       break;
+    case 'mockSetup':
+      screen = <MockSetupScreen examLevel={view.examLevel} go={go} />;
+      break;
+    case 'mock':
+      screen = (
+        <MockScreen
+          questionIds={view.questionIds}
+          examLevel={view.examLevel}
+          durationMins={view.durationMins}
+          state={state}
+          dispatch={dispatch}
+          go={go}
+        />
+      );
+      break;
+    case 'results':
+      screen = <ResultsScreen attempt={view.attempt} go={go} />;
+      break;
+    case 'realExam':
+      screen = <RealExamScreen state={state} dispatch={dispatch} go={go} />;
+      break;
+    case 'legal':
+      screen = <LegalScreen doc={view.doc} go={go} />;
+      break;
     case 'home':
     default:
-      // Screens not yet ported fall back to Home rather than crashing, so the
-      // app stays usable while the remaining screens are brought across.
       screen = <HomeScreen state={state} go={go} />;
       break;
   }
@@ -215,7 +240,9 @@ export default function App() {
   // on web: a lesson still belongs to Home's Topics branch.
   const TAB_FOR = {
     home: 'home', topicsList: 'home', topic: 'home', lesson: 'home',
-    examPrep: 'examPrep', practice: 'home', flashcards: 'home', mockList: 'home', reference: 'home', verbalDrills: 'home', constableCompanion: 'constableCompanion', settings: 'settings',
+    examPrep: 'examPrep', practice: 'home', flashcards: 'home', reference: 'home', verbalDrills: 'home',
+    mockList: 'home', mockSetup: 'home', mock: 'home', results: 'home', realExam: 'home',
+    constableCompanion: 'constableCompanion', settings: 'settings', legal: 'settings',
   };
 
   return (

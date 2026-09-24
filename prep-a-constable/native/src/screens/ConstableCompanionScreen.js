@@ -12,6 +12,7 @@ import { Screen, Header, Card, SectionLabel } from '../ui';
 import { C, fontDisplay, fontDisplaySemi, fontDisplayItalic, fontBody, fontBodySemi, fontMono } from '../theme';
 import {
   OFFENCES, OFFENCE_CATEGORIES, POWERS, POWER_CATEGORIES, TOR_CODES, TOR_STATUTE_KEY,
+  SEARCH_SYNONYMS,
 } from '../../../shared/content/index.js';
 import { torActsFor } from '../../../shared/logic.js';
 
@@ -30,10 +31,24 @@ export default function ConstableCompanionScreen({ go }) {
 
   const q = query.trim().toLowerCase();
 
+  // Expand the query into all the terms we should match against, exactly as on
+  // web: the cards use full titles ("anti-social behaviour"), so an officer
+  // typing "ASB" or "GBH" must still find them.
+  const queryTerms = useMemo(() => {
+    if (!q) return [];
+    const terms = [q];
+    if (SEARCH_SYNONYMS[q]) terms.push(...SEARCH_SYNONYMS[q]);
+    // also catch the abbreviation typed with dots, e.g. "a.s.b"
+    const stripped = q.replace(/[.\s]/g, '');
+    if (stripped !== q && SEARCH_SYNONYMS[stripped]) terms.push(...SEARCH_SYNONYMS[stripped]);
+    return terms;
+  }, [q]);
+
   const matches = (item) => {
     if (!q) return true;
-    return [item.title, item.section, item.act, item.notes, item.grounds, item.definition, item.category]
-      .filter(Boolean).join(' ').toLowerCase().includes(q);
+    const haystack = [item.title, item.section, item.act, item.notes, item.grounds, item.definition, item.category]
+      .filter(Boolean).join(' ').toLowerCase();
+    return queryTerms.some((term) => haystack.includes(term));
   };
 
   const dailyOffences = useMemo(() => OFFENCES.filter((o) => o.daily && matches(o)), [q]);

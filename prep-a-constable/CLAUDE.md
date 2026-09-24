@@ -81,6 +81,9 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
   third-party sign-in would oblige Sign in with Apple. Email magic link only.
 - In-app account deletion exists in native Settings. Apple REQUIRES it wherever
   accounts can be created — do not remove it.
+- The Legal card on Profile (Privacy Policy, Terms of Service) and the screen it
+  opens are a submission requirement, not decoration. The privacy policy must be
+  reachable from inside the app.
 
 ## Deployed infrastructure (live)
 
@@ -99,7 +102,9 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
 ```
 shared/            NO JSX, no platform APIs. The single source of truth.
   content/         TOPICS, QUESTIONS, LESSONS, OFFENCES, POWERS, FLASHCARDS,
-                   MNEMONICS, KEY_CASES, TOR_CODES, VERBAL_DRILLS, LEGAL_DOCS
+                   MNEMONICS, KEY_CASES, TOR_CODES, VERBAL_DRILLS, LEGAL_DOCS,
+                   SEARCH_SYNONYMS (the Constable Companion abbreviation map —
+                   "ASB", "GBH", "TWOC" must find the same cards on both builds)
   logic.js         shuffle, SRS, scoring, speech matcher, trainingProgress
   state.js         SCHEMA_VERSION, DEFAULT_STATE, sanitisers, mergeState, reducer
   theme.js         the colour palette (C)
@@ -122,14 +127,34 @@ npx expo start                     # scan the QR with Expo Go on a real iPhone
 ```
 
 ```bash
-cd native && npx jest          # 61 render tests — MUST stay green
+cd native && npx jest          # 79 render tests — MUST stay green
 npx expo-doctor                # 19/21; the 2 failures are network-blocked here
 ```
 
+**The web build in `app/` is the DESIGN OF RECORD.** Every native screen is a
+port of its web counterpart — same sections, same order, same type scale and
+colours. Writing a simpler native version of a screen and calling it a port is
+the mistake that produced Round 10 in AUDIT.md; if a native screen needs to
+change, change the web one first or not at all. `src/Graphics.js` holds the
+react-native-svg ports of the web's inline SVG (shield, London skyline, streak
+and progress rings, the nav icons).
+
 There is **no iOS Simulator in this container** (Linux, no Xcode) and there
-never will be. `expo export` proves it bundles and `jest` proves screens render
-real content, but NOTHING here confirms how it LOOKS — that needs Expo Go on a
-real device.
+never will be. But the native app CAN be looked at, and should be, before
+claiming anything about how it looks:
+
+```bash
+cd native && npx expo export --platform web --output-dir dist-web
+# then rename dist-web/_expo -> dist-web/expo-static, make the "/assets/" and
+# "/_expo/" paths in index.html and the js bundle relative, and serve it.
+```
+
+That renders the REAL React Native app through react-native-web at phone width.
+It is not iOS — fonts, safe areas and the date picker are the platform's own —
+but it catches what bundling and text assertions miss. It is how the invisible
+skyline was found: a bare `<Svg>` is a raw `<svg>` under react-native-web, and
+an absolutely-positioned sibling paints straight over it, so illustrations go in
+a wrapping `<View>` and are sized through `style`.
 
 The jest tests render screens for real, because "it bundles" would not have
 caught the mnemonic bug that shipped on web. `__tests__/app.test.js` renders the

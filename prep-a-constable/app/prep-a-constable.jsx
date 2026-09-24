@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer, useRef } from "react";
 
 // Content and state logic live in shared/ so the React Native app in native/
 // imports the exact same data and merge rules — no second copy to drift.
-import { TOPICS, EXAM_CONFIGS, QUESTIONS, FLASHCARDS, MNEMONICS, KEY_CASES, LESSONS, OFFENCE_CATEGORIES, OFFENCES, POWER_CATEGORIES, POWERS, TOR_STATUTE_KEY, TOR_CODES, VERBAL_DRILLS, LEGAL_DOCS } from "../shared/content/index.js";
+import { TOPICS, EXAM_CONFIGS, QUESTIONS, FLASHCARDS, MNEMONICS, KEY_CASES, LESSONS, OFFENCE_CATEGORIES, OFFENCES, POWER_CATEGORIES, POWERS, TOR_STATUTE_KEY, TOR_CODES, VERBAL_DRILLS, LEGAL_DOCS, SEARCH_SYNONYMS } from "../shared/content/index.js";
 import { C } from "../shared/theme.js";
 import { shuffle, _shuffledOptCache, getShuffledOptions, pickQuestions, getReviewQueue, getTopicMastery, getWeakSpots, formatTime, daysUntil, formatDateLong, trainingProgress, plural, uuid, normaliseSpeech, matchScript, matchKeywords, matchComponents, DEMO_MODE, SRS_INTERVALS, srsIntervalDays, addDaysISO, isQuestionDue, mnemonicRow, torActsFor } from "../shared/logic.js";
 import { SCHEMA_VERSION, STORAGE_KEY, DEFAULT_STATE, dayKey, DANGEROUS_KEYS, isPlainObject, sanitizeRecordMap, loadStateFromRaw, mergeState, reducer } from "../shared/state.js";
@@ -1761,52 +1761,8 @@ function ConstableCompanionScreen({ go }) {
   // Build the filtered lists
   const q = query.trim().toLowerCase();
 
-  // Abbreviation / synonym map. When the officer types a common police abbreviation,
-  // we also search for the spelled-out terms — because the cards themselves use full
-  // titles (e.g. "anti-social behaviour", not "ASB"). Each key maps to a list of
-  // extra terms that the query is treated as matching.
-  const SEARCH_SYNONYMS = {
-    "asb": ["anti-social behaviour", "antisocial behaviour", "dispersal", "anti-social behaviour, crime and policing act 2014", "community protection", "public spaces protection", "criminal behaviour order"],
-    "rtc": ["road traffic collision", "road traffic act 1988", "collision", "accident", "fail to stop", "fail to report", "section 170", "driving", "vehicle"],
-    "rta": ["road traffic act 1988", "driving", "vehicle", "collision"],
-    "esd": ["electronic screening device", "breath test", "breathalyser", "breathalyzer", "roadside breath", "drink drive", "preliminary test", "specimen for analysis"],
-    "twoc": ["taking without consent", "taking a conveyance", "section 12 theft act 1968", "conveyance"],
-    "gbh": ["grievous bodily harm", "section 18", "section 20", "wounding", "offences against the person act 1861"],
-    "abh": ["actual bodily harm", "section 47", "assault occasioning", "offences against the person act 1861"],
-    "pwits": ["possession with intent to supply", "section 5(3)", "misuse of drugs act 1971", "supply"],
-    "pace": ["police and criminal evidence act 1984"],
-    "moda": ["misuse of drugs act 1971", "drugs"],
-    "poca": ["prevention of crime act 1953", "offensive weapon"],
-    "cja": ["criminal justice act 1988", "bladed", "pointed article"],
-    "owa": ["offensive weapons act 2019", "corrosive", "flick knife", "zombie knife"],
-    "poa": ["public order act 1986", "affray", "violent disorder", "riot", "harassment alarm distress"],
-    "soa": ["sexual offences act 2003", "rape", "sexual assault", "consent"],
-    "da": ["domestic abuse", "domestic violence", "dvpn", "dvpo", "coercive control"],
-    "dvpn": ["domestic violence protection notice"],
-    "dvpo": ["domestic violence protection order"],
-    "cse": ["child sexual exploitation", "safeguard"],
-    "fgm": ["female genital mutilation"],
-    "hba": ["honour based abuse", "honour-based abuse", "forced marriage"],
-    "nrm": ["national referral mechanism", "modern slavery", "trafficking"],
-    "mha": ["mental health act 1983", "section 136", "section 135", "place of safety"],
-    "mca": ["mental capacity act 2005", "capacity"],
-    "misper": ["missing person", "missing persons"],
-    "bop": ["breach of the peace"],
-    "fpn": ["fixed penalty notice", "penalty"],
-    "cbo": ["criminal behaviour order"],
-    "cpn": ["community protection notice"],
-    "pspo": ["public spaces protection order"],
-    "vps": ["victim personal statement"],
-    "mg11": ["witness statement"],
-    "tic": ["taken into consideration", "offences taken into consideration"],
-    "cd": ["criminal damage act 1971", "criminal damage", "arson"],
-    "ndm": ["national decision model"],
-    "csi": ["crime scene", "evidence"],
-    "anpr": ["automatic number plate", "vehicle"],
-    "s17": ["section 17"], "s18": ["section 18"], "s19": ["section 19"],
-    "s24": ["section 24"], "s32": ["section 32"], "s136": ["section 136"],
-    "s170": ["section 170"], "s5": ["section 5"], "s4": ["section 4"],
-  };
+  // The abbreviation/synonym map lives in shared/ so the native build searches
+  // exactly the same way — typing "ASB" or "GBH" must find the same cards.
 
   // Expand the query into all the terms we should match against.
   const queryTerms = (() => {

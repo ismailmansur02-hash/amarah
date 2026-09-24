@@ -592,3 +592,98 @@ CONNECT, confirmed with curl) — they are environmental, not project defects.
 Nobody has LOOKED at the native app. There is no iOS Simulator in this
 container and cannot be. Visual confirmation needs Expo Go on a real iPhone.
 The magic-link round trip is also untested end to end on device.
+
+---
+
+# Round 10 — restoring the native app's appearance
+
+Mr Mansur's words: *"you've changed everything how it's supposed to look… the
+whole home page is completely different"*, then *"no restore everything to how
+it looked. all I asked for you to do was make it ready so I can submit on the
+apple store."*
+
+He was right, and the fault was mine. The native screens had been written as
+simplified versions of the web screens and described as ports. The web build is
+the design of record; this round makes native match it.
+
+## What was actually missing
+
+Checked screen by screen against `app/prep-a-constable.jsx`:
+
+| Screen | What had been dropped |
+|---|---|
+| Home | Shield logo, the London skyline illustration, the circular streak ring, the icon tiles, the white cards with 2px coloured borders, **Review due**, **Weak spots** |
+| Exam Prep | Back button, hero decoration, welcome line, the exam date card (Change AP / Edit date), the Overall + Topic mastery split card, the Recent + Mock tests split card |
+| Topics | Green header, per-topic descriptions, the accent top rule, the "n/m mastered" line. It was also sorted by Hendon week — web sorts only Exam Prep's list that way |
+| Topic | The Lessons/Mastered stats card, numbered lesson tiles, **and both practice buttons** — there was no route from a topic into its questions at all |
+| Lesson | "Practise →" on the last lesson, "← Topic" on the first |
+| Flash Cards | The whole deck model: topic picker, "Again" re-queueing a card, "Got it", deck-complete screen. It was a next-card carousel instead |
+| Mock Tests | The AP grid with best scores, custom mock, record-a-real-result, and the attempts list read `a.level`/`a.total`/`a.dateISO` — **fields the reducer never writes**, so those rows would have rendered blank |
+| Mocks | No exam mode at all. Practice graded every answer immediately, while Mock Tests promises "No feedback until you submit" |
+| Results | Missing entirely — no score breakdown, no answer review |
+| Mock setup / Real exam | Missing entirely |
+| Profile | About-this-build, the Account card, **the Legal card** and the always-available Delete account |
+| Legal | Missing entirely — the privacy policy was unreachable in-app, which the App Store requires |
+| Constable Companion | The abbreviation search map: typing "ASB", "GBH" or "TWOC" found nothing |
+| Verbal Drills | The drill list; it opened straight into a drill behind a pill row |
+
+Shared primitives were off too, which affected every screen: `Card` radius and
+padding, `ProgressBar` height and track colour, `PrimaryButton` size, the
+`SectionLabel` weight and colour, and `Header` had no `bg` (so the green Topics
+and red Mock Tests headers were navy).
+
+## What was done
+
+- `src/Graphics.js` — react-native-svg ports of ShieldLogo, BadgeIcon,
+  BookIcon, AlertIcon, RefIcon, CalendarIcon, StreakRing, ProgressRing,
+  HeroGradient and HomeIllustration (Big Ben, the London Eye, the Gherkin, the
+  Shard, the road and the Met patrol car), copied coordinate for coordinate.
+- New screens: `MockScreen`, `MockSetupScreen`, `ResultsScreen`,
+  `RealExamScreen`, `LegalScreen`, plus a shared `QuestionCard`.
+- Rewritten: Home, Exam Prep, Topics, Topic, Lesson, Flash Cards, Mock Tests,
+  Practice, Profile.
+- `SEARCH_SYNONYMS` moved VERBATIM out of the web file into
+  `shared/content/search.js`, so both builds expand abbreviations identically.
+- Routes added: `mockSetup`, `mock`, `results`, `realExam`, `legal`.
+
+## Two bugs this found that tests alone would not have
+
+1. **`fontDisplaySemi` was not imported in `Graphics.js`** — a ReferenceError
+   the moment the streak ring drew. Caught by rendering it.
+2. **The skyline was invisible.** It was in the DOM with correct geometry, but
+   under react-native-web a bare `<Svg>` is a raw `<svg>` element, and the
+   absolutely-positioned hero gradient painted straight over it. Fixed by
+   wrapping the illustration in a `<View>` and sizing through `style`.
+
+Both are exactly the class of defect that "it bundles" and "the text is on
+screen" miss — which is why this round was verified by LOOKING at it.
+
+## How it was verified
+
+`npx expo export --platform web` renders the real React Native app through
+react-native-web, and it was then driven in a headless browser at iPhone size:
+Home, Exam Prep, Topics, a topic, Mock Tests, AP1 setup, a live AP1 mock,
+Custom mock, My Exam Results, Flash Cards, Reference, Verbal Drills, Profile,
+Privacy Policy and Constable Companion. **No console or page errors anywhere.**
+Screenshots compared against the web build.
+
+This is not the same as running on iOS — fonts, safe areas and the date picker
+are the platform's own — but it is the first time anyone has actually seen
+these screens.
+
+- `npx jest` — **79 passing** (was 61); new guards cover the Home
+  illustrations, every Graphics export, the mock attempt shape, the
+  results review, the Legal route and abbreviation search.
+- `npx expo export --platform ios` — bundles clean (3.9 MB).
+- `node backend/scripts/test-contract.cjs` — 27/27.
+- `cd preview && npm run build` — the web build still compiles after the
+  `SEARCH_SYNONYMS` move, and the web Home was re-checked visually: unchanged.
+
+## Still NOT done
+
+- **Verbal Drills still take typed input, not speech.** Restored to the web's
+  two-stage layout, but the microphone is not wired: on-device recognition
+  needs a native module and a custom build, and none of that can be run or
+  verified in this container. This is a real difference from the web app and
+  Mr Mansur's call to make — see "Deliberate omissions" above.
+- Nothing has run on an actual iPhone.
