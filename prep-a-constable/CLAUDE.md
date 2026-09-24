@@ -2,7 +2,8 @@
 
 Commercial iOS/Android revision app for Metropolitan Police PCEP recruits (AP1–AP4
 assessments). Owner: Mr Mansur (serving PC). Planned model: £10.99/month subscription.
-Current form: single-file React prototype (`app/prep-a-constable.jsx`, ~10k lines)
+Current form: `shared/` (content + logic) consumed by a web build (`app/`, `preview/`)
+and a React Native build (`native/`)
 plus a deployed Supabase backend and an integration package in `backend/`.
 
 ## THE CARDINAL RULE — content integrity
@@ -59,7 +60,7 @@ The cloud-sync layer uses functions extracted VERBATIM from the app. If you chan
 `DEFAULT_STATE`, `loadStateFromRaw`, `mergeState`, or the sanitisers in the app:
 
 ```bash
-node backend/scripts/extract-contract.js app/prep-a-constable.jsx
+node backend/scripts/extract-contract.js shared/state.js
 node backend/scripts/test-contract.cjs        # must stay 27/27 passing
 ```
 
@@ -86,6 +87,44 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
 - Client keys in `backend/.env` (publishable — safe in the client).
 - Still manual in the dashboard: enable Apple/Google/Email auth providers and
   the deep-link redirect URL; RevenueCat products not yet created.
+
+## Repository layout — shared core, two front ends
+
+```
+shared/            NO JSX, no platform APIs. The single source of truth.
+  content/         TOPICS, QUESTIONS, LESSONS, OFFENCES, POWERS, FLASHCARDS,
+                   MNEMONICS, KEY_CASES, TOR_CODES, VERBAL_DRILLS, LEGAL_DOCS
+  logic.js         shuffle, SRS, scoring, speech matcher, trainingProgress
+  state.js         SCHEMA_VERSION, DEFAULT_STATE, sanitisers, mergeState, reducer
+  theme.js         the colour palette (C)
+app/               WEB UI only (react-dom). Imports everything else from shared/.
+preview/           esbuild web bundle -> Netlify
+native/            Expo / React Native app (iOS + Android)
+```
+
+**Never duplicate content into a platform folder.** Content and logic were moved
+into `shared/` VERBATIM — if a question, offence or merge rule needs changing,
+change it in `shared/` and BOTH builds get it. The app file is UI only now
+(~3.8k lines, down from 12.1k).
+
+## React Native build (`native/`)
+
+```bash
+cd native && npm install
+npx expo export --platform ios     # proves it bundles; no Mac needed
+npx expo start                     # scan the QR with Expo Go on a real iPhone
+```
+
+There is **no iOS Simulator in this container** (Linux, no Xcode) and there
+never will be — `expo export` is the furthest automated check available here,
+and visual confirmation has to happen on a real device via Expo Go.
+
+`metro.config.js` is load-bearing: `watchFolders` adds `../shared` (outside the
+project root, so Metro cannot see it otherwise) and `disableHierarchicalLookup`
+stops Metro walking up and pulling a second React out of `preview/node_modules`.
+
+Font weights: the `@expo-google-fonts/*` packages ship every weight and Metro
+bundles them all (~4 MB of unused faces). Trim before store submission.
 
 ## Web preview build
 
