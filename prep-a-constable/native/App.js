@@ -29,9 +29,12 @@ import { reducer, DEFAULT_STATE } from '../shared/state.js';
 import { loadState, persistState } from './src/storage';
 import { C, fontDisplay, fontBody } from './src/theme';
 
+import BottomNav from './src/BottomNav';
 import HomeScreen from './src/screens/HomeScreen';
 import TopicsListScreen from './src/screens/TopicsListScreen';
 import TopicScreen from './src/screens/TopicScreen';
+import LessonScreen from './src/screens/LessonScreen';
+import ExamPrepScreen from './src/screens/ExamPrepScreen';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -84,6 +87,20 @@ export default function App() {
     case 'topic':
       screen = <TopicScreen topicId={view.topicId} state={state} go={go} />;
       break;
+    case 'lesson':
+      screen = (
+        <LessonScreen
+          topicId={view.topicId}
+          lessonId={view.lessonId}
+          state={state}
+          dispatch={dispatch}
+          go={go}
+        />
+      );
+      break;
+    case 'examPrep':
+      screen = <ExamPrepScreen state={state} dispatch={dispatch} go={go} />;
+      break;
     case 'home':
     default:
       // Screens not yet ported fall back to Home rather than crashing, so the
@@ -92,11 +109,19 @@ export default function App() {
       break;
   }
 
+  // Which tab to light up. Sub-screens keep their parent tab highlighted, as
+  // on web: a lesson still belongs to Home's Topics branch.
+  const TAB_FOR = {
+    home: 'home', topicsList: 'home', topic: 'home', lesson: 'home',
+    examPrep: 'examPrep', constableCompanion: 'constableCompanion', settings: 'settings',
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1, backgroundColor: C.paper }} edges={['top', 'left', 'right']}>
         <StatusBar style="dark" />
-        {screen}
+        <View style={{ flex: 1 }}>{screen}</View>
+        <BottomNav active={TAB_FOR[view.name] || 'home'} go={go} />
       </SafeAreaView>
     </SafeAreaProvider>
   );

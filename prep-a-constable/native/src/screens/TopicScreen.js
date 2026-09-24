@@ -35,10 +35,10 @@ export default function TopicScreen({ topicId, state, go }) {
 
         <SectionLabel>{lessons.length} lesson{lessons.length === 1 ? '' : 's'} · {qCount} questions</SectionLabel>
 
-        {lessons.map((l, i) => (
+        {lessons.map((l) => (
           <Pressable
             key={l.id}
-            onPress={() => go({ name: 'lesson', topicId: topic.id, lessonIndex: i })}
+            onPress={() => go({ name: 'lesson', topicId: topic.id, lessonId: l.id })}
             accessibilityRole="button"
             style={({ pressed }) => [pressed && { opacity: 0.85 }]}
           >
