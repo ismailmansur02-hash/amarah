@@ -36,6 +36,10 @@ import TopicScreen from './src/screens/TopicScreen';
 import LessonScreen from './src/screens/LessonScreen';
 import ExamPrepScreen from './src/screens/ExamPrepScreen';
 import ConstableCompanionScreen from './src/screens/ConstableCompanionScreen';
+import PracticeScreen from './src/screens/PracticeScreen';
+import FlashcardsScreen from './src/screens/FlashcardsScreen';
+import MockListScreen from './src/screens/MockListScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -105,6 +109,26 @@ export default function App() {
     case 'constableCompanion':
       screen = <ConstableCompanionScreen go={go} />;
       break;
+    case 'flashcards':
+      screen = <FlashcardsScreen go={go} />;
+      break;
+    case 'mockList':
+      screen = <MockListScreen state={state} go={go} />;
+      break;
+    case 'settings':
+      screen = <SettingsScreen state={state} dispatch={dispatch} go={go} />;
+      break;
+    case 'practice':
+      screen = (
+        <PracticeScreen
+          questionIds={view.questionIds}
+          title={view.title}
+          state={state}
+          dispatch={dispatch}
+          go={go}
+        />
+      );
+      break;
     case 'home':
     default:
       // Screens not yet ported fall back to Home rather than crashing, so the
@@ -117,7 +141,7 @@ export default function App() {
   // on web: a lesson still belongs to Home's Topics branch.
   const TAB_FOR = {
     home: 'home', topicsList: 'home', topic: 'home', lesson: 'home',
-    examPrep: 'examPrep', constableCompanion: 'constableCompanion', settings: 'settings',
+    examPrep: 'examPrep', practice: 'home', flashcards: 'home', mockList: 'home', constableCompanion: 'constableCompanion', settings: 'settings',
   };
 
   return (

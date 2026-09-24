@@ -84,11 +84,12 @@ export function Card({ children, style, onPress }) {
   );
 }
 
-export function PrimaryButton({ children, onPress, secondary, full, disabled, style }) {
+export function PrimaryButton({ children, onPress, secondary, full, disabled, style, accessibilityLabel }) {
   return (
     <Pressable
       onPress={disabled ? undefined : onPress}
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled: !!disabled }}
       style={({ pressed }) => [
         styles.btn,
