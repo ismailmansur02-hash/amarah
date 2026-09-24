@@ -144,6 +144,53 @@ the added "Book a Session" button. Heading alignment was compared the same way.
 `site.test.mjs` and `deposit.test.mts` in the scratchpad cover the constraints,
 the copy, the panels, the forms, the payment guards and the narrow-width arc.
 
+## Motion
+
+The brief calls this an Apple-style scrolling page, so the motion is built to
+that standard rather than left as defaults. Palette, type and layout are
+untouched — all of this is timing, depth and scroll behaviour.
+
+**Two curves, used everywhere.** `--ease` for anything that travels,
+`--ease-quick` for anything answering a tap. One pair of curves across a whole
+page is most of what makes motion feel like it came from one hand.
+
+**The hero recedes as you leave it.** The eyebrow, wordmark, tagline and
+buttons each fade and blur out over a different scroll distance, so the group
+gains depth instead of sliding away as one flat sheet. It is tied to scroll
+position, not fired once, so scrubbing back up plays it backwards.
+
+This uses CSS scroll-driven animations (`animation-timeline`). Browsers without
+them skip the block entirely and still get the entrance animation and the
+scroll-triggered reveals — nothing is missing, it is just less alive.
+
+**Depth instead of borders.** Cards and menu blocks sit on a hairline plus a
+soft layered shadow, lift 3px on hover and press back down in 90ms.
+
+**The panels are very slightly translucent** (94% cream over a 30px blur).
+A stronger glass was tried first and reverted: the panel covers a flat sage
+field, so blurring it only washed the cream to a muddy khaki and cost the form
+fields their crispness.
+
+**A soft bloom sits behind the wordmark** so the ring reads as lit rather than
+printed. It is under the type, never over it.
+
+Everything above stops dead under `prefers-reduced-motion: reduce`.
+
+### Two layout bugs fixed along the way
+
+Both were in the original single-file page, and both were easy to miss:
+
+- **The scroll cue landed on the wreath buttons** on any screen about 800px
+  tall — a very common laptop size. The ring is the tallest thing in the hero,
+  so it now steps down on short screens, and below 700px the cue is dropped
+  rather than crowding the buttons.
+- **The three wreath buttons wrapped onto two rows on every phone.** The hero
+  was shrinking to fit its widest child, leaving the button row about 40px
+  narrower than the screen. The hero now takes the full width and the row
+  tightens under 400px, so all three stay on one line down to 320px.
+
+The hero was checked at eleven viewport sizes from 320x780 to 1512x982.
+
 ## One accessibility point to raise
 
 The sage-dark section labels on cream sit at **2.97:1**, below the WCAG AA

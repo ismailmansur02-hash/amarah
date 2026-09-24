@@ -20,7 +20,11 @@
   --display: "Cormorant Garamond", serif;
   --body: "Jost", ui-sans-serif, system-ui, sans-serif;
 
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* One long curve for anything that travels, one short one for anything
+     that answers a tap. Using two curves everywhere is most of what makes
+     motion feel like it came from one hand. */
+  --ease: cubic-bezier(0.22, 0.61, 0.24, 1);
+  --ease-quick: cubic-bezier(0.32, 0.72, 0.22, 1);
   --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
   --wreath: url("/assets/img/wreath.png");
 }
@@ -59,7 +63,9 @@ button { font: inherit; color: inherit; }
 /* ══════════════════════════════════════════════════════════ HERO ══ */
 .hero {
   position: relative;
-  height: 100vh; min-height: 620px;
+  height: 100vh;
+  height: 100svh;               /* no jump when the mobile URL bar hides */
+  min-height: 620px;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   background: var(--sage);
@@ -74,6 +80,10 @@ button { font: inherit; color: inherit; }
 }
 
 .hero-content {
+  /* Without this the flex parent shrinks the hero to its widest child, which
+     leaves the button row ~40px narrower than the screen. That plus the
+     tighter row below is what keeps all three wreaths on one line at 320px. */
+  width: 100%;
   position: relative; text-align: center; padding: 1rem;
   opacity: 0; transform: translateY(30px);
   animation: riseIn 1.2s var(--ease) 0.5s forwards;
@@ -112,8 +122,8 @@ button { font: inherit; color: inherit; }
   gap: 0.45rem; padding: 0.4rem 0.9rem;
   transition: transform 0.35s var(--ease);
 }
-.logo-btn:hover { transform: scale(1.08); }
-.logo-btn:active { transform: scale(0.96); }
+.logo-btn:hover { transform: scale(1.06); }
+.logo-btn:active { transform: scale(0.965); transition-duration: 0.09s; transition-timing-function: var(--ease-quick); }
 .logo-btn:disabled { opacity: 0.55; cursor: progress; transform: none; }
 .logo-btn img { width: 58px; height: 72px; object-fit: contain; pointer-events: none; }
 .logo-btn span {
@@ -169,7 +179,9 @@ section { padding: 6rem 1.5rem; }
 .divider-icon { color: var(--sage-dark); font-size: 1rem; }
 
 /* ═════════════════════════════════════════════════════════ ABOUT ══ */
-.about { background: var(--cream); text-align: center; position: relative; }
+/* overflow hidden because the floral behind it drifts and scales; without
+   this the scaled pseudo-element widens the page by a few pixels */
+.about { background: var(--cream); text-align: center; position: relative; overflow: hidden; }
 .about::after {
   content: ''; position: absolute; inset: 0;
   background-image: var(--wreath);
@@ -190,9 +202,18 @@ section { padding: 6rem 1.5rem; }
 .card {
   background: var(--cream); padding: 2.5rem 2rem; text-align: center;
   border: 1px solid rgba(90, 96, 60, 0.15);
-  transition: transform 0.4s var(--ease), box-shadow 0.4s;
+  box-shadow: 0 1px 2px rgba(42, 42, 34, 0.03), 0 8px 24px -16px rgba(42, 42, 34, 0.18);
+  transition:
+    transform 0.45s var(--ease-quick),
+    box-shadow 0.45s var(--ease-quick),
+    border-color 0.45s var(--ease-quick);
 }
-.card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(42, 42, 34, 0.1); }
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(90, 96, 60, 0.26);
+  box-shadow: 0 2px 4px rgba(42, 42, 34, 0.04), 0 22px 48px -24px rgba(42, 42, 34, 0.32);
+}
+.card:active { transform: translateY(0); transition-duration: 0.09s; }
 .card-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
 .card-title {
   font-family: var(--display); font-size: 1.4rem; font-weight: 400;
@@ -221,6 +242,8 @@ section { padding: 6rem 1.5rem; }
 .offer-block {
   background: rgba(212, 217, 181, 0.25);
   border: 1px solid rgba(90, 96, 60, 0.18);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(42, 42, 34, 0.02), 0 10px 30px -22px rgba(42, 42, 34, 0.22);
   padding: 2.4rem 2.2rem; margin-bottom: 1.4rem;
 }
 .offer-block h4 {
@@ -257,6 +280,7 @@ section { padding: 6rem 1.5rem; }
 /* ═══════════════════════════════════════════════════════ OVERLAY ══ */
 .overlay {
   position: fixed; inset: 0; z-index: 100;
+  /* opaque by default; the glass version is layered on below where supported */
   background: var(--cream);
   display: flex; align-items: center; justify-content: center;
   padding: 4.5rem 1.5rem 2.5rem;
@@ -265,6 +289,14 @@ section { padding: 6rem 1.5rem; }
   transition: opacity 0.6s var(--ease);
 }
 .overlay.active { opacity: 1; pointer-events: all; }
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .overlay {
+    background: color-mix(in srgb, var(--cream) 94%, transparent);
+    -webkit-backdrop-filter: blur(30px) saturate(1.15);
+    backdrop-filter: blur(30px) saturate(1.15);
+  }
+}
 .overlay[hidden] { display: none; }
 .overlay::before {
   content: ''; position: absolute; inset: 0;
@@ -276,10 +308,10 @@ section { padding: 6rem 1.5rem; }
 .overlay-inner {
   position: relative; text-align: center;
   max-width: 480px; width: 100%;
-  transform: translateY(30px);
-  transition: transform 0.7s var(--ease) 0.1s;
+  transform: translateY(26px) scale(0.985);
+  transition: transform 0.75s var(--ease) 0.06s;
 }
-.overlay.active .overlay-inner { transform: translateY(0); }
+.overlay.active .overlay-inner { transform: none; }
 
 .overlay-close {
   position: fixed; top: 1.2rem; left: 1.2rem; z-index: 110;
@@ -352,18 +384,134 @@ footer .tm { font-size: 0.66rem; opacity: 0.65; margin-top: 1rem; }
   50%      { transform: scaleY(1.4); opacity: 0.7; }
 }
 
+/* Content arrives rather than appearing: a short distance on a long curve
+   reads as calm, where a long distance on a short curve reads as a jump. */
 .reveal {
-  opacity: 0; transform: translateY(40px);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  opacity: 0; transform: translateY(22px);
+  transition: opacity 1.05s var(--ease), transform 1.05s var(--ease);
+  will-change: opacity, transform;
 }
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: 0.15s; }
-.reveal-delay-2 { transition-delay: 0.3s; }
-.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal.visible { opacity: 1; transform: none; will-change: auto; }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-content, .scroll-hint { animation: none; opacity: 1; transform: none; }
   .scroll-arrow { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .menu-expand, .overlay, .overlay-inner, .logo-btn, .card { transition: none; }
+}
+
+/* ══════════════════════════════════════════ SCROLL-LINKED MOTION ══ */
+/* Tied to scroll position rather than fired once on entry, so the page
+   answers the finger continuously — scrub back up and it plays back.
+   Progressive enhancement: browsers without scroll-driven animations get
+   everything above and simply skip this block. */
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+
+    /* The hero recedes as you leave it, each part at its own rate so the
+       group gains depth instead of sliding as one flat sheet. */
+    .hero-eyebrow,
+    .hero-logo-wrap,
+    .hero-tagline,
+    .hero-actions {
+      animation: hero-recede linear both;
+      animation-timeline: scroll(root block);
+    }
+    .hero-eyebrow   { animation-range: 0 52vh; }
+    .hero-tagline   { animation-range: 0 68vh; }
+    .hero-actions   { animation-range: 0 60vh; }
+    .hero-logo-wrap { animation-range: 0 88vh; }
+
+    @keyframes hero-recede {
+      0%   { opacity: 1; filter: blur(0px); }
+      55%  { opacity: 0.55; }
+      100% { opacity: 0; transform: translateY(-4vh) scale(0.93); filter: blur(6px); }
+    }
+
+    .scroll-hint {
+      animation: riseIn 1s ease 1.8s forwards, hint-out linear both;
+      animation-timeline: auto, scroll(root block);
+      animation-range: normal, 0 24vh;
+    }
+    @keyframes hint-out { to { opacity: 0; } }
+
+    /* The floral behind the story drifts against the scroll — a slow
+       parallax that suggests it sits further back than the words. */
+    .about::after {
+      animation: watermark-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+    @keyframes watermark-drift {
+      from { transform: translateY(4%) scale(1.06); }
+      to   { transform: translateY(-4%) scale(1); }
+    }
+
+    /* The quote settles into the dark panel as it arrives. */
+    .quote-section blockquote {
+      animation: panel-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 42%;
+    }
+    @keyframes panel-settle {
+      from { transform: translateY(28px) scale(0.985); }
+      to   { transform: none; }
+    }
+  }
+}
+
+/* A soft bloom behind the wordmark, so the ring reads as lit rather than
+   printed. Sits under the type, never over it. */
+.hero-logo-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -16%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 46%, rgba(245, 240, 232, 0.42), rgba(245, 240, 232, 0) 70%);
+  filter: blur(26px);
+  pointer-events: none;
+}
+.circular-text { position: relative; z-index: 1; }
+
+/* On a short screen the ring is the tallest thing in the hero, so it gives
+   way first — otherwise the scroll cue lands on top of the wreath buttons,
+   which it does on any 800px-tall laptop. */
+@media (min-width: 600px) and (max-height: 880px) {
+  .circular-text { width: min(44vw, 300px); height: min(44vw, 300px); }
+  .hero { padding-bottom: 5rem; }
+  .hero-eyebrow { margin-bottom: 1rem; }
+  .hero-logo-wrap { margin-bottom: 1.1rem; }
+  .hero-tagline { margin-bottom: 1.7rem; }
+}
+@media (min-width: 600px) and (max-height: 740px) {
+  .circular-text { width: min(38vw, 240px); height: min(38vw, 240px); }
+  .hero { padding-bottom: 5.5rem; }
+  .hero-tagline { margin-bottom: 1.4rem; }
+}
+
+/* Shorter still: drop the scroll cue rather than crowd the buttons with it.
+   At this height the page is plainly scrollable without being told. */
+@media (min-width: 600px) and (max-height: 700px) {
+  .scroll-hint { display: none; }
+}
+
+/* Phones are narrow rather than short, so they need their own rule: the ring
+   is sized off viewport width there, and on a shorter handset it still has to
+   give way. Without this a 360x780 phone puts the cue on the buttons. */
+/* Narrow phones: tighten the button row so all three stay on one line. */
+@media (max-width: 400px) {
+  .hero-actions { gap: 0.4rem; }
+  .logo-btn { padding: 0.4rem 0.45rem; }
+  .logo-btn span { font-size: 0.64rem; letter-spacing: 0.2em; }
+}
+
+@media (max-width: 599px) and (max-height: 870px) {
+  .circular-text { width: min(60vw, 250px); height: min(60vw, 250px); }
+  .hero { padding-bottom: 3.5rem; }
+  .hero-tagline { margin-bottom: 1.8rem; }
 }
