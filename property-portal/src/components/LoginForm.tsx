@@ -27,6 +27,15 @@ export default function LoginForm() {
         setError("That username or password is not right.");
         return;
       }
+      if (res.status === 503) {
+        // The database had gone to sleep. It wakes itself, but it takes a
+        // couple of minutes — so say that, rather than letting someone
+        // conclude their password is wrong.
+        setError(
+          "The database was asleep and is waking up. This takes a minute or two — your login is fine, try again shortly."
+        );
+        return;
+      }
       if (!res.ok) {
         setError("The server could not be reached just now. Wait a moment and try again.");
         return;

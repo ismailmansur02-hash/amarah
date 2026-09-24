@@ -66,7 +66,15 @@ function getPool(): Pool {
 }
 
 /** True for failures that mean the connection died rather than the query being wrong. */
-function isConnectionFailure(err: unknown): boolean {
+/**
+ * True when the error means "could not reach the database", as opposed to
+ * "the database rejected this query".
+ *
+ * Exported so a route can tell an unreachable database apart from a genuine
+ * error and say something true about it, rather than showing the same shrug
+ * for both.
+ */
+export function isConnectionFailure(err: unknown): boolean {
   const e = err as { code?: string; message?: string };
   const code = e?.code ?? "";
   const message = e?.message ?? "";
