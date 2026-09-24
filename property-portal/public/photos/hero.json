@@ -1,0 +1,12 @@
+{
+  "slot": "hero",
+  "width": 2000,
+  "height": 1116,
+  "aspectRatio": 1.7921,
+  "widths": [
+    640,
+    1024,
+    1600
+  ],
+  "placeholder": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAwCdASoYAA0APu1orU2ppqSiMAgBMB2JagCdMoAJ9EkwyCXOF9fgAP76DBB1FYlEBZPTMEPmluKNOoG11M3uuhEKzlu8Vi2dzsAKQYqA9sY/otj1eLp36Q/EZPiOEAA="
+}

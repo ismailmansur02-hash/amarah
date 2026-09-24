@@ -6,6 +6,7 @@ import { BRAND } from "@/lib/brand";
 import type { Photo as PhotoData } from "@/lib/photos";
 import { Lines, useScrollProgress, useViewportProgress } from "./motion";
 import Photo from "./Photo";
+import AppStoreBadge from "./AppStoreBadge";
 import FileStack from "./FileStack";
 import ScrollChecklist from "./ScrollChecklist";
 
@@ -48,7 +49,7 @@ function Hero({ photo }: { photo: PhotoData | null }) {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(6,10,15,0.46) 0%, rgba(6,10,15,0.12) 32%, rgba(6,10,15,0.52) 74%, rgba(6,10,15,0.82) 100%)",
+            "linear-gradient(to bottom, rgba(6,10,15,0.44) 0%, rgba(6,10,15,0.10) 26%, rgba(6,10,15,0.34) 52%, rgba(6,10,15,0.68) 76%, rgba(6,10,15,0.88) 100%)",
         }}
       />
 
@@ -92,6 +93,8 @@ function Hero({ photo }: { photo: PhotoData | null }) {
               Install the app ›
             </Link>
           </div>
+
+          <AppStoreBadge tone="light" className="mt-5" />
         </div>
       </div>
 
@@ -284,7 +287,7 @@ export default function Landing({ photos }: { photos: LandingPhotos }) {
             No app store. They open the link, add it to the home screen, and it behaves like any
             other app.
           </p>
-          <div className="mt-12 flex flex-wrap justify-center gap-3">
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
             <Link href="/login" className="btn px-7 py-3">
               Sign in
             </Link>
@@ -294,6 +297,10 @@ export default function Landing({ photos }: { photos: LandingPhotos }) {
             >
               How to install ›
             </Link>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <AppStoreBadge />
           </div>
         </div>
       </section>

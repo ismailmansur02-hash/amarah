@@ -57,8 +57,10 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   // PWA assets must stay publicly reachable or the app cannot be installed
-  // from the login screen.
+  // from the login screen, and the landing page's photographs must be too —
+  // they sit on a page anyone can see, so sending them to /login leaves the
+  // hero showing nothing but its placeholder.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|offline.html|icons/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|offline.html|icons/|photos/).*)",
   ],
 };
