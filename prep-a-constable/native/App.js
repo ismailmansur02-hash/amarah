@@ -35,6 +35,7 @@ import TopicsListScreen from './src/screens/TopicsListScreen';
 import TopicScreen from './src/screens/TopicScreen';
 import LessonScreen from './src/screens/LessonScreen';
 import ExamPrepScreen from './src/screens/ExamPrepScreen';
+import ConstableCompanionScreen from './src/screens/ConstableCompanionScreen';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -100,6 +101,9 @@ export default function App() {
       break;
     case 'examPrep':
       screen = <ExamPrepScreen state={state} dispatch={dispatch} go={go} />;
+      break;
+    case 'constableCompanion':
+      screen = <ConstableCompanionScreen go={go} />;
       break;
     case 'home':
     default:
