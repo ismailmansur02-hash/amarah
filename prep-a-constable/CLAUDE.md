@@ -73,8 +73,14 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
   `preview/entry.jsx` provides it in browsers).
 - No secrets in the app or backend client code. The Supabase service-role key
   exists ONLY inside the deployed edge function.
-- `DEMO_MODE = true` is a RELEASE GATE — must be `false` before store submission,
-  replaced by real Supabase auth (see `backend/src/lib/auth.js`).
+- `DEMO_MODE` is now `false` (release gate closed). Both builds use real
+  Supabase auth; the web falls back to the old fake sign-in ONLY when no
+  `window.cloud` is injected.
+- Apple and Google sign-in are deliberately NOT offered on native. Neither
+  provider is configured, a dead button is a review rejection, and offering any
+  third-party sign-in would oblige Sign in with Apple. Email magic link only.
+- In-app account deletion exists in native Settings. Apple REQUIRES it wherever
+  accounts can be created — do not remove it.
 
 ## Deployed infrastructure (live)
 
@@ -115,9 +121,20 @@ npx expo export --platform ios     # proves it bundles; no Mac needed
 npx expo start                     # scan the QR with Expo Go on a real iPhone
 ```
 
+```bash
+cd native && npx jest          # 61 render tests — MUST stay green
+npx expo-doctor                # 19/21; the 2 failures are network-blocked here
+```
+
 There is **no iOS Simulator in this container** (Linux, no Xcode) and there
-never will be — `expo export` is the furthest automated check available here,
-and visual confirmation has to happen on a real device via Expo Go.
+never will be. `expo export` proves it bundles and `jest` proves screens render
+real content, but NOTHING here confirms how it LOOKS — that needs Expo Go on a
+real device.
+
+The jest tests render screens for real, because "it bundles" would not have
+caught the mnemonic bug that shipped on web. `__tests__/app.test.js` renders the
+whole App: screen-level tests alone let a missing `useRef` import through, which
+would have crashed on launch with every other test green.
 
 `metro.config.js` is load-bearing: `watchFolders` adds `../shared` (outside the
 project root, so Metro cannot see it otherwise) and `disableHierarchicalLookup`

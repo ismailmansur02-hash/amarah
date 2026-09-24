@@ -236,7 +236,7 @@ const matchComponents = (components, spoken) => {
 //    it ships in the app bundle and is versioned with each release.
 // ============================================================
 
-const DEMO_MODE = true;
+const DEMO_MODE = false;   // RELEASE GATE: real auth is live on both builds.
 
 const SRS_INTERVALS = [0, 1, 3, 7, 16, 35]; // days; box index clamps to last
 

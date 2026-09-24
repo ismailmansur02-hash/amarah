@@ -520,3 +520,75 @@ blocked-network noise.
 **NOT verified:** no real magic-link email could be sent or received — this
 sandbox blocks `supabase.co`. That round trip needs a live check once the Email
 provider and redirect URL are set in the Supabase dashboard.
+
+# Round 9 — React Native build, and a submission-readiness pass
+
+Mr Mansur chose the full React Native rewrite and asked for everything to be
+ready for App Store submission.
+
+## Every screen ported
+
+Home, Topics, Topic, Lesson (all nine block types), Exam Prep with the training
+countdown, Constable Companion (Daily-use, A–Z, Powers, TOR Codes), practice,
+timed mocks, Flash Cards, Reference, Verbal Drills, Login, Profile and the
+bottom nav. Nothing in the web app is now unported.
+
+Mocks are genuinely timed and record an attempt in the SAME shape the web build
+writes, so a mock sat on the phone appears in the history beside one sat in the
+browser.
+
+## Verification, because "it bundles" is not verification
+
+61 tests that RENDER screens and assert real content. Two of them exist because
+of specific failures:
+
+- The mnemonic regression guard renders the real AFRAID lesson and requires
+  ALLEGATION, FEAR, RELUCTANCE, ADVERSE, INJURY and DEMEANOUR. Bundling would
+  never have caught the empty-boxes bug that reached Mr Mansur on web.
+- `app.test.js` renders the whole App. Screen-level tests let a missing
+  `useRef` import through — the app would have crashed on launch with every
+  other test green.
+
+Shuffle-aware grading is tested three ways, including a sweep over 300
+questions checking the shuffled correct option still carries the original
+correct text and no option is lost.
+
+## Submission work
+
+- **Icons** were still the Expo template defaults, which is a straight
+  rejection. Replaced with a drawn shield, chequered band and gold PC in the
+  app's own Fraunces face, generated at every required size.
+- **DEMO_MODE closed** (`true` → `false`) — the documented release gate.
+- **In-app account deletion** added to Settings. Apple requires it wherever
+  accounts can be created; its absence is a hard blocker. Sign-out too.
+- **Privacy manifest** declared: UserDefaults access (CA92.1, which AsyncStorage
+  needs on iOS 17+) and email as linked data used for app functionality, not
+  tracking.
+- **supportsTablet: false** — the layouts are phone-only, and Apple reviews on
+  iPad if you claim support.
+- **eas.json** added for development, preview and production builds.
+- **Metro override removed**: `disableHierarchicalLookup` guarded against Metro
+  finding a second React in `preview/node_modules`, which cannot happen —
+  lookup only walks UP, and preview/ is a SIBLING of native/. Verified no
+  ancestor has `node_modules/react`. It also tripped expo-doctor.
+
+expo-doctor: 19/21. The two failures are the Expo config schema and React
+Native Directory checks, both of which need hosts this sandbox blocks (403 on
+CONNECT, confirmed with curl) — they are environmental, not project defects.
+
+## Deliberate omissions, with reasons
+
+- **Verbal Drills take typed input, not speech.** The web uses
+  window.SpeechRecognition; native needs a custom dev build, which does not run
+  in Expo Go — currently the only way to preview this app on a phone. The
+  shared matchers take a plain string either way, so grading is identical and
+  wiring a recogniser later changes nothing else. A dead microphone button at
+  review is a rejection.
+- **Apple and Google sign-in are not offered.** Neither is configured, and
+  offering any third-party sign-in obliges Sign in with Apple.
+
+## Still NOT verified
+
+Nobody has LOOKED at the native app. There is no iOS Simulator in this
+container and cannot be. Visual confirmation needs Expo Go on a real iPhone.
+The magic-link round trip is also untested end to end on device.

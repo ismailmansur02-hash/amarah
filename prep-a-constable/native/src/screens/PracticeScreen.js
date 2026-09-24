@@ -8,14 +8,18 @@
 // place that decides, so web and native cannot disagree.
 // ============================================================================
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Screen, Header, Card, PrimaryButton, ProgressBar } from '../ui';
 import { C, fontDisplay, fontDisplaySemi, fontBody, fontBodySemi, fontMono } from '../theme';
 import { QUESTIONS, TOPICS } from '../../../shared/content/index.js';
-import { getShuffledOptions } from '../../../shared/logic.js';
+import { getShuffledOptions, uuid, formatTime } from '../../../shared/logic.js';
 
-export default function PracticeScreen({ questionIds, title, state, dispatch, go }) {
+// `durationMins` and `examLevel` turn this into a MOCK: a countdown runs, and
+// on finish an attempt is saved in the same shape the web build records, so a
+// mock sat on the phone shows up in the history alongside one sat in the
+// browser.
+export default function PracticeScreen({ questionIds, title, state, dispatch, go, durationMins, examLevel }) {
   const questions = useMemo(
     () => (questionIds || []).map((id) => QUESTIONS.find((q) => q.id === id)).filter(Boolean),
     [questionIds]
@@ -24,6 +28,18 @@ export default function PracticeScreen({ questionIds, title, state, dispatch, go
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState(null);
   const [score, setScore] = useState(0);
+  const startRef = useRef(Date.now());
+  const savedRef = useRef(false);
+  const [remaining, setRemaining] = useState(durationMins ? durationMins * 60 : null);
+
+  // Countdown for timed mocks only.
+  useEffect(() => {
+    if (!durationMins) return undefined;
+    const t = setInterval(() => setRemaining((r) => (r == null ? r : Math.max(0, r - 1))), 1000);
+    return () => clearInterval(t);
+  }, [durationMins]);
+
+  const outOfTime = remaining !== null && remaining <= 0;
 
   if (questions.length === 0) {
     return (
@@ -39,7 +55,31 @@ export default function PracticeScreen({ questionIds, title, state, dispatch, go
     );
   }
 
-  const done = idx >= questions.length;
+  const done = idx >= questions.length || outOfTime;
+
+  // Record the attempt once, when a mock finishes.
+  useEffect(() => {
+    if (!done || !examLevel || savedRef.current || questions.length === 0) return;
+    savedRef.current = true;
+    const completedAt = new Date().toISOString();
+    const spentSecs = Math.floor((Date.now() - startRef.current) / 1000);
+    dispatch({
+      type: 'saveAttempt',
+      attempt: {
+        id: uuid(),
+        mode: 'mock',
+        examLevel,
+        startedAt: new Date(startRef.current).toISOString(),
+        completedAt,
+        durationSecs: durationMins ? durationMins * 60 : spentSecs,
+        timeSpentSecs: spentSecs,
+        questionIds: questions.map((q) => q.id),
+        score: score / questions.length,
+        correctCount: score,
+        total: questions.length,
+      },
+    });
+  }, [done, examLevel]);
 
   if (done) {
     const pct = Math.round((score / questions.length) * 100);
@@ -50,6 +90,7 @@ export default function PracticeScreen({ questionIds, title, state, dispatch, go
           <Card style={{ alignItems: 'center', paddingVertical: 28 }}>
             <Text style={s.resultPct}>{pct}%</Text>
             <Text style={s.resultSub}>{score} of {questions.length} correct</Text>
+            {outOfTime ? <Text style={s.timeUp}>Time ran out — unanswered questions count as wrong.</Text> : null}
           </Card>
           <PrimaryButton full onPress={() => go({ name: 'home' })}>Done</PrimaryButton>
         </View>
@@ -78,7 +119,11 @@ export default function PracticeScreen({ questionIds, title, state, dispatch, go
       <Header
         title={title || 'Practice'}
         onBack={() => go({ name: 'home' })}
-        right={<Text style={s.counter}>{idx + 1}/{questions.length}</Text>}
+        right={
+          <Text style={[s.counter, remaining !== null && remaining < 60 && { color: '#FFD9D9' }]}>
+            {remaining !== null ? `${formatTime(remaining)} · ` : ''}{idx + 1}/{questions.length}
+          </Text>
+        }
       />
 
       <View style={{ paddingHorizontal: 16, paddingTop: 12 }}>
@@ -142,7 +187,7 @@ export default function PracticeScreen({ questionIds, title, state, dispatch, go
               </Text>
               <Text style={s.explanation}>{q.explanation}</Text>
             </Card>
-            <PrimaryButton full onPress={next}>
+            <PrimaryButton full onPress={next} accessibilityLabel="Continue">
               {idx + 1 === questions.length ? 'See result' : 'Next question'}
             </PrimaryButton>
           </>
@@ -170,4 +215,5 @@ const s = StyleSheet.create({
   explanation: { fontFamily: fontBody, fontSize: 14, lineHeight: 21, color: C.text },
   resultPct: { fontFamily: fontDisplaySemi, fontSize: 48, color: C.navy },
   resultSub: { fontFamily: fontBody, fontSize: 14, color: C.textMuted, marginTop: 6 },
+  timeUp: { fontFamily: fontBody, fontSize: 12.5, color: C.error, marginTop: 10, textAlign: 'center' },
 });

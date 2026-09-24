@@ -126,3 +126,56 @@ describe('shuffle-aware grading contract', () => {
     });
   });
 });
+
+describe('Timed mock mode', () => {
+  const ids = QUESTIONS.slice(0, 3).map((q) => q.id);
+
+  it('shows a countdown when a duration is given', () => {
+    const t = allText(draw(
+      <PracticeScreen questionIds={ids} title="AP1 mock" durationMins={30} examLevel="AP1"
+        state={DEFAULT_STATE()} dispatch={jest.fn()} go={jest.fn()} />
+    ));
+    expect(t).toMatch(/30:00|29:5\d/);
+  });
+
+  it('shows no countdown for untimed practice', () => {
+    const t = allText(draw(
+      <PracticeScreen questionIds={ids} title="Practice"
+        state={DEFAULT_STATE()} dispatch={jest.fn()} go={jest.fn()} />
+    ));
+    expect(t).not.toMatch(/\d\d:\d\d/);
+  });
+
+  it('saves an attempt in the web-compatible shape when a mock finishes', () => {
+    const dispatch = jest.fn();
+    const tree = draw(
+      <PracticeScreen questionIds={[QUESTIONS[0].id]} title="AP1 mock" durationMins={30} examLevel="AP1"
+        state={DEFAULT_STATE()} dispatch={dispatch} go={jest.fn()} />
+    );
+    const { correctOptionId } = getShuffledOptions(QUESTIONS[0]);
+    pressOption(tree, correctOptionId);
+    // advance past the last question
+    const nextBtn = tree.root.findAll((n) => n.props?.accessibilityLabel === 'Continue')[0];
+    expect(nextBtn).toBeTruthy();
+    act(() => { nextBtn.props.onPress(); });
+
+    const saved = dispatch.mock.calls.map((c) => c[0]).find((a) => a.type === 'saveAttempt');
+    expect(saved).toBeTruthy();
+    expect(saved.attempt).toEqual(expect.objectContaining({
+      mode: 'mock', examLevel: 'AP1', total: 1,
+      correctCount: expect.any(Number), score: expect.any(Number),
+      questionIds: expect.any(Array), startedAt: expect.any(String), completedAt: expect.any(String),
+    }));
+  });
+
+  it('does not save an attempt for untimed practice', () => {
+    const dispatch = jest.fn();
+    const tree = draw(
+      <PracticeScreen questionIds={[QUESTIONS[0].id]} title="Practice"
+        state={DEFAULT_STATE()} dispatch={dispatch} go={jest.fn()} />
+    );
+    const { correctOptionId } = getShuffledOptions(QUESTIONS[0]);
+    pressOption(tree, correctOptionId);
+    expect(dispatch.mock.calls.map((c) => c[0]).some((a) => a.type === 'saveAttempt')).toBe(false);
+  });
+});

@@ -15,7 +15,7 @@ export default function MockListScreen({ state, go }) {
     const cfg = EXAM_CONFIGS[key];
     const pool = QUESTIONS.filter((q) => cfg.topicIds.includes(q.topicId));
     const ids = shuffle(pool.map((q) => q.id)).slice(0, cfg.questions);
-    go({ name: 'practice', questionIds: ids, title: `${cfg.label} mock` });
+    go({ name: 'practice', questionIds: ids, title: `${cfg.label} mock`, durationMins: cfg.durationMins, examLevel: cfg.label });
   };
 
   const attempts = state.attempts || [];

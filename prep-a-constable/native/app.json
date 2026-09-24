@@ -7,28 +7,50 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "prepaconstable",
+    "primaryColor": "#1A3A6C",
     "splash": {
       "backgroundColor": "#FAFAF7",
       "resizeMode": "contain",
       "image": "./assets/splash-icon.png"
     },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
       "bundleIdentifier": "uk.co.prepaconstable.app",
       "buildNumber": "1",
+      "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
+          }
+        ],
+        "NSPrivacyCollectedDataTypes": [
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeEmailAddress",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          }
+        ],
+        "NSPrivacyTracking": false
       }
     },
     "android": {
       "package": "uk.co.prepaconstable.app",
       "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#E8EFF8",
+        "backgroundColor": "#1A3A6C",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"

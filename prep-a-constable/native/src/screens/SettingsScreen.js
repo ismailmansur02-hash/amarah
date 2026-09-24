@@ -15,10 +15,56 @@ import { QUESTIONS } from '../../../shared/content/index.js';
 const RANKS = ['PC', 'DC', 'PCSO', 'Special'];
 const GOALS = [5, 10, 20, 30];
 
-export default function SettingsScreen({ state, dispatch, go }) {
+export default function SettingsScreen({ state, dispatch, go, cloud }) {
   const p = state.profile || {};
   const answered = Object.keys(state.answered || {}).length;
   const lessons = Object.keys(state.lessonsRead || {}).length;
+
+  const signedIn = !!state.auth && state.auth.provider !== 'guest';
+
+  const confirmSignOut = () => {
+    Alert.alert(
+      'Sign out?',
+      'Your progress stays on this device and in your account. You can sign back in at any time.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign out',
+          onPress: async () => {
+            try { if (cloud) await cloud.signOut(); } catch (e) { /* never block sign-out */ }
+            dispatch({ type: 'signOut' });
+            go({ name: 'home' });
+          },
+        },
+      ]
+    );
+  };
+
+  // Apple requires an in-app route to delete the account wherever accounts can
+  // be created. This calls the JWT-verified edge function; the state row goes
+  // with it via ON DELETE CASCADE.
+  const confirmDeleteAccount = () => {
+    Alert.alert(
+      'Delete your account?',
+      'This permanently deletes your account and everything stored against it, on every device. It cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete account',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              if (cloud) await cloud.deleteAccount();
+              dispatch({ type: 'deleteAccount' });
+              go({ name: 'home' });
+            } catch (e) {
+              Alert.alert('Could not delete the account', (e && e.message) || 'Please try again.');
+            }
+          },
+        },
+      ]
+    );
+  };
 
   const confirmReset = () => {
     Alert.alert(
@@ -102,8 +148,31 @@ export default function SettingsScreen({ state, dispatch, go }) {
         </View>
 
         <View>
+          <SectionLabel>Account</SectionLabel>
+          <Card style={{ gap: 10 }}>
+            <Text style={s.stat}>
+              {signedIn
+                ? `Signed in as ${state.auth.email || state.auth.displayName}. Your progress syncs across your devices.`
+                : 'You are using the app without an account. Progress is saved on this device only.'}
+            </Text>
+            {signedIn ? (
+              <PrimaryButton secondary full onPress={confirmSignOut} accessibilityLabel="Sign out">
+                Sign out
+              </PrimaryButton>
+            ) : null}
+          </Card>
+        </View>
+
+        <View>
           <SectionLabel>Danger zone</SectionLabel>
-          <PrimaryButton secondary full onPress={confirmReset} accessibilityLabel="Reset all progress">Reset all progress</PrimaryButton>
+          <View style={{ gap: 10 }}>
+            <PrimaryButton secondary full onPress={confirmReset} accessibilityLabel="Reset all progress">Reset all progress</PrimaryButton>
+            {signedIn ? (
+              <PrimaryButton secondary full onPress={confirmDeleteAccount} accessibilityLabel="Delete my account">
+                Delete my account
+              </PrimaryButton>
+            ) : null}
+          </View>
         </View>
       </View>
     </Screen>

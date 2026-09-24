@@ -97,3 +97,37 @@ describe('SettingsScreen', () => {
     expect(dispatch).not.toHaveBeenCalledWith({ type: 'reset' });
   });
 });
+
+describe('SettingsScreen — account requirements', () => {
+  const signedIn = () => {
+    const s = DEFAULT_STATE();
+    s.auth = { provider: 'email', email: 'officer@example.com', displayName: 'officer' };
+    return s;
+  };
+
+  it('offers sign-out and account deletion when signed in', () => {
+    // Apple requires an in-app route to delete the account wherever accounts
+    // can be created. Its absence is a hard submission blocker.
+    const t = allText(draw(
+      <SettingsScreen state={signedIn()} dispatch={jest.fn()} go={go} cloud={{}} />
+    ));
+    expect(t).toContain('Sign out');
+    expect(t).toContain('Delete my account');
+    expect(t).toContain('officer@example.com');
+  });
+
+  it('hides both when using the app without an account', () => {
+    const t = allText(draw(
+      <SettingsScreen state={DEFAULT_STATE()} dispatch={jest.fn()} go={go} cloud={{}} />
+    ));
+    expect(t).toContain('without an account');
+    expect(t).not.toContain('Delete my account');
+  });
+
+  it('never deletes the account on a bare tap', () => {
+    const dispatch = jest.fn();
+    const tree = draw(<SettingsScreen state={signedIn()} dispatch={dispatch} go={go} cloud={{}} />);
+    pressLabel(tree, 'Delete my account');
+    expect(dispatch).not.toHaveBeenCalledWith({ type: 'deleteAccount' });
+  });
+});
