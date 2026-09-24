@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { getPhoto } from "@/lib/photos";
 import Landing from "@/components/landing/Landing";
 
 export default async function Home() {
@@ -9,5 +10,15 @@ export default async function Home() {
   // for the owner arriving at the link for the first time.
   if (session) redirect(session.role === "manager" ? "/dashboard" : "/my");
 
-  return <Landing />;
+  // Read on the server so adding a photograph needs no code change — the page
+  // picks it up on the next deploy, and draws its own scene until then.
+  return (
+    <Landing
+      photos={{
+        hero: getPhoto("hero"),
+        interior: getPhoto("interior"),
+        aerial: getPhoto("aerial"),
+      }}
+    />
+  );
 }
