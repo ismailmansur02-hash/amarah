@@ -47,7 +47,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="mt-6 space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-300">Username</label>
+        <label className="block text-[13px] font-medium text-[var(--ink-2)]">Username</label>
         <input
           name="username"
           required
@@ -55,24 +55,24 @@ export default function LoginForm() {
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-emerald-400/60 focus:bg-white/10 focus:outline-none"
+          className="mt-1.5 w-full rounded-xl border border-black/[0.12] bg-white px-3.5 py-3 text-[15px] transition-colors duration-200 focus:border-black/40 focus:outline-none"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-300">Password</label>
+        <label className="block text-[13px] font-medium text-[var(--ink-2)]">Password</label>
         <input
           name="password"
           type="password"
           required
           autoComplete="current-password"
-          className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-slate-500 transition focus:border-emerald-400/60 focus:bg-white/10 focus:outline-none"
+          className="mt-1.5 w-full rounded-xl border border-black/[0.12] bg-white px-3.5 py-3 text-[15px] transition-colors duration-200 focus:border-black/40 focus:outline-none"
         />
       </div>
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <button
         type="submit"
         disabled={busy}
-        className="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200 disabled:opacity-50"
+        className="w-full rounded-full bg-[var(--ink)] px-4 py-3 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-black disabled:opacity-50"
       >
         {busy ? "Signing in…" : "Sign in"}
       </button>
