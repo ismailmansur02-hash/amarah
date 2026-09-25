@@ -1,17 +1,16 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
 import { getPhoto } from "@/lib/photos";
 import Landing from "@/components/landing/Landing";
 
-export default async function Home() {
-  const session = await getSession();
-
-  // Anyone already signed in goes straight to their work; the landing page is
-  // for the owner arriving at the link for the first time.
-  if (session) redirect(session.role === "manager" ? "/dashboard" : "/my");
-
-  // Read on the server so adding a photograph needs no code change — the page
-  // picks it up on the next deploy, and draws its own scene until then.
+/*
+ * Static. Anyone already signed in is sent to their own screens by
+ * middleware, at the edge, so this page reads no cookie and needs no
+ * function — it is HTML on the CDN, which is what the first page a new owner
+ * opens should be.
+ *
+ * The photographs are read from disk at build, so that costs nothing at
+ * request time either.
+ */
+export default function Home() {
   return (
     <Landing
       photos={{

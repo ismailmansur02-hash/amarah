@@ -27,23 +27,43 @@ function getSecret(): Uint8Array {
  */
 const PUBLIC_PATHS = ["/", "/login", "/api/login", "/install", "/api/health"];
 
+/**
+ * Pages a signed-in person should not be looking at, and where they go
+ * instead. Handled here rather than in the pages themselves: a page that
+ * reads the session cookie cannot be statically rendered, and these two are
+ * the first thing anybody loads.
+ */
+const REDIRECT_WHEN_SIGNED_IN = ["/", "/login"];
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  if (PUBLIC_PATHS.some((p) => pathname === p)) return NextResponse.next();
 
   const token = req.cookies.get(SESSION_COOKIE)?.value;
   let valid = false;
+  let role: string | undefined;
   if (token) {
     // Resolved outside the try so a misconfigured secret surfaces as a real
     // error instead of being swallowed into a silent redirect loop.
     const key = getSecret();
     try {
-      await jwtVerify(token, key);
+      const { payload } = await jwtVerify(token, key);
       valid = true;
+      role = typeof payload.role === "string" ? payload.role : undefined;
     } catch {
       valid = false;
     }
   }
+
+  if (REDIRECT_WHEN_SIGNED_IN.includes(pathname)) {
+    if (!valid) return NextResponse.next();
+    const url = req.nextUrl.clone();
+    url.pathname = role === "manager" ? "/dashboard" : "/my";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  if (PUBLIC_PATHS.includes(pathname)) return NextResponse.next();
+
   if (valid) return NextResponse.next();
 
   if (pathname.startsWith("/api/")) {

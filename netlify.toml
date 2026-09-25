@@ -56,6 +56,14 @@
   [headers.values]
     Cache-Control = "private, no-store, max-age=0"
 
+# The landing page's photographs. An hour of hard caching takes the download
+# off almost every repeat visit, and stale-while-revalidate means a swapped
+# photograph still appears within the day without anyone waiting on it.
+[[headers]]
+  for = "/photos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, stale-while-revalidate=86400"
+
 # The service worker must never be cached, or clients keep running an old one.
 [[headers]]
   for = "/sw.js"

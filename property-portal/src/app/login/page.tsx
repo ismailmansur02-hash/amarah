@@ -1,13 +1,10 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
 import { BRAND } from "@/lib/brand";
 import LoginForm from "@/components/LoginForm";
 
-export default async function LoginPage() {
-  const session = await getSession();
-  if (session) redirect(session.role === "manager" ? "/dashboard" : "/my");
-
+/* Static, for the same reason as the landing page: middleware sends anyone
+   who already has a session straight to their own screens. */
+export default function LoginPage() {
   return (
     <div className="marketing flex min-h-[100svh] flex-col items-center justify-center px-6 py-16">
       <div className="w-full max-w-[26rem]">
