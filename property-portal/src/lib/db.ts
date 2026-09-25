@@ -18,15 +18,56 @@ types.setTypeParser(types.builtins.TIMESTAMP, (v) => (v ? new Date(v + "Z").toIS
 
 let pool: Pool | null = null;
 
+/**
+ * The connection string actually in use.
+ *
+ * Starts as DATABASE_URL and may be switched to the sibling pooler host once,
+ * see nextPoolerHost below.
+ */
+let activeUrl: string | null = null;
+
+/**
+ * Supabase serves each region's transaction pooler from more than one
+ * endpoint — aws-0-<region>.pooler.supabase.com and aws-1-<region> — and a
+ * given project lives behind exactly one of them. Which one is shown in the
+ * dashboard and is not exposed by the management API, so a connection string
+ * written from anywhere else is a coin flip that takes the site down when it
+ * lands wrong.
+ *
+ * Rather than guess, this flips to the other endpoint after a connection
+ * failure and remembers the one that works for the life of the instance. It
+ * costs one failed connection once per cold start in the wrong case, and
+ * nothing at all in the right one — and it keeps working if Supabase ever
+ * moves the project between endpoints.
+ */
+function nextPoolerHost(url: string): string | null {
+  const m = url.match(/@aws-(\d)-([a-z0-9-]+)\.pooler\.supabase\.com/);
+  if (!m) return null;
+  return url.replace(/@aws-\d-/, `@aws-${m[1] === "0" ? "1" : "0"}-`);
+}
+
+/** Switches to the sibling pooler endpoint. Returns false if there is none. */
+function switchPoolerHost(): boolean {
+  const current = activeUrl ?? process.env.DATABASE_URL ?? "";
+  const next = nextPoolerHost(current);
+  if (!next) return false;
+  activeUrl = next;
+  const dead = pool;
+  pool = null;
+  dead?.end().catch(() => {});
+  return true;
+}
+
 function getPool(): Pool {
   if (!pool) {
-    const connectionString = process.env.DATABASE_URL;
+    const connectionString = activeUrl ?? process.env.DATABASE_URL;
     if (!connectionString) {
       throw new Error(
         "DATABASE_URL is not set. Point it at the Supabase connection string " +
           "(Supabase dashboard → Connect → Transaction pooler)."
       );
     }
+    activeUrl = connectionString;
     const isLocal = /@(localhost|127\.0\.0\.1)/.test(connectionString);
     const created = new Pool({
       connectionString,
@@ -101,7 +142,17 @@ export async function query<T = Record<string, unknown>>(
     pool = null;
     dead?.end().catch(() => {});
 
-    return (await getPool().query(text, params)).rows as T[];
+    try {
+      return (await getPool().query(text, params)).rows as T[];
+    } catch (retryErr) {
+      if (!isConnectionFailure(retryErr)) throw retryErr;
+
+      // A fresh connection to the same host failed too. That is the signature
+      // of the wrong pooler endpoint rather than a sleeping database, so try
+      // the sibling once. Whichever answers is kept for this instance.
+      if (!switchPoolerHost()) throw retryErr;
+      return (await getPool().query(text, params)).rows as T[];
+    }
   }
 }
 
