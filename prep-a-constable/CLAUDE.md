@@ -157,8 +157,15 @@ react-native-svg ports of the web's inline SVG (shield, London skyline, streak
 and progress rings, the nav icons).
 
 There is **no iOS Simulator in this container** (Linux, no Xcode) and there
-never will be. But the native app CAN be looked at, and should be, before
-claiming anything about how it looks:
+never will be. Mr Mansur has Xcode on his own Mac — `npm run ios` there is
+`expo run:ios`, which prebuilds, pod-installs and launches on the simulator.
+That is where iOS rendering gets confirmed; nothing in this container can.
+
+Note the simulator has no real microphone, so the Verbal Drill mic is the one
+feature it cannot verify — that still needs a physical iPhone.
+
+The native app can also be looked at HERE, and should be, before claiming
+anything about how it looks:
 
 ```bash
 cd native && npx expo export --platform web --output-dir dist-web
