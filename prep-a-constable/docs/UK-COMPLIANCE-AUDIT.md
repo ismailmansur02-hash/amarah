@@ -536,3 +536,53 @@ with a cohort floor and an opt-out, gets the same answer and adds almost no risk
    cohort threshold, and it must be accurate — a misleading claim about
    effectiveness engages the Consumer Protection from Unfair Trading
    Regulations 2008 and the advertising codes.
+
+
+---
+
+# Applied and verified live — 27 September 2026
+
+`0003_effectiveness.sql` has been applied to Supabase project
+`uqekeszdgeumwjdbompd` as migration `app_effectiveness_aggregates`. The
+safeguards were then checked against the live database rather than assumed:
+
+| Check | Result |
+|---|---|
+| `app_effectiveness()` runs | Yes — `people: 0`, every figure NULL |
+| `app_improvement()` runs | Yes — `people_with_two_or_more_mocks: 0`, figures NULL |
+| `anon` can execute any of the three functions | **No** |
+| `authenticated` can execute any of the three functions | **No** |
+| `anon` can read `stats_cohort` | **No** |
+| `authenticated` can read `stats_cohort` | **No** |
+| Opt-out expression excludes only `statsOptOut = true` | Verified against literals: absent → included, false → included, true → **excluded** |
+
+Everything returning NULL is the minimum-cohort safeguard working with no users
+yet, not a fault. `people` will keep counting, and figures appear at 20.
+
+## Database-level observation
+
+The same Supabase project also hosts an unrelated property-portal schema
+(`properties`, `tenants`, `leases`, `documents`, `portal_users` and others).
+This matters because the Prep a Constable app ships a publishable key for this
+database inside a public App Store binary.
+
+**Checked: every table in `public` has row level security enabled.** The
+property-portal tables have RLS enabled with **zero policies**, which in
+PostgreSQL denies all access to non-superuser roles — so the shipped key cannot
+read them. Nothing is currently exposed.
+
+**But this is a standing risk, not a clean bill of health.** The moment a policy
+is added to any of those tables — for example to build the property portal's own
+front end — it will be evaluated against a key that is already published in an
+App Store app. Two options, in order of preference:
+
+1. **Move the property portal to its own Supabase project.** Unrelated
+   applications sharing one database and one publishable key is the underlying
+   problem; separating them removes it permanently.
+2. If they must share, write every future policy on those tables as if an
+   untrusted public key is holding it, because one is.
+
+This is a security observation about the database your app depends on. It is not
+a UK data protection finding today, because nothing is accessible. It would
+become one — potentially a serious one, given the property tables would hold
+tenants' personal data — if a permissive policy were added later.
