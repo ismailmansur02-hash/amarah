@@ -19,7 +19,7 @@ const STORAGE_KEY = "pc:state:v4";
 const DEFAULT_STATE = () => ({
   schemaVersion: SCHEMA_VERSION,
   auth: null,        // { provider: "apple"|"google"|"email"|"guest", email, displayName, signedInAt } | null
-  profile: { firstName: "", surname: "", rank: "PC", examDate: null, nextExam: "AP1", trainingStart: null, trainingEnd: null },
+  profile: { firstName: "", surname: "", rank: "PC", examDate: null, nextExam: "AP1", trainingStart: null, trainingEnd: null, statsOptOut: false },
   answered: {},      // { [questionId]: { correctCount, totalCount, lastCorrect, lastSeen, flagged, box, dueAt } }
   attempts: [],      // [{ id, level, score, total, dateISO, ... }]  newest first
   lessonsRead: {},   // { [lessonId]: true }
@@ -259,6 +259,10 @@ function reducer(state, action) {
     case "setFirstName": return stamp({ ...state, profile: { ...state.profile, firstName: action.firstName } });
     case "setSurname": return stamp({ ...state, profile: { ...state.profile, surname: action.surname } });
     case "setRank": return stamp({ ...state, profile: { ...state.profile, rank: action.rank } });
+    // Honours the right to object (Article 21 UK GDPR) to the aggregate
+    // effectiveness statistics. Set true, and the server-side aggregate skips
+    // this row entirely — see backend/supabase/migrations/0003_effectiveness.sql.
+    case "setStatsOptOut": return stamp({ ...state, profile: { ...state.profile, statsOptOut: !!action.optOut } });
     case "markLessonRead": return stamp({ ...state, lessonsRead: { ...(state.lessonsRead || {}), [action.lessonId]: true } });
     case "setDailyGoal": return stamp({ ...state, streak: { ...state.streak, dailyGoal: action.goal } });
     case "signIn": return stamp({ ...state, auth: { ...action.auth, signedInAt: new Date().toISOString() } });

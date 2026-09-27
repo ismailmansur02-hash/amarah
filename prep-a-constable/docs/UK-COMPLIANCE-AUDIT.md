@@ -484,3 +484,55 @@ it should not.
 The single genuine product defect was the microphone claim, and that only
 surfaced by reading the speech module's documented default rather than trusting
 the policy. That is the one I would want a second pair of eyes on.
+
+
+---
+
+# Addendum — effectiveness statistics (added after the main audit)
+
+Mr Mansur asked to track how people score, to see whether the app is helping.
+This is a new purpose, so it was added deliberately rather than casually.
+
+**What it does.** Three read-only SQL functions
+(`backend/supabase/migrations/0003_effectiveness.sql`) that answer: are people
+getting more accurate, do mock scores improve with practice, what is the real
+assessment pass rate among users who record one, and which topics do people find
+hardest.
+
+**What it collects.** Nothing new. It reads data already stored to provide the
+service. No analytics SDK was added and the app still contains no tracking.
+
+**Lawful basis.** Legitimate interests, Article 6(1)(f). A Legitimate Interests
+Assessment is recorded at `docs/LEGITIMATE-INTERESTS-ASSESSMENT.md` — relying on
+this basis without one is itself a compliance gap.
+
+**Safeguards, all enforced in code rather than promised:**
+
+| Safeguard | Where |
+|---|---|
+| Aggregate only — no function returns a user id, name or single-person row | the SQL |
+| Minimum cohort of 20; smaller figures return NULL | the SQL |
+| Opt-out excluded before anything is counted | `stats_cohort` view |
+| Opt-out offered as a control, not just a policy sentence | Profile → Help improve the app |
+| Functions revoked from `anon` and `authenticated` | the SQL |
+
+**Notice updated** with the purpose, the basis and the objection route
+(Article 13(1)(c)-(d), Article 21). Tests assert all of it.
+
+**Why this did not become a problem.** The obvious way to answer "is my app
+helping?" is to add an analytics SDK. That would have introduced third-party
+tracking, a new processor, probably a transfer outside the UK, and a consent
+question — undoing most of the audit. Querying data already held, in aggregate,
+with a cohort floor and an opt-out, gets the same answer and adds almost no risk.
+
+**Still outstanding for this piece:**
+
+1. Run `0003_effectiveness.sql` in Supabase. It is not applied automatically.
+2. Complete the controller name in the Legitimate Interests Assessment.
+3. Expect every figure to be NULL until 20 people qualify. That is the safeguard
+   working, not a fault — `people` still shows the count so you know when numbers
+   will appear.
+4. If you ever publish a figure in marketing, it must be one that cleared the
+   cohort threshold, and it must be accurate — a misleading claim about
+   effectiveness engages the Consumer Protection from Unfair Trading
+   Regulations 2008 and the advertising codes.

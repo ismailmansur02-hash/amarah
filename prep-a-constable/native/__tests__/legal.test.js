@@ -127,6 +127,29 @@ describe('privacy notice — matches what the app actually does', () => {
   });
 });
 
+describe('effectiveness statistics — the new purpose is disclosed', () => {
+  const p = flat('privacy');
+
+  it('states the purpose, the lawful basis and the objection route', () => {
+    // Added a purpose (does the app work?) that is NOT necessary for the
+    // contract, so it runs on legitimate interests and must say so, and must
+    // tell people how to object — Article 13(1)(c)-(d) and Article 21.
+    expect(p).toMatch(/Whether the app is working/);
+    expect(p).toMatch(/Lawful basis: our legitimate interests/);
+    expect(p).toMatch(/You can object at any time/);
+    expect(p).toMatch(/Help improve the app/);
+  });
+
+  it('promises aggregate-only figures and a minimum cohort', () => {
+    expect(p).toMatch(/never a report about you/);
+    expect(p).toMatch(/fewer than 20 people/);
+  });
+
+  it('promises no extra collection for it', () => {
+    expect(p).toMatch(/we collect nothing extra for it/);
+  });
+});
+
 describe('terms — UK consumer law', () => {
   const t = flat('terms');
 

@@ -15,7 +15,7 @@
 // ============================================================================
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, Switch, Alert, StyleSheet } from 'react-native';
 import { Screen, Header, Card, SectionLabel, PrimaryButton } from '../ui';
 import { C, fontDisplay, fontDisplaySemi, fontBody, fontBodySemi, fontBodyBold } from '../theme';
 
@@ -201,6 +201,28 @@ export default function SettingsScreen({ state, dispatch, go, cloud }) {
               {state.streak.longest > state.streak.current ? ` · Longest: ${state.streak.longest}` : ''}
             </Text>
           ) : null}
+        </Card>
+
+        {/* The right to object (Article 21 UK GDPR) to the aggregate
+            effectiveness statistics, offered as a control rather than only as a
+            sentence in the privacy notice. Turning it off excludes this account
+            from the server-side aggregate entirely. */}
+        <Card style={{ marginBottom: 14 }}>
+          <SectionLabel style={{ marginBottom: 0 }}>Help improve the app</SectionLabel>
+          <View style={s.detailsRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={s.cardBody}>
+                Let your results count towards anonymous totals that show whether the app is
+                helping people pass. Never linked to you, and never shared.
+              </Text>
+            </View>
+            <Switch
+              value={!state.profile.statsOptOut}
+              onValueChange={(on) => dispatch({ type: 'setStatsOptOut', optOut: !on })}
+              accessibilityLabel="Help improve the app"
+              trackColor={{ true: C.navy, false: C.border }}
+            />
+          </View>
         </Card>
 
         <Card accent={C.error}>
