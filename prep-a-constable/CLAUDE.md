@@ -101,6 +101,17 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
 - The Legal card on Profile (Privacy Policy, Terms of Service) and the screen it
   opens are a submission requirement, not decoration. The privacy policy must be
   reachable from inside the app.
+- `shared/content/legal.js` is a COMPLIANCE SURFACE, not copy. It must describe
+  what the app actually does — the microphone wording matches `src/speech.js`
+  exactly, and if speech behaviour changes both change in the same commit.
+  `native/__tests__/legal.test.js` asserts the UK GDPR Article 13 content and
+  FAILS while the controller placeholders are unfilled. That failure is a
+  release gate, not a broken test: fill the values, never delete the test.
+  See `docs/UK-COMPLIANCE-AUDIT.md`.
+- Speech asks for `requiresOnDeviceRecognition` where the device supports it.
+  The module default is FALSE, meaning audio is sent to Apple or Google — the
+  privacy notice and the in-app line before the microphone opens both depend on
+  this staying set.
 
 ## Deployed infrastructure (live)
 

@@ -393,6 +393,14 @@ export default function VerbalDrillScreen({ go }) {
               When you tap the mic the screen goes blank — deliver it from memory, word-for-word. Tap again
               to finish and see what you missed.
             </Text>
+            {/* Told BEFORE the microphone opens, not buried in the policy. Which
+                of the two happens is the device's capability, not our choice, so
+                the officer is told which one applies to them. */}
+            <Text style={s.privacyNote} accessibilityLabel="How your speech is processed">
+              {Speech.supportsOnDevice()
+                ? 'Your speech is turned into text on this device. No audio is recorded, sent anywhere or kept.'
+                : 'This device cannot transcribe offline, so the audio is sent to Apple or Google to be turned into text, under their privacy terms. We never receive or keep it. Tap "Type it instead" if you would rather it were not sent.'}
+            </Text>
             <Pressable
               onPress={startRecording}
               accessibilityRole="button"
@@ -500,6 +508,10 @@ const s = StyleSheet.create({
   idleTitle: { fontFamily: fontDisplaySemi, fontSize: 22, color: C.text, letterSpacing: -0.3, marginBottom: 6, textAlign: 'center' },
   idleSub: { fontFamily: fontBody, fontSize: 14, color: C.textMuted, lineHeight: 22, textAlign: 'center', maxWidth: 300 },
   idleHint: { fontFamily: fontBody, fontSize: 13, color: C.textFaint, lineHeight: 20, textAlign: 'center', maxWidth: 300, marginTop: 8, marginBottom: 36 },
+  privacyNote: {
+    fontFamily: fontBody, fontSize: 12, color: C.textMuted, lineHeight: 18,
+    textAlign: 'center', maxWidth: 320, marginTop: -20, marginBottom: 28,
+  },
   micBtn: { width: 110, height: 110, borderRadius: 55, backgroundColor: C.navy, alignItems: 'center', justifyContent: 'center' },
   micLabel: { fontFamily: fontBodySemi, fontSize: 15, color: C.navy, marginTop: 20 },
   switchLink: { fontFamily: fontBodySemi, fontSize: 13.5, color: C.navy, textDecorationLine: 'underline' },

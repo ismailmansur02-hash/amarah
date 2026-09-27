@@ -13,12 +13,26 @@
 // conditionally when the module is missing.
 // ============================================================================
 
+// Resolved lazily, and a FAILURE is never cached.
+//
+// The module is native: it exists in a development or EAS build and not in Expo
+// Go, where importing it throws. Resolving it once at module load and caching
+// the failure meant the answer depended on when the module first happened to be
+// loaded — which made the drill tests fail about one run in four, and would
+// equally mean a transient resolution failure disabled the microphone for the
+// rest of the session. Retrying costs nothing: once `require` succeeds its
+// result is cached here, and Node caches the module itself anyway.
 let mod = null;
-try {
-  // eslint-disable-next-line global-require
-  mod = require('expo-speech-recognition').ExpoSpeechRecognitionModule || null;
-} catch (e) {
-  mod = null;
+
+function getMod() {
+  if (mod) return mod;
+  try {
+    // eslint-disable-next-line global-require
+    mod = require('expo-speech-recognition').ExpoSpeechRecognitionModule || null;
+  } catch (e) {
+    mod = null;
+  }
+  return mod;
 }
 
 // Asked on every render, NOT frozen at module load. `isRecognitionAvailable`
@@ -28,19 +42,42 @@ try {
 // a value captured once at startup goes stale. (It was also load-order
 // dependent under jest, which made the drill tests flaky.)
 export function isAvailable() {
-  if (!mod) return false;
+  const m = getMod();
+  if (!m) return false;
   try {
-    return typeof mod.isRecognitionAvailable !== 'function' || !!mod.isRecognitionAvailable();
+    return typeof m.isRecognitionAvailable !== 'function' || !!m.isRecognitionAvailable();
   } catch (e) {
     return false;
   }
 }
 
 export async function requestPermissions() {
-  if (!mod) return false;
+  const m = getMod();
+  if (!m) return false;
   try {
-    const res = await mod.requestPermissionsAsync();
+    const res = await m.requestPermissionsAsync();
     return !!res?.granted;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Whether transcription will happen ON the device rather than by sending the
+// audio to Apple's or Google's servers.
+//
+// This is a PRIVACY NOTICE question, not a preference. `requiresOnDeviceRecognition`
+// defaults to FALSE in the underlying module, which means audio is sent over
+// the network for transcription — so a privacy policy claiming "nothing leaves
+// your device" is false unless this is set. We ask for on-device wherever the
+// device supports it, and the drill screen tells the officer which of the two
+// is actually happening before the microphone is switched on.
+export function supportsOnDevice() {
+  const m = getMod();
+  if (!m) return false;
+  try {
+    return typeof m.supportsOnDeviceRecognition === 'function'
+      ? !!m.supportsOnDeviceRecognition()
+      : false;
   } catch (e) {
     return false;
   }
@@ -49,28 +86,39 @@ export async function requestPermissions() {
 // en-GB matters: the caution and GOWISELY are British wordings, and a US
 // recogniser mangles them ("offence" -> "offense", "practise" -> "practice").
 export function start(opts = {}) {
-  if (!mod) return;
+  const m = getMod();
+  if (!m) return;
   try {
-    mod.start({ lang: 'en-GB', interimResults: true, continuous: true, ...opts });
+    m.start({
+      lang: 'en-GB',
+      interimResults: true,
+      continuous: true,
+      // Keep the audio on the handset when the handset can do it.
+      requiresOnDeviceRecognition: supportsOnDevice(),
+      ...opts,
+    });
   } catch (e) { /* surfaced through the error event */ }
 }
 
 export function stop() {
-  if (!mod) return;
-  try { mod.stop(); } catch (e) { /* already stopped */ }
+  const m = getMod();
+  if (!m) return;
+  try { m.stop(); } catch (e) { /* already stopped */ }
 }
 
 export function abort() {
-  if (!mod) return;
-  try { mod.abort(); } catch (e) { /* already stopped */ }
+  const m = getMod();
+  if (!m) return;
+  try { m.abort(); } catch (e) { /* already stopped */ }
 }
 
 // Returns a teardown function for every listener attached.
 export function listen(handlers) {
-  if (!mod || typeof mod.addListener !== 'function') return () => {};
+  const m = getMod();
+  if (!m || typeof m.addListener !== 'function') return () => {};
   const subs = [];
   Object.entries(handlers).forEach(([name, fn]) => {
-    try { subs.push(mod.addListener(name, fn)); } catch (e) { /* unsupported event */ }
+    try { subs.push(m.addListener(name, fn)); } catch (e) { /* unsupported event */ }
   });
   return () => subs.forEach((s) => { try { s?.remove?.(); } catch (e) { /* gone */ } });
 }

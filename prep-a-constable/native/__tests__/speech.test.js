@@ -35,7 +35,7 @@ jest.mock('expo-speech-recognition', () => ({
       return { remove: () => { delete mockListeners[name]; } };
     },
   },
-}), { virtual: true });
+}));
 
 // eslint-disable-next-line import/first
 import VerbalDrillScreen from '../src/screens/VerbalDrillScreen';
