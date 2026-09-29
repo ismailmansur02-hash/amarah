@@ -86,6 +86,15 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
 - Apple and Google sign-in are deliberately NOT offered on native. Neither
   provider is configured, a dead button is a review rejection, and offering any
   third-party sign-in would oblige Sign in with Apple.
+- The native Supabase client uses `flowType: 'pkce'`. This is NOT a preference.
+  The sign-in link returns through `prepaconstable://`, a custom scheme that any
+  other app on the phone may also register; under the implicit flow that link
+  carries the access and refresh tokens, so whichever app catches it holds the
+  account. PKCE makes it a one-time code that is useless without the verifier in
+  this app's storage. `completeFromUrl` keeps the token branch only for links
+  already sent by older builds. `__tests__/cloud-auth.test.js` guards both.
+  The full fix is a Universal Link on an owned domain — do that when the domain
+  hosting the privacy policy exists, and keep PKCE regardless.
 - `src/speech.js` guards the `expo-speech-recognition` import. It is a NATIVE
   module: it does NOT exist in Expo Go, and an unguarded import crashes the app
   on launch there. Keep the typed fallback — it is what makes the mic button
@@ -109,9 +118,14 @@ node backend/scripts/test-contract.cjs        # must stay 27/27 passing
   release gate, not a broken test: fill the values, never delete the test.
   See `docs/UK-COMPLIANCE-AUDIT.md`.
 - Speech asks for `requiresOnDeviceRecognition` where the device supports it.
-  The module default is FALSE, meaning audio is sent to Apple or Google — the
-  privacy notice and the in-app line before the microphone opens both depend on
-  this staying set.
+  The module default is FALSE, meaning audio is sent to Apple or Google. THREE
+  surfaces describe this and all three must agree: the privacy notice in
+  `shared/content/legal.js`, the line in `VerbalDrillScreen` before the
+  microphone opens, and the `speechRecognitionPermission` string in `app.json`
+  (which iOS shows in the system dialog — the first thing most users read). That
+  last one said "Nothing is recorded or uploaded" long after the other two were
+  corrected; `__tests__/legal.test.js` now guards it. Never write "never leaves
+  the device" on any of them.
 
 ## Deployed infrastructure (live)
 

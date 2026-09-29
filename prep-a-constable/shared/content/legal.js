@@ -69,7 +69,8 @@ const LEGAL_DOCS = {
       ["p", "You can exercise most of these immediately in the app. Profile lets you see and change everything we hold about you, and Profile then Delete account erases it. For anything else, email us at " + CONTROLLER_EMAIL + ". We will respond within one month. We may extend that by up to two further months for complex requests, and we will tell you within the first month if we need to. We do not charge for this."],
 
       ["h", "If you are unhappy"],
-      ["p", "Please contact us first at " + CONTROLLER_EMAIL + " so we can put it right. You also have the right to complain to the Information Commissioner's Office, the United Kingdom's data protection regulator, at any time. Their helpline is 0303 123 1113 and their website is ico.org.uk. Complaining to them does not affect any other legal remedy."],
+      ["p", "You have the right to complain to us about how we have used your personal information. Email " + CONTROLLER_EMAIL + " with the word Complaint in the subject line and tell us what has gone wrong. We will acknowledge your complaint within 30 days of receiving it, look into it, keep you informed of progress, and tell you the outcome."],
+      ["p", "You also have the right to complain to the Information Commissioner's Office, the United Kingdom's data protection regulator, at any time. Their helpline is 0303 123 1113 and their website is ico.org.uk. You do not have to come to us first, and complaining to either of us does not affect any other legal remedy."],
 
       ["h", "Marketing"],
       ["p", "We do not send marketing. The only emails we send are the sign-in link you request, and the inactivity notice described above. The app sends no push notifications."],

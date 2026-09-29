@@ -19,7 +19,7 @@
         "expo-speech-recognition",
         {
           "microphonePermission": "Prep a Constable uses the microphone so you can practise delivering the caution and stop-search wording out loud.",
-          "speechRecognitionPermission": "Prep a Constable converts what you say into text so your verbal drill can be marked word-for-word. Nothing is recorded or uploaded.",
+          "speechRecognitionPermission": "Prep a Constable converts what you say into text so your verbal drill can be marked word-for-word. Your speech is transcribed on this iPhone where it can be, otherwise by Apple's speech service. We never receive or keep the audio.",
           "androidSpeechServicePackages": ["com.google.android.googlequicksearchbox"]
         }
       ]

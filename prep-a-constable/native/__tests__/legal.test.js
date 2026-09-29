@@ -90,9 +90,31 @@ describe('privacy notice — UK GDPR Article 13 content', () => {
     expect(p).toMatch(/ico\.org\.uk/);
   });
 
+  it('offers a complaint route to us, with the 30-day acknowledgement', () => {
+    // Section 164A Data Protection Act 2018, inserted by section 103 Data (Use
+    // and Access) Act 2025, in force for complaints received on or after
+    // 19 June 2026. The controller must give people a way to complain directly,
+    // acknowledge receipt within 30 days, respond without undue delay and tell
+    // the complainant the outcome. Complaining to the ICO first is still the
+    // user's choice — 164A does not make us a compulsory first step.
+    expect(p).toMatch(/right to complain to us/i);
+    expect(p).toMatch(/acknowledge your complaint within 30 days/i);
+    expect(p).toMatch(/tell you the outcome/i);
+    expect(p).toMatch(/You do not have to come to us first/i);
+  });
+
   it('states the one-month response time, not an invented one', () => {
+    // Article 12(3) is "without undue delay and in any event within one month".
+    // "30 days" is the commonest wrong paraphrase of it and is a shorter period
+    // than the law gives, so it must not appear as the RIGHTS deadline.
+    //
+    // 30 days is nevertheless correct for one thing — acknowledging a complaint
+    // under section 164A DPA 2018 — so this checks the sentence about rights
+    // requests specifically rather than banning the phrase from the document.
     expect(p).toMatch(/within one month/);
-    expect(p).not.toMatch(/within 30 days/);
+    const rights = LEGAL_DOCS.privacy.body
+      .filter(([, t]) => /We will respond/.test(t)).map(([, t]) => t).join('\n');
+    expect(rights).not.toMatch(/30 days/);
   });
 });
 
@@ -147,6 +169,36 @@ describe('effectiveness statistics — the new purpose is disclosed', () => {
 
   it('promises no extra collection for it', () => {
     expect(p).toMatch(/we collect nothing extra for it/);
+  });
+});
+
+describe('permission strings — the other place we describe the microphone', () => {
+  // These are shown by iOS in the system permission dialog, which for most
+  // users is the FIRST thing they read about the microphone, before the privacy
+  // notice and before the line on the drill screen. It said "Nothing is
+  // recorded or uploaded", which is not true on a device that cannot transcribe
+  // offline — the same defect that was already fixed in the privacy notice.
+  //
+  // So all three surfaces have to agree: app.json here, the privacy notice in
+  // shared/content/legal.js, and the line in VerbalDrillScreen before the
+  // microphone opens. If speech behaviour changes, all three change together.
+  const plugins = require('../app.json').expo.plugins;
+  const speech = plugins.find((p) => Array.isArray(p) && p[0] === 'expo-speech-recognition');
+  const strings = Object.values(speech[1]).filter((v) => typeof v === 'string').join('\n');
+
+  it('names the real feature rather than asking for access in the abstract', () => {
+    expect(strings).toMatch(/verbal drill/i);
+    expect(strings).toMatch(/caution/i);
+  });
+
+  it('does not claim the audio never leaves the device', () => {
+    expect(strings).not.toMatch(/nothing is recorded or uploaded/i);
+    expect(strings).not.toMatch(/never (leaves|leave) (the|your) (device|phone|iPhone)/i);
+  });
+
+  it('says where the audio actually goes when it cannot be done on-device', () => {
+    expect(strings).toMatch(/Apple's speech service/);
+    expect(strings).toMatch(/never receive or keep the audio/i);
   });
 });
 

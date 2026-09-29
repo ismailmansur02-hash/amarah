@@ -402,9 +402,11 @@ Stated explicitly so the absence is a finding, not an oversight.
   is a one-off £6.99 purchase, so there is no auto-renewal, no cancellation flow
   and no dark-pattern surface. **For completeness:** the subscription regime in
   Chapter 2 of Part 4 of the Digital Markets, Competition and Consumers Act 2024
-  is **enacted but not yet in force**; secondary legislation is still required and
-  commencement was anticipated for spring 2027. If you ever move to a
-  subscription, that regime and its reminder and cooling-off duties will apply.
+  is **enacted but not yet in force**; secondary legislation is still required.
+  Commencement was originally estimated for spring 2027, but the Government's
+  announcement of 9 August 2026 brought it forward to **January 2027**. If you
+  ever move to a subscription, that regime and its reminder and cooling-off
+  duties will apply.
   **Sources:** [DMCCA 2024 Part 4 Chapter 2](https://www.legislation.gov.uk/ukpga/2024/13/part/4/chapter/2) · [GOV.UK — government response on the subscription contracts regime](https://www.gov.uk/government/consultations/consultation-on-the-implementation-of-the-new-subscription-contracts-regime/outcome/government-response-to-consultation-on-the-implementation-of-the-new-subscription-contracts-regime-web-accessible-version)
 - **Financial Conduct Authority.** Not engaged. The app provides no regulated
   financial activity and handles no payments.

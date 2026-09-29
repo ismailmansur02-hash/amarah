@@ -135,11 +135,26 @@ Location · Contacts · Health & Fitness · Financial Info · Browsing History �
 Search History · Identifiers · Usage Data · Diagnostics · Purchases ·
 Sensitive Info · Photos or Videos · **Audio Data**
 
-**Audio Data is a No, and that is correct.** The microphone is used only during
-a Verbal Drill; the phone's own recogniser turns speech into text on the
-device, no audio is recorded, stored or transmitted, and the transcript is
-discarded when you leave the drill. Apple only wants "Yes" for data that leaves
-the device.
+**Audio Data is a No — but for a narrower reason than it first looks.**
+
+Be accurate about this, because the wrong version of it is in your privacy
+notice's favour and Apple checks the two against each other.
+
+The app asks for on-device transcription (`requiresOnDeviceRecognition`) and
+gets it on phones that support it. On phones that do not, iOS sends the audio to
+Apple's own speech service to be transcribed. So it is **not** true that audio
+never leaves the phone, and neither this form nor the review notes should say so.
+
+It is still a **No**, because Apple's question is whether *you* collect the data.
+Transcription runs through `SFSpeechRecognizer`, Apple's own framework: you never
+receive the audio, never store it, and cannot retrieve it. The app keeps only the
+text, only while the drill is open. Nothing is transmitted to you or to any
+third party you have a relationship with.
+
+If a reviewer queries it, that is the answer: Apple's framework, Apple's servers,
+no developer access. Your privacy notice already states the transmission plainly
+rather than hiding it, which is the position you want to be in. This is the one
+answer on this page worth a second opinion before you submit.
 
 ### Tracking
 
@@ -187,11 +202,12 @@ sign-in instead, enter any email address and you will be sent a one-time link.
 MICROPHONE: the microphone is used in one place only — Home > Verbal Drills >
 any drill > the microphone button. It is used so the officer can practise
 saying the police caution out loud and have it marked word-for-word against
-the correct wording. Speech is converted to text by the device's own
-recogniser. No audio is recorded, stored or transmitted, and the transcript is
-discarded when the drill is closed. Every drill can also be completed by
-typing, using the "Type it instead" link, if you would prefer not to grant
-microphone access.
+the correct wording. The app requests on-device transcription and uses it where
+the device supports it; where it does not, iOS transcribes the audio through
+Apple's speech service. We never receive, record or store the audio, and the
+transcript is discarded when the drill is closed. Every drill can also be
+completed by typing, using the "Type it instead" link, if you would prefer not
+to grant microphone access.
 
 ACCOUNT DELETION: Profile tab > Delete account.
 
@@ -240,3 +256,10 @@ your phone, screenshot these same eleven screens and swap them in.
 - [ ] Say the caution into the microphone and check it scores
 - [ ] Delete the account from Profile and confirm it actually goes
 - [ ] Screenshots retaken on device
+- [ ] Age rating questionnaire answered under the current bands — never leave it Unrated
+- [ ] Your name, and a contact phone number **in international format with the
+      country code** (`+44 7…`, not `07…`), in the App Review Information fields
+
+See `APP-STORE-COMPLIANCE-REVIEW.md` for the full check against the
+`app-store-compliance` toolkit, including why Audio Data is answered No and
+what is deliberately left undone.

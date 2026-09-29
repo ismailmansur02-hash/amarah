@@ -34,6 +34,20 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     // A phone has no address bar; the callback arrives as a deep link, which
     // completeFromUrl() below feeds back in explicitly.
     detectSessionInUrl: false,
+    // PKCE, not the implicit flow. This matters because the sign-in link comes
+    // back through a CUSTOM URL SCHEME (prepaconstable://), and a custom scheme
+    // is not owned by anyone: any other app on the phone may register the same
+    // one, and iOS then picks between them with no guarantee it picks us.
+    //
+    // Under the implicit flow that link carries the access and refresh tokens
+    // themselves, so whichever app wins the scheme is handed a working session.
+    // Under PKCE it carries only a one-time code, which is worthless without
+    // the code_verifier — and the verifier never leaves this app's storage.
+    //
+    // The real fix is a Universal Link on a domain we control, which cannot be
+    // claimed by another app. That needs the domain that will also host the
+    // privacy policy; until then this closes the credential leak.
+    flowType: 'pkce',
   },
 });
 
@@ -68,12 +82,25 @@ export async function sendMagicLink(email) {
 }
 
 // Called when the app is opened by the emailed link.
+//
+// Under PKCE the link carries `code`, which is exchanged for a session using
+// the code_verifier held in this app's storage. The token branch below is the
+// implicit-flow shape and is kept only so a link already sitting in someone's
+// inbox from an older build still signs them in. New links take the code path.
 export async function completeFromUrl(url) {
   try {
     const parsed = Linking.parse(url);
     const qp = parsed.queryParams || {};
     const frag = (url.split('#')[1] || '');
     const fragParams = Object.fromEntries(new URLSearchParams(frag));
+
+    const code = qp.code || fragParams.code;
+    if (code) {
+      const { data, error } = await supabase.auth.exchangeCodeForSession(String(code));
+      if (error) return null;
+      return data.session || null;
+    }
+
     const access_token = qp.access_token || fragParams.access_token;
     const refresh_token = qp.refresh_token || fragParams.refresh_token;
     if (!access_token || !refresh_token) return null;
