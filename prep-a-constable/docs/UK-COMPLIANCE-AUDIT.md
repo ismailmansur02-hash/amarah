@@ -586,3 +586,42 @@ This is a security observation about the database your app depends on. It is not
 a UK data protection finding today, because nothing is accessible. It would
 become one — potentially a serious one, given the property tables would hold
 tenants' personal data — if a permissive policy were added later.
+
+
+---
+
+# App icon — decision recorded
+
+The icon shipped at Mr Mansur's direction depicts a British custodian helmet
+bearing a royal crown and a police cap badge, over the letters "PC".
+
+**This was flagged before it was used, and he asked for it as supplied.** It is
+his app and his decision; this entry exists so the record is honest, not to
+reopen it.
+
+**The risk, stated once.** App Store Review Guideline 5.2 covers content that
+suggests an association with, or endorsement by, another entity. An icon
+combining a police helmet, a crown and a cap badge can read as an official
+police product. That is the same risk the store description already addresses
+with its "not produced, endorsed or approved by the Metropolitan Police Service
+or the College of Policing" line, which remains in place and is now doing more
+work than it was.
+
+Two further points a reviewer or a solicitor may raise:
+
+- Use of a representation of the Royal Crown in commercial branding is
+  ordinarily subject to permission.
+- Section 90 of the Police Act 1996 concerns impersonation and articles of police
+  uniform. An app icon is not a uniform and this is not an impersonation offence,
+  but the proximity of the imagery to police insignia is the reason the guideline
+  risk above is real rather than theoretical.
+
+**Mitigations in place:** the disclaimer in the store description, the equivalent
+clause in the Terms of Service, and the absence of any force name or wordmark in
+the icon itself.
+
+**If Apple rejects on 5.2**, a de-badged version of the same design — identical
+lettering, colours and layout, without the helmet, crown and badge — is committed
+at `docs/icon-options/CHOSEN-1-wordmark.png` and can be swapped in by copying it
+over `native/assets/icon.png` and rebuilding. That is a ten-minute change, so a
+rejection on this point costs a resubmission, not a redesign.
