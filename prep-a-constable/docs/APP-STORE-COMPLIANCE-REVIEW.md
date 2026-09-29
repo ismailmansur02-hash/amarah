@@ -175,6 +175,60 @@ anticipated for spring 2027. The Government's announcement of 9 August 2026
 brought it forward to **January 2027**. Corrected. It remains moot for a one-off
 paid app — it would only bite if you ever moved to a subscription.
 
+## BLOCKER found after the scan — the app icon carries royal and police insignia
+
+Neither the toolkit nor any earlier audit looked at the icon. It was checked by
+hand and it is the most serious problem in the app.
+
+`native/assets/icon.png` (and `splash-icon.png`, which is byte-identical, and
+`android-icon-foreground.png`, which is the same design) shows a **British police
+custodian helmet** bearing a **police badge with St Edward's Crown** above a
+Brunswick-star crest.
+
+Two separate problems, and the first is the hard one.
+
+**The crown.** Section 99 of the Trade Marks Act 1994 makes it an offence to use,
+in connection with a business, the Royal arms — or arms so closely resembling
+them as to be calculated to deceive — in a way that suggests you are authorised.
+Section 99(2) extends this to devices and emblems suggesting Royal patronage, and
+section 4 bars registering any mark containing a representation of the Crown
+without authorisation. Selling a £6.99 app is unambiguously "in connection with a
+business". Whether this specific rendering crosses the line is a judgement, but
+it is not one to take a chance on when the fix is a redraw.
+
+**The police insignia.** The helmet-and-crest combination reads as official
+police identity. This is what it costs you: the app's whole legal position rests
+on the disclaimer that it is "not produced, endorsed or approved by the
+Metropolitan Police Service or the College of Policing". That disclaimer is in
+the privacy notice, in the terms and in the Notes for Review. **The icon
+contradicts every one of them** — it is the first thing anyone sees, it appears
+on the store listing, the home screen and the splash, and it says the opposite.
+An unfair-practice argument under the Consumer Protection from Unfair Trading
+Regulations 2008 — displaying a mark suggesting approval you do not hold — is
+much easier to make against an icon like this than against anything in the text.
+
+**On Apple specifically:** Guideline 5.2.1 requires that you only use content you
+created or are licensed to use, and Apple rejects icons implying affiliation with
+a government or law-enforcement body absent authorisation. I am confident about
+the guideline; I cannot tell you how a given reviewer will read this icon. It is
+a live rejection risk rather than a certainty.
+
+**What to do.** The crown and the crest have to go — those are not negotiable.
+A custodian helmet *silhouette* with no badge on it is far more defensible, since
+the helmet is a generic British symbol rather than any force's mark, though it
+still leans on official imagery.
+
+The safe version already exists in your own code: `ShieldLogo` in
+`native/src/Graphics.js` is a plain navy shield with "PC" set in the display
+italic, no crown, no crest, no helmet. It is what the app shows at the top of the
+Home screen. Building the icon around that mark would be consistent with the
+in-app brand, carries none of this risk, and is a drawing job rather than a
+rethink.
+
+Both icon files and the splash need replacing. I cannot draw raster artwork from
+here — say the word and I will produce the icon as SVG in the app's own palette,
+which you can export at 1024 × 1024.
+
 ## Checked and already satisfied
 
 From the toolkit's pre-submission checklist, the items this app already meets:
@@ -213,8 +267,10 @@ From the toolkit's pre-submission checklist, the items this app already meets:
 
 ## Still outstanding, unchanged by this review
 
-These remain from `UK-COMPLIANCE-AUDIT.md` and none of them is code:
+These remain from `UK-COMPLIANCE-AUDIT.md`, plus the icon above:
 
+0. **Replace the app icon, splash icon and Android foreground.** See the blocker
+   section — the crown and police crest must come off before submission.
 1. Fill `CONTROLLER_NAME`, `CONTROLLER_EMAIL` and `CONTROLLER_ADDRESS` in
    `shared/content/legal.js`. The test suite fails until you do — that is the
    release gate working, not a broken test.
