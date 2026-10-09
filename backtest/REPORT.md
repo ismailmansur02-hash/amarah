@@ -763,3 +763,78 @@ The noon exit passed a train/test wall, was positive in all four years, and had
 a coherent mechanism — and was still wrong, because the comparison that sold it
 was not like-for-like. A held-out window does not protect against comparing two
 things that differ in more than one variable at a time.
+
+---
+
+## GODMODE v4.1 (Pine Script) — tested (2026-10-09)
+
+User supplied a TradingView Pine script and asked whether it is profitable.
+Ported faithfully to Python (`backtest/godmode_port.py`) and run through a real
+trade simulator (`godmode_test.py`, `godmode_baseline.py`, `godmode_sweep.py`)
+on EURUSD + GBPUSD, 2023-01 → 2026-07.
+
+### Why it had to be ported
+
+The file is an `indicator()`, **not a `strategy()`** — TradingView's Strategy
+Tester cannot run it and it ships no P&L. Everything it displays about
+performance is its own ad-hoc counter.
+
+### Four things about what it displays
+
+1. **The on-chart "Win Rate (TP1 before SL)" is not a win rate.** `nWins`
+   increments the moment TP1 is touched; `nLoss` only when SL is hit *before*
+   TP1. After TP1 the stop moves to breakeven, so **a trade can never be
+   recorded as a loss once it has touched +1R**. On a reversal exit, any close
+   in profit — even +0.01R — books a full win.
+2. **"Potential gain +X%" is maximum favourable excursion** since the signal:
+   the best possible exit, which no one achieves. The tooltip concedes this; the
+   large green number does not.
+3. **The AI only predicts on the last `aiWindow` = 5,000 bars.** Scroll back
+   further and the historical signals on screen were never AI-filtered, so the
+   visible track record is not what the tool would have produced.
+4. **The Congress/CEO "Smart Money" panel is hardcoded demo text** (`DEMO_FEED`
+   — fabricated NVDA/MSFT/AAPL rows). Pine cannot reach the internet.
+
+To its credit: the Pine is cleanly written, the higher-timeframe non-repaint
+idiom (`expr[1]` + `lookahead_on`) is the correct one, a bar touching both stop
+and target is scored as the stop, and it carries a risk disclaimer.
+
+### Results (default settings, net of FTMO spreads)
+
+| Timeframe | Trades | Total | Per trade | t |
+|---|---|---|---|---|
+| 1D + 4H + 1H pooled | 1,364 | **−55R** | −0.040R | −1.30 |
+| **5-minute EURUSD** | 5,443 | **−925R** | −0.170R | **−11.3** |
+| **5-minute GBPUSD** | 6,771 | **−1,335R** | −0.197R | **−14.6** |
+
+Every exit model loses: TP1-only −77R, thirds −55R, runner −18R. Meanwhile the
+indicator's own counter would have displayed a reassuring **48.6%** win rate
+(48.3% / 48.1% on the 5-minute charts).
+
+### It is not the spread, and it is not the settings
+
+- **Costs switched off entirely: still −18R.** The signal itself has no edge;
+  the spread turns a flat system into a losing one.
+- **Versus 1,000 random-entry simulations** with identical SL/TP structure,
+  GODMODE lands at the **14th, 51st, 81st, 5th, 51st and 55th percentile** of
+  the random distribution — statistically indistinguishable from picking bars at
+  random. The k-NN engine, composite confidence and multi-timeframe agreement
+  add nothing measurable.
+- **All 40 settings combinations** (5 signal modes × 4 confidence thresholds × 2
+  timeframes): every 1-hour cell loses, the worst at −122.8R. The positive 4-hour
+  cells peak at **t = 1.03** against a Bonferroni bar of ~3.0 for 40 scans. The
+  "Scalper" mode is the best on 4H and the **worst** on 1H (−122.8R) — the
+  inconsistency that marks noise rather than edge.
+
+### Verdict
+
+**Not profitable.** On the timeframe it is most likely to be used — 5-minute —
+it loses about 0.17–0.20R per trade across more than 12,000 trades at t = −11 to
+−15. That is one of the most statistically significant results in this entire
+project, and it is significant in the losing direction. At 0.5% risk per trade
+that is roughly −0.09% per trade, compounding to near-total loss of capital over
+the trade count it generates.
+
+The mechanism is ordinary: a supertrend flip with a 1.5×ATR stop and 1:1 first
+target is close to a coin flip, and the spread is the house edge. The AI layer
+does not change the entries enough to matter.
