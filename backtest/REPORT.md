@@ -860,3 +860,46 @@ entry carrying **zero directional information** looks like. Changing the
 reward:risk ratio cannot manufacture an edge — it only moves the win rate you
 need by the same amount it moves the payoff. Random entries scored −0.024R/trade
 on the identical bars; GODMODE scored −0.057R, i.e. no better.
+
+### Your own Notion rules, coded and tested (2026-10-10)
+
+`backtest/my_rules_test.py` mechanises the "⛔ Rules" page: pivot swing →
+liquidity sweep → displacement → entry at the 0.62 OTE retracement, stop beyond
+the sweep extreme, 2:1 target, one trade per 4H bucket, equal-high/low setups
+skipped (rule 1), unfilled OTE abandoned (rule 3). Rules 2 and 4 (the FVG
+re-anchoring of the fib) are **not** mechanised — they move the anchor, hence
+entry and stop, so this is the base reading.
+
+| Timeframe | Pair | n | Win% | Mean R | t | Spread as % of 1R |
+|---|---|---|---|---|---|---|
+| 5-min | EURUSD | 5,531 | 41.0% | −0.075R | −3.75 | **23%** |
+| 5-min | GBPUSD | 5,502 | 38.3% | −0.228R | **−11.5** | **27%** |
+| 15-min | GBPUSD | 3,870 | 37.0% | −0.088R | −3.77 | 15% |
+| **1h** | **EURUSD** | 1,319 | 36.8% | **+0.024R** | 0.61 | 6% |
+| 1h | GBPUSD | 1,336 | 34.8% | −0.044R | −1.13 | 7% |
+| 4h | EURUSD | 390 | 30.3% | −0.136R | −1.95 | 4% |
+
+**The rules do contain something real.** Against 300 random-entry simulations
+with identical stop/target geometry and a matched 400-bar hold cap, the 1-hour
+results sit at the **100th and 97th percentile**. The sweep→OTE entry genuinely
+selects better-than-random entries there. On 4H it does not (29th/39th).
+
+**But it only reaches break-even.** A 2:1 needs 33.3% before costs; the rules
+deliver 34.8–36.8% on 1H and the spread eats the rest. The edge over random
+(~+0.08 to +0.14R) is almost exactly the cost.
+
+**5-minute is the killer.** The spread is **23–27% of every trade's risk** at
+that stop size — the same rules go from roughly break-even on 1H to −0.23R per
+trade on 5-min GBPUSD at t = −11.5. The "4HR to 5min" execution is the single
+most damaging choice in the whole setup.
+
+**GODMODE's contribution, measured honestly:** +0.01 to +0.15R per trade, best
+t = 1.67 — not significant. The first run showed t = 2.8–4.1, but that was a
+lookahead bug of mine: the filter used the supertrend direction at the entry
+**bar**, which depends on that bar's close, while the OTE fills intrabar. Lagging
+it to the last confirmed direction removed 60–97% of the apparent gain.
+
+| | Rules alone | + GODMODE (same-bar, buggy) | + GODMODE (lagged, honest) |
+|---|---|---|---|
+| 1h EURUSD | +0.024R (t 0.61) | +0.271R (t 2.84) | +0.094R (t 1.11) |
+| 1h GBPUSD | −0.044R (t −1.13) | +0.408R (t 4.11) | +0.147R (t 1.67) |
