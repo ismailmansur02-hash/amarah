@@ -838,3 +838,25 @@ the trade count it generates.
 The mechanism is ordinary: a supertrend flip with a 1.5×ATR stop and 1:1 first
 target is close to a coin flip, and the spread is the house edge. The AI layer
 does not change the entries enough to matter.
+
+### Follow-up: "use it only as the trigger, then run a clean 2:1"
+
+Tested exactly that (`backtest/godmode_2to1.py`): GODMODE signal as the entry,
+target +2R, stop −1R, **no breakeven move**, first touch wins, bars touching
+both scored as the stop.
+
+| | Trades | Hit 2R | Total | Per trade |
+|---|---|---|---|---|
+| GODMODE + clean 2:1 | 1,312 | **31.9%** | **−74.5R** | −0.057R |
+| Random entries, same 2:1 | — | — | — | −0.024R |
+| GODMODE 2:1, **zero cost** | 1,312 | 32.0% | — | −0.029R |
+
+**A 2:1 needs a 33.3% win rate to break even** (1/(1+2)) before costs. GODMODE
+delivers **31.9%** — and 32.0% even with the spread removed entirely.
+
+That 1/3 is not a coincidence: for a price process with no drift, the
+probability of touching +2R before −1R is exactly 1/3. Landing on 32% is what an
+entry carrying **zero directional information** looks like. Changing the
+reward:risk ratio cannot manufacture an edge — it only moves the win rate you
+need by the same amount it moves the payoff. Random entries scored −0.024R/trade
+on the identical bars; GODMODE scored −0.057R, i.e. no better.
